@@ -1,0 +1,7 @@
+.history
+.vscode
+.cache
+build
+# !build
+# build/*
+# !build/test.py
