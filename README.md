@@ -53,25 +53,6 @@
 4. 各包丁姿勢から計算された点数を足し合わせて，この\nameholdingpointset の点数となる．
 5. 点数が一番高い\nameholdingpointset を出力する．
 
-具体的に，ある時間$t$の包丁の情報$\mathrm{T}_\mathrm{j}$（姿勢と速度）に対して：
-まず，「PrepareData」関数は包丁情報$\mathrm{T}_\mathrm{j}$と食材表面情報$\Omega$を利用し，食材と包丁の接触面$\Omega_{\mathrm{c}}$（包丁からの力を計算するため）や把持に使う表面$\Omega_{\mathrm{g}}$（$\Omega$を$\Omega_{\mathrm{c}}$で分割した片方の表面），初期\namesearchspace $\equsearchspace_\mathrm{init}$を生成する．
-
-\namesearchspace $\equsearchspace$は，\nameholdingpointset $\equholdingpointset$の集合であり，$\equsearchspace = \{\equholdingpointset[1], \equholdingpointset[2], \cdots \}$と定義する．
-
-\nameholdingpointset $\equholdingpointset$は，$n$個の\namefingerpoint $\equfingerpoint[i]$ の集合である（つまり，$\equholdingpointset = \{\equfingerpoint[1], \equfingerpoint[2], \cdots, \equfingerpoint[][n]\}$）．$n$は食材への接触点の数である（指の本数）．
-
-\namefingerpoint $\equfingerpoint[][i] ($i = 1,\ldots,n$)$は，指と食材の接触点座標であり，三次元のベクトルである．
-% \namesearchspace $\equsearchspace$について，
-% \namefingerpoint $\equfingerpoint[][i] ($i = 1,\ldots,n$)$は，指と食材の接触点座標であり，三次元のベクトルである．
-% \nameholdingpointset $\equholdingpointset$は，$n$個の\namefingerpoint $\equfingerpoint[i]$ の集合である（つまり，$\equholdingpointset = \{\equfingerpoint[1], \equfingerpoint[2], \cdots, \equfingerpoint[][n]\}$）．$n$は食材への接触点の数である（指の本数）．
-% \nameholdingpointset の候補の集合を\namesearchspace $\equsearchspace = \{\equholdingpointset[1], \equholdingpointset[2], \cdots \}$とよぶ．
-% 
-次に，「FilterByGeoScore」関数は初期\namesearchspace $\equsearchspace_\mathrm{init}$を削減する．\namesearchspace の中で使えない\nameholdingpointset が大量に存在する（例えば，指同士が近いや指が接触面の点に近いなど）ため，正式の計算が開始する前に不適切な\nameholdingpointset を削除する．
-% 
-また，「CalKnifeForce」関数は包丁の力$t_\mathrm{k}$（力とトルク，6次元のベクトル）を計算する．
-% 
-さらに，5-8行は包丁力$t_\mathrm{k}$と\nameholdingpointset で\namesearchspace $\equsearchspace$にあるすべての\nameholdingpointset に点数を計算し，\nameholdingpointset の最終点数$D_\mathrm{fin}[\equholdingpointset]$に累積する．
-最後に，「FindPointSetWithMaxScore」関数は最終点数$D_\mathrm{fin}$の中で一番高い点数\nameholdingpointset $\equholdingpointset[fin]$を最終\nameholdingpointset として出力する．
 
 # 把持位置を評価するプログラム
 ## 依頼
@@ -86,15 +67,7 @@
 | vtk          | 9.2        | pclが依頼する可視化ライブラリ     | https://gitlab.kitware.com/vtk/vtk                    |
 | pybind11     | master     | C/C++とPythonを連携するライブラリ | https://github.com/pybind/pybind11                    |
 
-## 流れ
 
-1. 
-
-## 各部分の説明
-
-
-
-## 実行
 
 
 
