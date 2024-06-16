@@ -5,3 +5,8 @@ build
 # !build
 # build/*
 # !build/test.py
+ScipyCurveFitting.ipynb
+CMakeFiles/Eigen/CMakeLists.txt
+1_PrepareData/CuttingFaceMaker/CrossSectionMaker/CrossSectionMaker.cpp
+1_PrepareData/CuttingFaceMaker/CrossSectionMaker/CrossSectionMaker.hpp
+*.pcd

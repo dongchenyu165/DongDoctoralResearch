@@ -1,0 +1,42 @@
+{
+	"Global" : {
+		"LoggerName": "Global",
+		"LogEnable": true,
+		"LogLevel": "DEBUG",
+		"LogPattern_Std": "(%n)%L %T : %v",
+		"LogFileOutputPathPattern": "./Logs/Global__%Y_%m_%d_%H_%M_%S__%ms.log",
+		"LogPattern_File": "(%n) (%L) %Y-%m-%d %H:%M:%S::%e(%z) : %v"
+	},
+	"PCL_GlobalLogger" : {
+		"LoggerName": "PCL_GlobalLogger",
+		"LogEnable": true,
+		"LogLevel": "DEBUG",
+		"LogPattern_Std": "(%n)%L %T : %v",
+		"LogFileOutputPathPattern": "./Logs/PCL_GlobalLogger__%Y_%m_%d_%H_%M_%S__%ms.log",
+		"LogPattern_File": "(%n) (%L) %Y-%m-%d %H:%M:%S::%e(%z) : %v"
+	},
+	"PCL_Vis" : {
+		"LoggerName": "PCL_Vis",
+		"LogEnable": false,
+		"LogLevel": "DEBUG",
+		"LogPattern_Std": "(%n)%L %T : %v",
+		"LogFileOutputPathPattern": "./Logs/PCL_Vis__%Y_%m_%d_%H_%M_%S__%ms.log",
+		"LogPattern_File": "(%n) (%L) %Y-%m-%d %H:%M:%S::%e(%z) : %v"
+	},
+	"PointArranger" : {
+		"LoggerName": "PointArranger",
+		"LogEnable": true,
+		"LogLevel": "INFO",
+		"LogPattern_Std": "(%n)%L %T : %v",
+		"LogFileOutputPathPattern": "./Logs/PointArranger__%Y_%m_%d_%H_%M_%S__%ms.log",
+		"LogPattern_File": "(%n) (%L) %Y-%m-%d %H:%M:%S::%e(%z) : %v"
+	},
+	"FilterGeo":{
+		"LoggerName": "FilterGeo",
+		"LogEnable": true,
+		"LogLevel": "DEBUG",
+		"LogPattern_Std": "(%n)%L %T : %v",
+		"LogFileOutputPathPattern": "./Logs/FilterGeo__%Y_%m_%d_%H_%M_%S__%ms.log",
+		"LogPattern_File": "(%n) (%L) %Y-%m-%d %H:%M:%S::%e(%z) : %v"
+	}
+}

@@ -1,0 +1,64 @@
+{
+	"EnabledCategoryNameList": [
+		"CuttingFace",
+		"Debug",
+		"PCL_Helper"
+	],
+	"GlobalLevel": "DEBUG",
+	"ViewerConfig": {
+		"CuttingFace": {
+			"ArrangeResult": {
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/Utilities/PCL_Helper/Apps/PointsArranger.hpp:266",
+				"Description": "",
+				"Enable": false,
+				"Level": "DEBUG",
+				"ViewerClassStr": "PointArrangementViewer",
+				"WindowTitle": "DEBUG ==== [ArrangeResult] "
+			},
+			"FillResult": {
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.cpp:311",
+				"Description": "",
+				"Enable": true,
+				"Level": "DEBUG",
+				"ViewerClassStr": "",
+				"WindowTitle": "DEBUG ==== [CuttingFace] Fill Result"
+			},
+			"FinalCutEdge": {
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.cpp:247",
+				"Description": "",
+				"Enable": false,
+				"Level": "DEBUG",
+				"ViewerClassStr": "",
+				"WindowTitle": "DEBUG ==== [CuttingFace] Final Cut Edge"
+			},
+			"RestPart": {
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.cpp:217",
+				"Description": "",
+				"Enable": false,
+				"Level": "DEBUG",
+				"ViewerClassStr": "",
+				"WindowTitle": "DEBUG ==== [CuttingFace] Rest Part"
+			}
+		},
+		"Debug": {
+			"DebugViewer": {
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/Utilities/PCL_Helper/Apps/PointsArranger.hpp:274",
+				"Description": "Just for debug",
+				"Enable": false,
+				"Level": "DEBUG",
+				"ViewerClassStr": "",
+				"WindowTitle": "DEBUG ==== [DebugViewer] "
+			}
+		},
+		"PCL_Helper": {
+			"EstimateNormal": {
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/Utilities/PCL_Helper/Modules/EstimateNormal.hpp:84",
+				"Description": "",
+				"Enable": false,
+				"Level": "DEBUG",
+				"ViewerClassStr": "",
+				"WindowTitle": "DEBUG ==== [CuttingFace] Rest Part"
+			}
+		}
+	}
+}

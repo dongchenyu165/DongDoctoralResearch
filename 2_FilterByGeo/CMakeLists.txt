@@ -1,0 +1,1 @@
+set(FILTER_GEO_SRC ${CMAKE_CURRENT_SOURCE_DIR}/SearchSpaceGenerator.cpp PARENT_SCOPE)

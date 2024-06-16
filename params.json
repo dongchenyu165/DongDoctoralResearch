@@ -1,0 +1,76 @@
+{
+	"Prepare-Data":{
+		"MakeCuttingFace":{
+			"KnifeParam": {
+				"KnifeBladeAngle": 5
+				},
+			"1.MakeCuttingEdgeParam": {
+				"CuttingEdgeSliceThickness": 0.002,
+				"GraspingPartSliceThickness": 0.002,
+				"GraspingPart_DownSampleSize": [0.007, 0.007, 0.007]
+			},
+			"2.CuttingEdgeDownSample": {
+				"DownSampleSize": [0.003, 0.003, 0.003]
+			},
+			"3.ArrangePoint": {
+				"Denoise_EuclideanClusterSetting": {
+					"ClusterTolerance": 0.002,
+					"MinClusterSize": 50,
+					"MaxClusterSize": 4000000,
+					"ClusterWithoutZAxis": false
+				}
+			},
+			"4.FillCuttingFace":{
+				"FillingGridSize": [0.0003, 0.0003, 0.0003],
+				"FinalDownSampleSize": [0.0006, 0.0006, 0.0006]
+			},
+			"5.BladeCurve":{
+				"StepSize": 0.0003
+			}
+		}
+	},
+	"FilterByGeoScore":{
+		"1.DownSample":{
+			"Size": [0.0003, 0.0003, 0.0003]
+		},
+		
+		"Weight": {
+			"Weight_PointDistance" : 1,
+			"Weight_PointNormalAngle" : 4.4,
+			"Weight_SameAsKnifeDir" : 2,
+			"Weight_SameAsKnifeDir_OLD" : 4,
+			"Weight_GraspHeight": 6,
+			"DistanceLimit" : 0.04,
+			"DistancePenality" : 6
+		}
+	},
+	"CalKnifeForce":{
+		"FoodParams":{
+			"Potato":{
+				"Friction_Mu": 0.6,
+				"FractureToughness": 200
+			},
+			"Onion":{
+				"Friction_Mu": 0.6,
+				"FractureToughness": 600
+			}
+		},
+		"PushingForce": 20.0
+	},
+	"CalForceScore":{
+		"Param":{
+			"MaxRandomRangeForce" : 300,
+			"RandomHalfAngle" : 90,
+			"AngleLimit": 120
+		},
+		"Weight":{
+			"Weight_ForceIntensity" : 2,
+			"Weight_ForceNormalAngle" : 2,
+			"Weight_ForceVarience" : 1,
+			"Weight_KnifeDistance" : 4,
+			"Weight_PointPairDir" : 5,
+			"Weight_" : 1,
+			"ForceAngleLimit" : 45
+		}
+	}
+}
