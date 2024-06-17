@@ -15,7 +15,7 @@
 	The raw score of added data'll calculated simutaneously.
 
  After all datas added, call [CalcFinalScore] function to calculate the final score,
-	and also sort datas by the final score in decent.
+	and also sort datas by the final score in descending order.
  * 
  * @tparam InputDataType Input data's type to calculate the raw score. like [position normal ...] of a point-set
  * @tparam ConfigDataType Config object type of this object, mainly contains [Weight Vector] or other config parameter for calculating.
@@ -48,14 +48,14 @@ public:
 
 protected:
 	/**
-	 * @brief Calculate a raw score of each score-component by using the input [InData].
+	 * @brief Calculate a raw score of each score-component by using the input [InData] and the [StaticData].
 	 MUST be implementated in child class.
 	 MEANS: YOU MUST implementate:
 	 1. Calculate each score component:
-	 	ScoreComp_1 = CalcScoreComp_1(InData.data1);
+	 	ScoreComp_1 = CalcScoreComp_1(InData.data1, StaticData.data2);
 	 	ScoreComp_2 = CalcScoreComp_2(InData.data1, InData.data2, InData.data4);
 		...
-	 	ScoreComp_n = CalcScoreComp_n(InData.data3, InData.data4);
+	 	ScoreComp_n = CalcScoreComp_n(InData.data3, InData.data4, StaticData.data3);
 	 2. Fill the matrix row the row index [CurrentDataIdx] with each score-component:
 	 	ScoreRawData[CurrentDataIdx] = [ScoreComp_1, ScoreComp_2, ... , ScoreComp_n]
 	 * 
@@ -64,8 +64,19 @@ protected:
 	 */
 	virtual double CalcRawScore(const InputDataType& InData) = 0;
 
-
+/**
+ * @brief Sort the [DataScoreList] by their score in descending order.
+ * 
+ */
 	void SortByScore() { std::stable_sort(DataScoreList.begin(), DataScoreList.end(), &Self::SortPredicate); }
+	/**
+	 * @brief A function to decide data A is LARGER than B.
+	 * 
+	 * @param InA data A
+	 * @param InB data B
+	 * @return true A is LARGER than B.
+	 * @return false A is SMALLER than B.
+	 */
 	static bool SortPredicate(const DataScorePairType& InA, const DataScorePairType& InB) { return InA.first > InB.first; }
 
 public:
