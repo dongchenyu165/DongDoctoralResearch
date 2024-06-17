@@ -28,8 +28,8 @@ class TScoreCalculatorBase
 	using Self = TScoreCalculatorBase<InputDataType, ConfigObjType, ScoreComponentCount>;
 
 public:
-	using DataScoreType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
-	using DataScoreListType = std::vector<DataScoreType>;
+	using DataScorePairType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
+	using DataScorePairListType = std::vector<DataScorePairType>;
 
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
 	// 		[Pre-Allocated DataSize]: Dynamic size. Set by the construct function's [InDataSize] argument.
@@ -68,7 +68,7 @@ protected:
 
 
 	void SortByScore() { std::stable_sort(DataScoreList.begin(), DataScoreList.end(), &Self::SortPredicate); }
-	static bool SortPredicate(const DataScoreType& InA, const DataScoreType& InB) { return InA.first > InB.first; }
+	static bool SortPredicate(const DataScorePairType& InA, const DataScorePairType& InB) { return InA.first > InB.first; }
 
 public:
 /**
@@ -87,7 +87,7 @@ public:
 	size_t Size() { return DataScoreList.size(); }
 
 protected:
-	DataScoreListType DataScoreList;
+	DataScorePairListType DataScoreList;
 	ConfigObjType ConfigData;
 
 	// A matrix to storage the score data with size (Pre-Allocated DataSize, ComponentSize).
