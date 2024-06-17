@@ -38,14 +38,14 @@ class TScoreCalculatorBase
 
 public:
 
-	TScoreCalculatorBase(const std::string& InJsonPath, const std::vector<std::string>& InKey)
-	{
-		JSON_Helper::LoadStructure_ByPath(InJsonPath, InKey, ConfigData);
+	TScoreCalculatorBase(const json& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData) : StaticData(InStaticData) { 
+		// std::vector init;
+		DataScoreList.resize(InDataSize, {INTMAX_MIN, InputDataType()});
+
+		// Eigen matrix init.
+		ScoreRawData.resize(InDataSize, ScoreComponentCount);
+		ScoreRawData.setConstant(-INFINITY);  // Init to min of the float.
 	}
-
-	TScoreCalculatorBase(const std::string& InJsonPath) { JSON_Helper::LoadStructure_ByPath(InJsonPath, {}, ConfigData); }
-
-	TScoreCalculatorBase() { }
 
 protected:
 	/**
@@ -92,6 +92,37 @@ public:
 	{
 		DataScoreList.push_back({CalcRawScore(InData), InData});
 		CurrentDataIdx++;
+	}
+
+/**
+ * @brief Mainly used function.
+			Normalize each score component at their own.
+			Also apply the weight of each component.
+			Should called after all calculating datas was added.
+ */
+	virtual void CalcFinalScore()
+	{
+		// Resize the score matrix to the fit the real size of datas.
+		this->ScoreRawData.resize(this->CurrentDataIdx, ScoreComponentCount);
+
+		// Normalize each score component.
+		for ( int i = 0; i < ScoreComponentCount; i++ )
+		{
+			float min                         = this->ScoreRawData.col(i).minCoeff();
+			float max                         = this->ScoreRawData.col(i).maxCoeff();
+			this->ScoreRawData.col(i).array() += min;
+			this->ScoreRawData.col(i) / (max - min);
+		}
+
+		// Apply the weight to each component for all datas.
+		auto ScoreVector = this->ScoreRawData * this->ScoreWeight;
+		for ( int i = 0; i < this->DataScoreList.size(); i++ )
+		{
+			this->DataScoreList[i].first = ScoreVector(i);
+		}
+
+		// Finally sort the datas by the final score.
+		this->SortByScore();
 	}
 
 	size_t Size() { return DataScoreList.size(); }
