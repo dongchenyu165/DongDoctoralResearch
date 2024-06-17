@@ -34,10 +34,9 @@ public:
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
 	// 		[Pre-Allocated DataSize]: Dynamic size. Set by the construct function's [InDataSize] argument.
 	using ScoreMatType         = Eigen::Matrix<float, -1, ScoreComponentCount>;
-	using ScoreMatRowType      = Eigen::Matrix<float, 1, ScoreComponentCount>;
 	using ScoreWeightVectorType = Eigen::Matrix<float, ScoreComponentCount, 1>;
 
-	using StrategiesType = std::map<std::string, DataScoreListType, std::less<std::string>>;
+
 
 	TScoreCalculatorBase(const std::string& InJsonPath, const std::vector<std::string>& InKey)
 	{
