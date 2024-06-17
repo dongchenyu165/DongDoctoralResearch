@@ -27,7 +27,6 @@ class TScoreCalculatorBase
 {
 	using Self = TScoreCalculatorBase<InputDataType, ConfigObjType, ScoreComponentCount>;
 
-public:
 	using DataScorePairType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
 	using DataScorePairListType = std::vector<DataScorePairType>;
 
@@ -36,7 +35,7 @@ public:
 	using ScoreMatType         = Eigen::Matrix<float, -1, ScoreComponentCount>;
 	using ScoreWeightVectorType = Eigen::Matrix<float, ScoreComponentCount, 1>;
 
-
+public:
 
 	TScoreCalculatorBase(const std::string& InJsonPath, const std::vector<std::string>& InKey)
 	{
