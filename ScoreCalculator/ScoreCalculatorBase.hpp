@@ -6,6 +6,7 @@
 
 #include <Eigen/Core>
 
+#include "DataTypes/PointSetData.hpp"
 #include <Utilities/JSON_Helper/StructSerializer.hpp>
 
 
@@ -98,6 +99,7 @@ public:
 protected:
 	DataScorePairListType DataScoreList;
 	ConfigObjType ConfigData;
+	EvaluationStaticData StaticData;
 
 	// A matrix to storage the score data with size (Pre-Allocated DataSize, ComponentSize).
 	// 		[Pre-Allocated DataSize] set by the construct function's [InDataSize] argument.
