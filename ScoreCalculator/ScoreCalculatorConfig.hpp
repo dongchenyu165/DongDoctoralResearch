@@ -52,7 +52,7 @@ struct TScoreCalculatorConfig
 	friend void from_json(const nlohmann::ordered_json& InJsonObj, TScoreCalculatorConfig<ScoreComponentCount>& InData)
 	{
 		// Assert that the size of the JSON object is greater than the number of components of the score calculator
-		assert(InJsonObj.size() > ScoreComponentCount);
+		assert(InJsonObj.size() >= ScoreComponentCount);
 		// Initialize the weight vector to zero
 		InData.WeightVector.setZero();
 
