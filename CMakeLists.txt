@@ -105,6 +105,16 @@ add_subdirectory("Utilities/spdlog")
 set(SPDLOG_LIBRARIES spdlog::spdlog)
 
 
+# Google Test
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+
 # cppitertools
 FetchContent_Declare(cppitertools 
 	GIT_REPOSITORY https://github.com/ryanhaining/cppitertools.git
