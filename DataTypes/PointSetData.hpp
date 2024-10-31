@@ -14,27 +14,12 @@ struct TSearchSpaceElement
 
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	/* ------------------------------- Basic Vars ------------------------------- */
-	// Generate by [Search space generator]
+	// These matrix are generate by [Search space generator]
 	Eigen::Matrix<float, ForceCount, 3> PositionPair;
 	Eigen::Matrix<float, ForceCount, 3> NormalPair;
 	Eigen::Matrix<int, ForceCount, 1> PointIndexPair;
-
-	/* ------------------------------ Runtime vars ------------------------------ */
-	bool bIsSucceedInfo = true; // PositionPair 是否含有一个可使用的抓取力。,标记没有找到力的点对。
-
-	// Score calculation var
-	float PositionScore = 0.0;
-	float ForceScore    = 0.0;
-	Eigen::Matrix<double, ForceCount, 3> ForcePair; // Force score calculation.
-	Eigen::Matrix<float, 4, 4> KnifePose;          // Force score calculation.
-	///// Eigen::Matrix<double, ForceCount, 3> KnifeMovingDirection;  // DEP
-
-	// Vis var
-	Eigen::Matrix<float, 3, 1> CuttingFaceCenter;
-	///// Eigen::Matrix<float, 3, 1> CuttingFaceNormal;
-	std::vector<Eigen::Matrix<float, ForceCount, 3>> ForcePairCandidateList;
-
+	
+	bool bIsIgnored = false;  // Flag this element is ignored from all of the further calculation.
 	std::string ToString()
 	{
 		std::stringstream StrStream;
@@ -73,7 +58,7 @@ struct TGraspingResult : public TSearchSpaceElement<ForceCount>, public Evaluati
 	float PositionScore = 0.0;
 	float FinalScore    = 0.0;
 
-	// Grasping force for each trajectory node.
+	// Grasping force list for each trajectory node.
 	std::vector<Eigen::Matrix<float, ForceCount, 3>> GraspingForcePairList;
 
 };
