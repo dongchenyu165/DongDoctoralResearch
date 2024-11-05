@@ -41,6 +41,10 @@ public:
 	TScoreCalculatorBase(const json& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
 		: StaticData(InStaticData)
 	{
+		// Load [ConfigData] from json object.
+		ConfigData = InConfigJsonObj.get<ConfigObjType>();
+		ScoreWeight = ConfigData.WeightVector;
+
 		// std::vector init;
 		DataScoreList.resize(InDataSize, { INTMAX_MIN, InputDataType() });
 
