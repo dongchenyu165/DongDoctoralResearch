@@ -164,6 +164,11 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 
+# Add subdirectories.
+add_subdirectory(1_PrepareData)
+add_subdirectory(2_FilterByGeo)
+add_subdirectory(SearchSpaceGenerator)
+
 # Test targets related.
 add_subdirectory(Utilities/EMST)
 option(TEST_EMST "Build and execute the test" OFF)
@@ -205,21 +210,18 @@ endif()
 option(TEST_1_PrepareData "Build and execute the [TEST_1_PrepareData]" OFF)
 if(TEST_1_PrepareData)
 	message("Build TEST_1_PrepareData")
-	add_subdirectory(1_PrepareData)
 	add_subdirectory(Tests/1_PrepareData)
 endif()
 
 option(TEST_2_FilterByGeo "Build and execute the [TEST_2_FilterByGeo]" ON)
 if(TEST_2_FilterByGeo)
 	message("Build TEST_2_FilterByGeo")
-	add_subdirectory(2_FilterByGeo)
 	add_subdirectory(Tests/2_FilterByGeo)
 endif()
 
 option(TEST_SearchSpaceTest "Build and execute the [TEST_SearchSpaceTest]" ON)
 if(TEST_SearchSpaceTest)
 	message("Build SearchSpaceTest")
-	add_subdirectory(SearchSpaceGenerator)
 	add_subdirectory(Tests/SearchSpaceTest)
 endif()
 
