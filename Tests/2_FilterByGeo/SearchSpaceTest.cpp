@@ -1,8 +1,6 @@
 #include "2_FilterByGeo/SearchSpaceGenerator.hpp"
 #include "GlobalTypes.hpp"
 #include "GlobalVars.hpp"
-#include "ScoreCalculator/ScoreCalculator2D.hpp"
-#include "nlohmann/detail/macro_scope.hpp"
 #include <Utilities/JSON_Helper/EigenSeiralizer.hpp>
 #include <Utilities/spdlog/LogConfig.hpp>
 #include <gtest/gtest.h>
@@ -10,7 +8,6 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-// #include "ScoreCalculator/ScoreCalculatorBase.hpp"
 
 bool TEST_GenerateInitSearchSpace(const SPDLog::LoggerType& InLogger, Types::CalcPCPTR InPC)
 {
@@ -123,7 +120,7 @@ TEST_F(SearchSpaceGeneratorTest, CalcCombination_HandlesEdgeCases)
 int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
-
+	
 	// Custom setup code can be added here if needed
 	auto Logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("FilterGeo", LogConfigJsonPath);
 
