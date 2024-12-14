@@ -28,54 +28,54 @@ protected:
 	void SetUp() override
 	{
 		// Initialize a mock point cloud with 5 points, where each point is of type CalcPoint.
-		mock_pc_ = PCL_Helper::PCPTR<CalcPoint>(new PCL_Helper::PC<CalcPoint>);
+		OperatingPC = PCL_Helper::PCPTR<CalcPoint>(new PCL_Helper::PC<CalcPoint>);
 		GenTestingPointCloud();
-		generator_ = std::make_unique<PCL_Helper::SearchSpaceGenerator>(mock_pc_);
+		Generator = std::make_unique<PCL_Helper::SearchSpaceGenerator>(OperatingPC);
 	}
 
 	void GenTestingPointCloud()
 	{
 		for ( size_t i = 0; i < 5; ++i )
 		{
-			CalcPoint point;
-			point.x        = static_cast<float>(i);
-			point.y        = static_cast<float>(i);
-			point.z        = static_cast<float>(i);
-			point.normal_x = -static_cast<float>(i);
-			point.normal_y = -static_cast<float>(i);
-			point.normal_z = -static_cast<float>(i);
-			mock_pc_->push_back(point);
+			CalcPoint _Point;
+			_Point.x        = static_cast<float>(i);
+			_Point.y        = static_cast<float>(i);
+			_Point.z        = static_cast<float>(i);
+			_Point.normal_x = -static_cast<float>(i);
+			_Point.normal_y = -static_cast<float>(i);
+			_Point.normal_z = -static_cast<float>(i);
+			OperatingPC->push_back(_Point);
 		}
 	}
 
-	NEW_CALC_PC_PTR(mock_pc_);
-	std::unique_ptr<PCL_Helper::SearchSpaceGenerator> generator_;
+	NEW_CALC_PC_PTR(OperatingPC);
+	std::unique_ptr<PCL_Helper::SearchSpaceGenerator> Generator;
 };
 
 TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ValidCombinationCount)
 {
-	std::vector<Types::CalcPointSetData> search_space;
-	size_t result_count = generator_->Generate(search_space);
+	std::vector<Types::CalcPointSetData> SearchSpace;
+	size_t ResultCount = Generator->Generate(SearchSpace);
 
-	EXPECT_EQ(result_count, 10);        // Combinations C(5, 2) == 10
-	EXPECT_EQ(search_space.size(), 10); // Verify allocated space
+	EXPECT_EQ(ResultCount, 10);        // Combinations C(5, 2) == 10
+	EXPECT_EQ(SearchSpace.size(), 10); // Verify allocated space
 }
 
 TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ContentVerification)
 {
-	std::vector<Types::CalcPointSetData> search_space;
-	generator_->Generate(search_space);
+	std::vector<Types::CalcPointSetData> SearchSpace;
+	Generator->Generate(SearchSpace);
 	// Eigen::Matrix<float, 2, 3> PositionPair;
 	// Eigen::Matrix<float, 1, 3> PositionPair2;
 	// CalcPoint point1;
 	// PositionPair2.row(0) == point1.getVector3fMap();
 
-	for ( const auto& set_data : search_space )
+	for ( const auto& set_data : SearchSpace )
 	{
 		for ( int i = 0; i < Types::CalcPointSetData::FINGER_COUNT; ++i )
 		{
 			int point_idx          = set_data.PointIndexPair(i);
-			const CalcPoint& point = (*mock_pc_)[point_idx];
+			const CalcPoint& point = (*OperatingPC)[point_idx];
 
 			EXPECT_EQ(set_data.PositionPair.row(i).transpose(), point.getVector3fMap());
 			EXPECT_EQ(set_data.NormalPair.row(i).transpose(), point.getNormalVector3fMap());
@@ -109,11 +109,11 @@ size_t CalcCombination(const size_t InElementCount, const size_t InSelectCount, 
 
 TEST_F(SearchSpaceGeneratorTest, CalcCombination_HandlesEdgeCases)
 {
-	SPDLog::LoggerType logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("FilterGeo", LogConfigJsonPath);
+	SPDLog::LoggerType Logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("FilterGeo", LogConfigJsonPath);
 
-	EXPECT_EQ(CalcCombination(5, 0, logger), 1);  // C(5, 0) == 1
-	EXPECT_EQ(CalcCombination(5, 5, logger), 1);  // C(5, 5) == 1
-	EXPECT_EQ(CalcCombination(5, 3, logger), 10); // C(5, 3) == 10
+	EXPECT_EQ(CalcCombination(5, 0, Logger), 1);  // C(5, 0) == 1
+	EXPECT_EQ(CalcCombination(5, 5, Logger), 1);  // C(5, 5) == 1
+	EXPECT_EQ(CalcCombination(5, 3, Logger), 10); // C(5, 3) == 10
 }
 
 
