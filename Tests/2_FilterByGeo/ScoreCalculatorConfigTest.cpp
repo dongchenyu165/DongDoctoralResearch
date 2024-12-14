@@ -3,47 +3,6 @@
 #include <gtest/gtest.h>
 #include "ScoreCalculator/ScoreCalculatorConfig.hpp"
 
-BEGIN_DEF_SCORE_CALCULATOR_CONFIG(Test2)
-MEMBER_DEF_WITH_DEFAULT(float, NewVar, 2.3847);
-MEMBER_DEF_WITH_DEFAULT(float, NewVar2, 2.3847);
-MEMBER_DEF_WITH_DEFAULT(float, NewVar3, 2.3847);
-
-SCORE_CALC_MEMBER_DEF(NewVar, NewVar2, NewVar3)
-END_DEF_SCORE_CALCULATOR_CONFIG()
-
-void TEST_JsonLoad()
-{
-	// Literal json string, like Python ["""]
-	std::string json_str      = R"(
-{
-	"Weight_PointDistance" : 1.5885,
-	"Weight_PointNormalAngle" : 4.4,
-	"Weight_SameAsKnifeDir" : 2,
-	"Weight_SameAsKnifeDir_OLD" : 4,
-	"Weight_GraspHeight": 6,
-	"NewVar" : 0.04,
-	"NewVar2" : 6,
-	"NewVar3" : 6
-}
-)";
-	using TestType            = TScoreCalculatorConfig_Test2<4>;
-	TestType::SelfJsonType j2 = TestType::SelfJsonType::parse(json_str);
-
-	TestType Obj = j2.get<TestType>();
-	std::cout << Obj.WeightVector.transpose() << '\n';
-	std::cout << Obj.NewVar << '\n';
-	std::cout << Obj.NewVar2 << '\n';
-	std::cout << Obj.NewVar3 << '\n';
-	TestType Obj2 = j2.get<TestType>();
-}
-
-// Define the derived configuration class outside of TEST_F
-BEGIN_DEF_SCORE_CALCULATOR_CONFIG(Test)
-MEMBER_DEF_WITH_DEFAULT(float, NewVar, 0.04);
-MEMBER_DEF_WITH_DEFAULT(float, NewVar2, 6.0);
-MEMBER_DEF_WITH_DEFAULT(float, NewVar3, 6.0);
-SCORE_CALC_MEMBER_DEF(NewVar, NewVar2, NewVar3);
-END_DEF_SCORE_CALCULATOR_CONFIG()
 
 // Unit test fixture class
 class ScoreCalculatorConfigTest : public ::testing::Test
@@ -109,6 +68,15 @@ TEST_F(ScoreCalculatorConfigTest, ExtraFieldsIgnored)
 }
 
 // Test default values and additional derived class fields
+
+// Define the derived configuration class outside of TEST_F
+BEGIN_DEF_SCORE_CALCULATOR_CONFIG(Test)
+MEMBER_DEF_WITH_DEFAULT(float, NewVar, 0.04);
+MEMBER_DEF_WITH_DEFAULT(float, NewVar2, 6.0);
+MEMBER_DEF_WITH_DEFAULT(float, NewVar3, 6.0);
+SCORE_CALC_MEMBER_DEF(NewVar, NewVar2, NewVar3);
+END_DEF_SCORE_CALCULATOR_CONFIG()
+
 TEST_F(ScoreCalculatorConfigTest, DerivedClassWithExtraFields)
 {
 	TScoreCalculatorConfig_Test<5> DerivedConfigObj;
@@ -143,7 +111,6 @@ int main(int argc, char** argv)
 	::testing::InitGoogleTest(&argc, argv);
 
 	// Custom setup code can be added here if needed
-	TEST_JsonLoad();
 
 	return RUN_ALL_TESTS();
 }
