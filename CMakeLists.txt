@@ -204,3 +204,9 @@ if(TEST_2_FilterByGeo)
 	add_subdirectory(Tests/2_FilterByGeo)
 endif()
 
+option(TEST_ScoreCalculator "Build and execute the [TEST_ScoreCalculator]" ON)
+if(TEST_ScoreCalculator)
+	message("Build TEST_ScoreCalculator")
+	add_subdirectory(Tests/ScoreCalculator)
+endif()
+

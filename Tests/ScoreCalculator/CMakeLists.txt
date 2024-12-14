@@ -1,0 +1,3 @@
+add_executable(DataSelectorTest DataSelectorTest.cpp)
+target_link_libraries(DataSelectorTest gtest)
+add_test(NAME DataSelectorTest COMMAND DataSelectorTest)
