@@ -1,3 +1,4 @@
+#include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
 #include <vector>
 #include <tuple>
 
@@ -12,15 +13,12 @@ using namespace Types;
 
 auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
-	NEW_CALC_PC_PTR(CuttingPlanePC);
-	NEW_CALC_PC_PTR(GraspingPartPC);
-
 	SearchSpace InitSearchSpace;
 
-	// Use [] to make cutting plane point cloud.
+	CuttingFaceMaker Maker("/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json", InTrajectoryNode);
+	CuttingFaceResult CuttingFaceResultObj = Maker.MakeCuttingFace(InPC);
 
-
-	return std::make_tuple(CuttingPlanePC, GraspingPartPC, InitSearchSpace);
+	return std::make_tuple(CuttingFaceResultObj, InitSearchSpace);
 }
 
 // template<typename Scalar>
@@ -59,10 +57,10 @@ int main()
 
 		const auto& KnifeTrajectoryNode = KnifeTrajectory[i];
 
-		auto [CuttingPlanePC, GraspingPartPC, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
+		auto [CuttingFaceResultObj, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
 		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj.GraspingPC, KnifeTrajectoryNode);
 
-		auto KnifeForce = CalKnifeForce(CuttingPlanePC, KnifeTrajectoryNode);
+		auto KnifeForce = CalKnifeForce({CuttingFaceResultObj.CuttingFacePC_P, CuttingFaceResultObj.CuttingFacePC_N}, KnifeTrajectoryNode);
 
 		for ( int j = 0; j < MainSearchSpace.size(); j++ )
 		{
