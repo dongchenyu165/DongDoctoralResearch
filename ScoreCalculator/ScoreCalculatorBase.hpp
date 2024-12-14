@@ -104,7 +104,10 @@ public:
 	 */
 	void AddCalculatingData(const InputDataType& InData)
 	{
-		DataScoreList.push_back({ CalcRawScore(InData), InData });
+		CalcRawScore(InData);
+
+		// Initial final score to 0.
+		DataScoreList.push_back({ 0, InData });
 		CurrentDataIdx++;
 	}
 
