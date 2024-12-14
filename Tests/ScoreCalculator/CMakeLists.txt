@@ -1,3 +1,7 @@
 add_executable(DataSelectorTest DataSelectorTest.cpp)
 target_link_libraries(DataSelectorTest gtest)
 add_test(NAME DataSelectorTest COMMAND DataSelectorTest)
+
+add_executable(ScoreCalculatorConfigTest ScoreCalculatorConfigTest.cpp)
+target_link_libraries(ScoreCalculatorConfigTest gtest nlohmann_json::nlohmann_json)
+add_test(NAME ScoreCalculatorTest COMMAND ScoreCalculatorConfigTest)
