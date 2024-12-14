@@ -10,4 +10,6 @@ BEGIN_DEF_SCORE_CALCULATOR_CONFIG(Geo)
 	SCORE_CALC_MEMBER_DEF(DistanceLimit, DistancePenality);
 END_DEF_SCORE_CALCULATOR_CONFIG()
 
+using GeoFilterScoreCalcConfig = TScoreCalculatorConfig_Geo<4>;
+
 #endif /* D2A9F1FA_514F_4844_B936_A79E8FFEBA46 */
