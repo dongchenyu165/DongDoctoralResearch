@@ -132,9 +132,10 @@ public:
 		}
 
 		// Apply the weight to each component for all datas.
-		auto ScoreVector = this->ScoreRawData * this->ScoreWeight;
+		/* (DataCount, 1) */ auto ScoreVector = this->ScoreRawData * this->ScoreWeight;
 		for ( int i = 0; i < this->DataScoreList.size(); i++ )
 		{
+			// Storage the final score to each element's first member var through the [DataScoreList].
 			this->DataScoreList[i].first = ScoreVector(i);
 		}
 
