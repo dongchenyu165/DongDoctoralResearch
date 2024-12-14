@@ -84,6 +84,7 @@ struct TScoreCalculatorConfig
 	using Self = TScoreCalculatorConfig_##SUB_NAME<ScoreComponentCount>;\
 	public:\
 	using SelfJsonType  = typename Super::JsonType;\
+  static constexpr int ScoreComponentCountVar = ScoreComponentCount;
 
 #define MEMBER_DEF(TYPE, VAR_NAME)\
 	TYPE VAR_NAME

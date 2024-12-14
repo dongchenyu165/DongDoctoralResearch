@@ -24,10 +24,14 @@
  Final Score = ScoreComp_1 * Weight_1 + ScoreComp_2 * Weight_2 + ... + ScoreComp_n * Weight_n  (n =
  [ScoreComponentCount])
  */
-template<typename InputDataType, typename ConfigObjType, int ScoreComponentCount>
+template<typename InputDataType, typename ConfigObjType>
 class TScoreCalculatorBase
 {
-	using Self = TScoreCalculatorBase<InputDataType, ConfigObjType, ScoreComponentCount>;
+public:
+	static constexpr int ScoreComponentCount = ConfigObjType::ScoreComponentCountVar;
+
+protected:
+	using Self = TScoreCalculatorBase<InputDataType, ConfigObjType>;
 
 	using DataScorePairType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
 	using DataScorePairListType = std::vector<DataScorePairType>;
