@@ -38,8 +38,8 @@ protected:
 
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
 	// 		[Pre-Allocated DataSize]: Dynamic size. Set by the construct function's [InDataSize] argument.
-	using ScoreMatType          = Eigen::Matrix<float, -1, ScoreComponentCount>;
-	using ScoreWeightVectorType = Eigen::Matrix<float, ScoreComponentCount, 1>;
+	using ScoreMatType          = Eigen::Matrix<Types::CalcScalar, -1, ScoreComponentCount>;
+	using ScoreWeightVectorType = Eigen::Matrix<Types::CalcScalar, ScoreComponentCount, 1>;
 
 public:
 	TScoreCalculatorBase(const json& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
