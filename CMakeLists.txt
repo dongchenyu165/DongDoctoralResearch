@@ -199,11 +199,11 @@ if(TEST_PYBIND11)
 endif()
 
 
-option(BUILD_MAIN "Build and execute the [BUILD_MAIN]" OFF)
+option(BUILD_MAIN "Build and execute the [BUILD_MAIN]" ON)
 if(BUILD_MAIN)
 	message("Build BUILD_MAIN")
-	add_executable(main main.cpp ${SPD_LOG_HELPER_SRC})
-	target_link_libraries(main ${PCL_LIBRARIES} nlohmann_json::nlohmann_json ${SPDLOG_LIBRARIES})
+	add_executable(main main.cpp ${SPD_LOG_HELPER_SRC} ${PREPARE_DATA_SRC} ${SEARCH_SPACE_GEN_SRC})
+	target_link_libraries(main ${PCL_LIBRARIES} nlohmann_json::nlohmann_json ${SPDLOG_LIBRARIES} ${PREPARE_DATA_LIB} ${ITERTOOLS_LIBRARIES})
 endif()
 
 
