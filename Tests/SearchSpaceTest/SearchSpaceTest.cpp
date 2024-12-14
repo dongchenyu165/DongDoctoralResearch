@@ -78,8 +78,8 @@ TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ContentVerification)
 			int point_idx          = set_data.PointIndexPair(i);
 			const CalcPoint& point = (*OperatingPC)[point_idx];
 
-			EXPECT_EQ(set_data.PositionPair.row(i).transpose(), point.getVector3fMap());
-			EXPECT_EQ(set_data.NormalPair.row(i).transpose(), point.getNormalVector3fMap());
+			EXPECT_EQ(set_data.PositionPair.row(i).transpose(), point.getVector3fMap().cast<Types::CalcScalar>());
+			EXPECT_EQ(set_data.NormalPair.row(i).transpose(), point.getNormalVector3fMap().cast<Types::CalcScalar>());
 		}
 	}
 }
