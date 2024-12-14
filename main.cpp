@@ -1,4 +1,5 @@
 #include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
+#include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
 #include <vector>
 #include <tuple>
 
@@ -14,6 +15,8 @@ using namespace Types;
 auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
 	SearchSpace InitSearchSpace;
+	PCL_Helper::SearchSpaceGenerator SearchSpaceGenObj(InPC);
+	size_t RealCombCount = SearchSpaceGenObj.Generate(InitSearchSpace);
 
 	CuttingFaceMaker Maker("/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json", InTrajectoryNode);
 	CuttingFaceResult CuttingFaceResultObj = Maker.MakeCuttingFace(InPC);
