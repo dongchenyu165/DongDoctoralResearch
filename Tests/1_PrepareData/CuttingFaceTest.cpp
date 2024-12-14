@@ -1,4 +1,5 @@
 #include "GlobalBaseTypes.hpp"
+#include "DataTypes/KnifeTrajectoryNode.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudInfo.hpp"
 #include "Utilities/PCL_Helper/Modules/EstimateNormal.hpp"
 #include "Utilities/PCL_Helper/Modules/ReconstructSurface.hpp"
