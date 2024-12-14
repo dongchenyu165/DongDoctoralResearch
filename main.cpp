@@ -67,7 +67,7 @@ int main()
 
 		for ( int j = 0; j < MainSearchSpace.size(); j++ )
 		{
-			HoldingPointSet& HoldingPointSet = MainSearchSpace[j];  // SearchSpacetType  $\mathbf{P}$
+			HoldingPointSet& HoldingPointSet = MainSearchSpace[j].PositionPair;  // SearchSpacetType  $\mathbf{P}$
 
 			float ForceScore = CalForceScore(KnifeForce, HoldingPointSet);
 			

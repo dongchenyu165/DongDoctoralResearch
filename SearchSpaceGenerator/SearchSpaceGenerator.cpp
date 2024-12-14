@@ -75,9 +75,9 @@ size_t SearchSpaceGenerator::Generate(std::vector<Types::CalcPointSetData>& OutS
 		for ( size_t PointIdx : PointIndexSetIt )
 		{
 			// Storage point position of each point in this point set.
-			OperatingData.PositionPair.row(DataIdx) = (*OperatingPC)[PointIdx].getVector3fMap();
+			OperatingData.PositionPair.row(DataIdx) = (*OperatingPC)[PointIdx].getVector3fMap().cast<Types::CalcScalar>();
 			// Storage point normal of each point in this point set.
-			OperatingData.NormalPair.row(DataIdx) = (*OperatingPC)[PointIdx].getNormalVector3fMap();
+			OperatingData.NormalPair.row(DataIdx) = (*OperatingPC)[PointIdx].getNormalVector3fMap().cast<Types::CalcScalar>();
 			// Storage index of each point in this point set.
 			OperatingData.PointIndexPair(DataIdx) = PointIdx;
 			DataIdx++;
