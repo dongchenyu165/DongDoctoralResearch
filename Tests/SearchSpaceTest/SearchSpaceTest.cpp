@@ -1,3 +1,4 @@
+#include "GlobalBaseTypes.hpp"
 #include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
 #include "GlobalTypes.hpp"
 #include "GlobalVars.hpp"
