@@ -32,11 +32,11 @@ protected:
 	{
 		// Initialize a mock point cloud with 5 points, where each point is of type CalcPoint.
 		mock_pc_ = PCL_Helper::PCPTR<CalcPoint>(new PCL_Helper::PC<CalcPoint>);
-		PopulateMockPointCloud();
+		GenTestingPointCloud();
 		generator_ = std::make_unique<PCL_Helper::SearchSpaceGenerator>(mock_pc_);
 	}
 
-	void PopulateMockPointCloud()
+	void GenTestingPointCloud()
 	{
 		for ( size_t i = 0; i < 5; ++i )
 		{
@@ -118,6 +118,7 @@ TEST_F(SearchSpaceGeneratorTest, CalcCombination_HandlesEdgeCases)
 	EXPECT_EQ(CalcCombination(5, 5, logger), 1);  // C(5, 5) == 1
 	EXPECT_EQ(CalcCombination(5, 3, logger), 10); // C(5, 3) == 10
 }
+
 
 int main(int argc, char** argv)
 {
