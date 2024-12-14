@@ -1,0 +1,2 @@
+add_executable(FunctionAutoLoggerTest FunctionAutoLoggerTest.cpp ${SPD_LOG_HELPER_SRC})
+target_link_libraries(FunctionAutoLoggerTest PRIVATE nlohmann_json::nlohmann_json ${SPDLOG_LIBRARIES} ${LIBDW_LIBRARIES})

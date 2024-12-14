@@ -142,6 +142,12 @@ if(OpenMP_FOUND)
 endif()
 
 
+# LIBDW: sudo apt install libdw-dev
+# Get the backtrack info.
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBDW REQUIRED libdw)
+include_directories(${LIBDW_INCLUDE_DIRS})
+set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${LIBDW_LIBRARIES})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
@@ -150,6 +156,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 # set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
+# Define the build type macro for program.
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(BUILD_DEBUG)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_definitions(BUILD_RELEASE)
+endif()
 
 
 # Test targets related.
@@ -208,5 +220,11 @@ option(TEST_ScoreCalculator "Build and execute the [TEST_ScoreCalculator]" ON)
 if(TEST_ScoreCalculator)
 	message("Build TEST_ScoreCalculator")
 	add_subdirectory(Tests/ScoreCalculator)
+endif()
+
+option(TEST_FunctionAutoLogger "Build and execute the [TEST_FunctionAutoLogger]" ON)
+if(TEST_ScoreCalculator)
+	message("Build TEST_FunctionAutoLogger")
+	add_subdirectory(Tests/spdlog_Test)
 endif()
 
