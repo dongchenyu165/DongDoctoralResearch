@@ -8,14 +8,14 @@
 #include <Utilities/spdlog/LogConfig.hpp>
 
 
-template<typename InputPointType>
-auto PrepareData(PCL_Helper::PCPTR<InputPointType> InPC, Types::TrajectoryNode InTrajectoryNode)
+using namespace Types;
+
+auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
 	NEW_CALC_PC_PTR(CuttingPlanePC);
 	NEW_CALC_PC_PTR(GraspingPartPC);
 
-	Types::SearchSpace InitSearchSpace;
-	// InitSearchSpace.assign(1919, Types::HoldingPointSet::Zero(FINGER_NUMBER, 3));
+	SearchSpace InitSearchSpace;
 
 	// Use [] to make cutting plane point cloud.
 
@@ -24,50 +24,49 @@ auto PrepareData(PCL_Helper::PCPTR<InputPointType> InPC, Types::TrajectoryNode I
 }
 
 // template<typename Scalar>
-Types::SearchSpace FilterByGeoScore(Types::SearchSpace InInitSearchSpace, PCL_Helper::PCPTR<PCL_Helper::PointXYZRGBN> InPC, Types::TrajectoryNode InTrajectoryNode)
+SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
-	return Types::SearchSpace();
+	return SearchSpace();
 }
 
 // template<typename Scalar>
-Types::ForceTorque CalKnifeForce(PCL_Helper::PCPTR<PCL_Helper::PointXYZRGBN> InCuttingPlanePC, Types::TrajectoryNode InTrajectoryNode)
+ForceTorque CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
 {
-	return Types::ForceTorque::Zero(6, 1);
+	return ForceTorque::Zero(6, 1);
 }
 
 // template<typename Scalar>
-float CalForceScore(Types::ForceTorque InKnifeForce, Types::HoldingPointSet InHoldingPointSet)
+float CalForceScore(ForceTorque InKnifeForce, HoldingPointSet InHoldingPointSet)
 {
 	return 0.0f;
 }
 
 // 
-template<typename PointType>
-PCL_Helper::PCPTR<PointType> LoadPC(const std::string& InFilePath)
+CalcPCPTR LoadPC(const std::string& InFilePath)
 {
-	return PCL_Helper::PCPTR<PointType>(new PCL_Helper::PC<PointType>);
+	return CalcPCPTR(new CalcPC);
 }
 
 int main()
 {
-	Types::HoldingPointSet a;
+	HoldingPointSet a;
 	// SPDLog::LoggerMaker::GetProgramExecStartTime();
 	auto OriginPC = LoadPC<PCL_Helper::PointXYZ>("");
 
-	Types::Trajectory KnifeTrajectory;
+	Trajectory KnifeTrajectory;
 	for ( int i = 0; i < KnifeTrajectory.size(); i++ )
 	{
 
 		const auto& KnifeTrajectoryNode = KnifeTrajectory[i];
 
 		auto [CuttingPlanePC, GraspingPartPC, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
-		Types::SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, GraspingPartPC, KnifeTrajectoryNode);
+		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj.GraspingPC, KnifeTrajectoryNode);
 
 		auto KnifeForce = CalKnifeForce(CuttingPlanePC, KnifeTrajectoryNode);
 
 		for ( int j = 0; j < MainSearchSpace.size(); j++ )
 		{
-			Types::HoldingPointSet& HoldingPointSet = MainSearchSpace[j];  // SearchSpacetType  $\mathbf{P}$
+			HoldingPointSet& HoldingPointSet = MainSearchSpace[j];  // SearchSpacetType  $\mathbf{P}$
 
 			float ForceScore = CalForceScore(KnifeForce, HoldingPointSet);
 			
