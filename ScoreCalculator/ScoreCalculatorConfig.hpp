@@ -71,6 +71,9 @@ struct TScoreCalculatorConfig
 	}
 
 	protected:
+  // Define the type of JSON object with ordered.
+  // For serialization and deserialization of the weight vector, 
+  //    the order of the elements is important.
 	using JsonType = nlohmann::ordered_json;
 };
 
