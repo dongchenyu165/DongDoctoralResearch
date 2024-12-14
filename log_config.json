@@ -1,4 +1,9 @@
 {
+	"FunctionAutoLoggerConfig":
+	{
+		"GlobalEnable": true,
+		"EnableAutoIndent": true
+	},
 	"Global" : {
 		"LoggerName": "Global",
 		"LogEnable": true,

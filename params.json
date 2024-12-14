@@ -30,16 +30,12 @@
 		}
 	},
 	"FilterByGeoScore":{
-		"1.DownSample":{
-			"Size": [0.0003, 0.0003, 0.0003]
-		},
-		
-		"Weight": {
+		"GeoScoreWeight": {
 			"Weight_PointDistance" : 1,
 			"Weight_PointNormalAngle" : 4.4,
 			"Weight_SameAsKnifeDir" : 2,
-			"Weight_SameAsKnifeDir_OLD" : 4,
 			"Weight_GraspHeight": 6,
+			"Weight_SameAsKnifeDir_OLD" : 4,
 			"DistanceLimit" : 0.04,
 			"DistancePenality" : 6
 		}
