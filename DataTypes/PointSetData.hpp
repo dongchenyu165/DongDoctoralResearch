@@ -1,6 +1,7 @@
 #ifndef E27503BF_E094_4CD3_85DA_CEAE08A17985
 #define E27503BF_E094_4CD3_85DA_CEAE08A17985
 
+#include <GlobalBaseTypes.hpp>
 #include "GlobalVars.hpp"
 #include <Eigen/Core>
 #include <Eigen/src/Core/IO.h>
@@ -15,8 +16,8 @@ struct TSearchSpaceElement
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	// These matrix are generate by [Search space generator]
-	Eigen::Matrix<float, ForceCount, 3> PositionPair;
-	Eigen::Matrix<float, ForceCount, 3> NormalPair;
+	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> PositionPair;
+	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> NormalPair;
 	Eigen::Matrix<int, ForceCount, 1> PointIndexPair;
 	
 	bool bIsIgnored = false;  // Flag this element is ignored from all of the further calculation.
