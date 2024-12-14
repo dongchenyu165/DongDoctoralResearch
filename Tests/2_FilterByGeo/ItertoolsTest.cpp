@@ -27,7 +27,7 @@ int main()
 	// }
 
 	/* --------------------------- OMP for assign test -------------------------- */
-	constexpr int TEST_LENGTH = 2e2;
+	constexpr int TEST_LENGTH = 2e3;  // if 2e3, the OMP version will be 5-times faster than the sequential version.
 	std::vector<int> IndexList;
 	IndexList.assign(TEST_LENGTH, -1);
 
