@@ -71,9 +71,8 @@ protected:
 	    ScoreRawData[CurrentDataIdx] = [ScoreComp_1, ScoreComp_2, ... , ScoreComp_n]
 	 *
 	 * @param InData The data for calculating score.
-	 * @return double Score.
 	 */
-	virtual double CalcRawScore(const InputDataType& InData) = 0;
+	virtual void CalcRawScore(const InputDataType& InData) = 0;
 
 	/**
 	 * @brief Sort the [DataScoreList] by their score in descending order.
