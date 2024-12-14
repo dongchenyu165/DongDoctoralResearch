@@ -4,6 +4,8 @@
 #include "Utilities/spdlog/LogConfig.hpp"
 #include <GlobalTypes.hpp>
 
+// TODO: Move to 1_PreProcess folder.
+
 namespace PCL_Helper
 {
 

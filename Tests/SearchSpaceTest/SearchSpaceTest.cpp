@@ -1,4 +1,4 @@
-#include "2_FilterByGeo/SearchSpaceGenerator.hpp"
+#include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
 #include "GlobalTypes.hpp"
 #include "GlobalVars.hpp"
 #include <Utilities/JSON_Helper/EigenSeiralizer.hpp>

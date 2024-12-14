@@ -1,0 +1,3 @@
+set(SEARCH_SPACE_GEN_SRC 
+	${CMAKE_CURRENT_SOURCE_DIR}/SearchSpaceGenerator.cpp 
+	PARENT_SCOPE)

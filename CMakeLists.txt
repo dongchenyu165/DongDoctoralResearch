@@ -216,6 +216,13 @@ if(TEST_2_FilterByGeo)
 	add_subdirectory(Tests/2_FilterByGeo)
 endif()
 
+option(TEST_SearchSpaceTest "Build and execute the [TEST_SearchSpaceTest]" ON)
+if(TEST_SearchSpaceTest)
+	message("Build SearchSpaceTest")
+	add_subdirectory(SearchSpaceGenerator)
+	add_subdirectory(Tests/SearchSpaceTest)
+endif()
+
 option(TEST_ScoreCalculator "Build and execute the [TEST_ScoreCalculator]" ON)
 if(TEST_ScoreCalculator)
 	message("Build TEST_ScoreCalculator")

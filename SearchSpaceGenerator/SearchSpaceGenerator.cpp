@@ -4,6 +4,7 @@
 #include "Utilities/spdlog/LogConfig.hpp"
 
 #include <cppitertools/combinations.hpp>
+#include <spdlog/common.h>
 
 
 namespace PCL_Helper
@@ -32,7 +33,11 @@ size_t CalcCombination(const size_t InElementCount, const size_t InSelectCount, 
 	{
 		Lower *= i;
 		Upper *= InElementCount - (i - 1);
-		SPDLog::Log_T(InLogger, 1, "LowerNew: [{}]; UpperNew: [{}] ==== Lower:[{}] / Upper:[{}]", i, InElementCount - (i - 1), Upper, Lower);
+		// SPDLog::
+		if (InLogger->should_log(spdlog::level::trace))
+		{
+			SPDLog::Log_T(InLogger, 1, "LowerNew: [{}]; UpperNew: [{}] ==== Lower:[{}] / Upper:[{}]", i, InElementCount - (i - 1), Upper, Lower);
+		}
 	}
 
 	return Upper / Lower;
