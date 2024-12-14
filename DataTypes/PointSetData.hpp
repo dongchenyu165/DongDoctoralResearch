@@ -37,9 +37,9 @@ struct TSearchSpaceElement
 
 struct EvaluationStaticData
 {
-	Eigen::Matrix<float, 4, 4> KnifePose;
-	Eigen::Matrix<double, 3, 1> CuttingFaceCenter;
-	Eigen::Matrix<double, 3, 1> CuttingFaceNormal;
+	Eigen::Matrix<Types::CalcScalar, 4, 4> KnifePose;
+	Types::Vec3 CuttingFaceCenter;
+	Types::Vec3 CuttingFaceNormal;
 };
 
 template<int ForceCount = 3>
