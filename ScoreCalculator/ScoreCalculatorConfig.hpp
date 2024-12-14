@@ -21,7 +21,7 @@
 		The [WeightVector] of [TScoreCalculatorConfig<2>] will be initialized as : [0.1, 0.2]
 
 	# For other elements in the JSON object, they will be ignored. 
-	  But you can define other members in the derived class to store them. For example, the json object:
+		But you can define other members in the derived class to store them. For example, the json object:
  {
 	"Weight_aaa": 0.1,
 	"Weight_bbb": 0.2,
@@ -70,10 +70,10 @@ struct TScoreCalculatorConfig
 		}
 	}
 
-	protected:
-  // Define the type of JSON object with ordered.
-  // For serialization and deserialization of the weight vector, 
-  //    the order of the elements is important.
+protected:
+	// Define the type of JSON object with ordered.
+	// For serialization and deserialization of the weight vector,
+	//    the order of the elements is important.
 	using JsonType = nlohmann::ordered_json;
 };
 
@@ -87,7 +87,7 @@ struct TScoreCalculatorConfig
 	using Self = TScoreCalculatorConfig_##SUB_NAME<ScoreComponentCount>;\
 	public:\
 	using SelfJsonType  = typename Super::JsonType;\
-  static constexpr int ScoreComponentCountVar = ScoreComponentCount;
+	static constexpr int ScoreComponentCountVar = ScoreComponentCount;
 
 #define MEMBER_DEF(TYPE, VAR_NAME)\
 	TYPE VAR_NAME
@@ -101,70 +101,70 @@ struct TScoreCalculatorConfig
 #define SCORE_CALC_EXPAND( x ) x
 #define SCORE_CALC_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42, _43, _44, _45, _46, _47, _48, _49, _50, _51, _52, _53, _54, _55, _56, _57, _58, _59, _60, _61, _62, _63, _64, NAME,...) NAME
 #define SCORE_CALC_PASTE(...) SCORE_CALC_EXPAND(SCORE_CALC_GET_MACRO(__VA_ARGS__, \
-        SCORE_CALC_PASTE64, \
-        SCORE_CALC_PASTE63, \
-        SCORE_CALC_PASTE62, \
-        SCORE_CALC_PASTE61, \
-        SCORE_CALC_PASTE60, \
-        SCORE_CALC_PASTE59, \
-        SCORE_CALC_PASTE58, \
-        SCORE_CALC_PASTE57, \
-        SCORE_CALC_PASTE56, \
-        SCORE_CALC_PASTE55, \
-        SCORE_CALC_PASTE54, \
-        SCORE_CALC_PASTE53, \
-        SCORE_CALC_PASTE52, \
-        SCORE_CALC_PASTE51, \
-        SCORE_CALC_PASTE50, \
-        SCORE_CALC_PASTE49, \
-        SCORE_CALC_PASTE48, \
-        SCORE_CALC_PASTE47, \
-        SCORE_CALC_PASTE46, \
-        SCORE_CALC_PASTE45, \
-        SCORE_CALC_PASTE44, \
-        SCORE_CALC_PASTE43, \
-        SCORE_CALC_PASTE42, \
-        SCORE_CALC_PASTE41, \
-        SCORE_CALC_PASTE40, \
-        SCORE_CALC_PASTE39, \
-        SCORE_CALC_PASTE38, \
-        SCORE_CALC_PASTE37, \
-        SCORE_CALC_PASTE36, \
-        SCORE_CALC_PASTE35, \
-        SCORE_CALC_PASTE34, \
-        SCORE_CALC_PASTE33, \
-        SCORE_CALC_PASTE32, \
-        SCORE_CALC_PASTE31, \
-        SCORE_CALC_PASTE30, \
-        SCORE_CALC_PASTE29, \
-        SCORE_CALC_PASTE28, \
-        SCORE_CALC_PASTE27, \
-        SCORE_CALC_PASTE26, \
-        SCORE_CALC_PASTE25, \
-        SCORE_CALC_PASTE24, \
-        SCORE_CALC_PASTE23, \
-        SCORE_CALC_PASTE22, \
-        SCORE_CALC_PASTE21, \
-        SCORE_CALC_PASTE20, \
-        SCORE_CALC_PASTE19, \
-        SCORE_CALC_PASTE18, \
-        SCORE_CALC_PASTE17, \
-        SCORE_CALC_PASTE16, \
-        SCORE_CALC_PASTE15, \
-        SCORE_CALC_PASTE14, \
-        SCORE_CALC_PASTE13, \
-        SCORE_CALC_PASTE12, \
-        SCORE_CALC_PASTE11, \
-        SCORE_CALC_PASTE10, \
-        SCORE_CALC_PASTE9, \
-        SCORE_CALC_PASTE8, \
-        SCORE_CALC_PASTE7, \
-        SCORE_CALC_PASTE6, \
-        SCORE_CALC_PASTE5, \
-        SCORE_CALC_PASTE4, \
-        SCORE_CALC_PASTE3, \
-        SCORE_CALC_PASTE2, \
-        SCORE_CALC_PASTE1)(__VA_ARGS__))
+				SCORE_CALC_PASTE64, \
+				SCORE_CALC_PASTE63, \
+				SCORE_CALC_PASTE62, \
+				SCORE_CALC_PASTE61, \
+				SCORE_CALC_PASTE60, \
+				SCORE_CALC_PASTE59, \
+				SCORE_CALC_PASTE58, \
+				SCORE_CALC_PASTE57, \
+				SCORE_CALC_PASTE56, \
+				SCORE_CALC_PASTE55, \
+				SCORE_CALC_PASTE54, \
+				SCORE_CALC_PASTE53, \
+				SCORE_CALC_PASTE52, \
+				SCORE_CALC_PASTE51, \
+				SCORE_CALC_PASTE50, \
+				SCORE_CALC_PASTE49, \
+				SCORE_CALC_PASTE48, \
+				SCORE_CALC_PASTE47, \
+				SCORE_CALC_PASTE46, \
+				SCORE_CALC_PASTE45, \
+				SCORE_CALC_PASTE44, \
+				SCORE_CALC_PASTE43, \
+				SCORE_CALC_PASTE42, \
+				SCORE_CALC_PASTE41, \
+				SCORE_CALC_PASTE40, \
+				SCORE_CALC_PASTE39, \
+				SCORE_CALC_PASTE38, \
+				SCORE_CALC_PASTE37, \
+				SCORE_CALC_PASTE36, \
+				SCORE_CALC_PASTE35, \
+				SCORE_CALC_PASTE34, \
+				SCORE_CALC_PASTE33, \
+				SCORE_CALC_PASTE32, \
+				SCORE_CALC_PASTE31, \
+				SCORE_CALC_PASTE30, \
+				SCORE_CALC_PASTE29, \
+				SCORE_CALC_PASTE28, \
+				SCORE_CALC_PASTE27, \
+				SCORE_CALC_PASTE26, \
+				SCORE_CALC_PASTE25, \
+				SCORE_CALC_PASTE24, \
+				SCORE_CALC_PASTE23, \
+				SCORE_CALC_PASTE22, \
+				SCORE_CALC_PASTE21, \
+				SCORE_CALC_PASTE20, \
+				SCORE_CALC_PASTE19, \
+				SCORE_CALC_PASTE18, \
+				SCORE_CALC_PASTE17, \
+				SCORE_CALC_PASTE16, \
+				SCORE_CALC_PASTE15, \
+				SCORE_CALC_PASTE14, \
+				SCORE_CALC_PASTE13, \
+				SCORE_CALC_PASTE12, \
+				SCORE_CALC_PASTE11, \
+				SCORE_CALC_PASTE10, \
+				SCORE_CALC_PASTE9, \
+				SCORE_CALC_PASTE8, \
+				SCORE_CALC_PASTE7, \
+				SCORE_CALC_PASTE6, \
+				SCORE_CALC_PASTE5, \
+				SCORE_CALC_PASTE4, \
+				SCORE_CALC_PASTE3, \
+				SCORE_CALC_PASTE2, \
+				SCORE_CALC_PASTE1)(__VA_ARGS__))
 #define SCORE_CALC_PASTE2(func, v1) func(v1)
 #define SCORE_CALC_PASTE3(func, v1, v2) SCORE_CALC_PASTE2(func, v1) SCORE_CALC_PASTE2(func, v2)
 #define SCORE_CALC_PASTE4(func, v1, v2, v3) SCORE_CALC_PASTE2(func, v1) SCORE_CALC_PASTE3(func, v2, v3)
@@ -235,8 +235,8 @@ struct TScoreCalculatorConfig
 #define SCORE_CALC_FROM_WITH_DEFAULT(v1) InOutStruct.v1 = InJsonObj.value(#v1, nlohmann_json_default_obj.v1);
 
 #define SCORE_CALC_MEMBER_DEF(...)  \
-    friend void to_json(SelfJsonType& InJsonObj, const Self& InStruct) { SCORE_CALC_EXPAND(SCORE_CALC_PASTE(SCORE_CALC_TO, __VA_ARGS__)) } \
-    friend void from_json(const SelfJsonType& InJsonObj, Self& InOutStruct) { from_json(InJsonObj, (Super&)InOutStruct); SCORE_CALC_EXPAND(SCORE_CALC_PASTE(SCORE_CALC_FROM, __VA_ARGS__)) }
+		friend void to_json(SelfJsonType& InJsonObj, const Self& InStruct) { SCORE_CALC_EXPAND(SCORE_CALC_PASTE(SCORE_CALC_TO, __VA_ARGS__)) } \
+		friend void from_json(const SelfJsonType& InJsonObj, Self& InOutStruct) { from_json(InJsonObj, (Super&)InOutStruct); SCORE_CALC_EXPAND(SCORE_CALC_PASTE(SCORE_CALC_FROM, __VA_ARGS__)) }
 
 
 
