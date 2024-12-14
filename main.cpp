@@ -25,8 +25,9 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 }
 
 // template<typename Scalar>
-SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
+SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CalcPCPTR InGraspingPC, TrajectoryNode InTrajectoryNode)
 {
+
 	return SearchSpace();
 }
 
