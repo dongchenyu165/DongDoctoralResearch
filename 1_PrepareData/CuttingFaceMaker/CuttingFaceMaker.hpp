@@ -2,6 +2,7 @@
 #define DDD056D7_A1AC_460A_A418_2018CD6E2D17
 
 // #include "Utilities/spdlog/LogConfig.hpp"
+#include "DataTypes/PointSetData.hpp"
 #include <string>
 
 #include <nlohmann/json.hpp>
@@ -22,6 +23,8 @@ struct CuttingFaceResult
 	Types::CalcPCPTR CuttingFacePC_N;
 	Types::CalcPCPTR KnifeBladePC;
 	Types::CalcPCPTR GraspingPC;
+
+	EvaluationStaticData StaticData;
 };
 
 class CuttingFaceMaker
