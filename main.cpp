@@ -6,6 +6,7 @@
 #include "Utilities/JSON_Helper/StructSerializer.hpp"
 #include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudConverter.hpp"
+#include "Utilities/PCL_Helper/Basic/PointCloudInfo.hpp"
 #include <pcl/io/pcd_io.h>
 #include <vector>
 #include <tuple>
@@ -77,12 +78,37 @@ CalcPCPTR LoadPC(const std::string& InFilePath)
 	return FinalCalcPC;
 }
 
+Trajectory MakeTrajectory(CalcPCPTR InPC)
+{
+	PCL_Helper::TPointCloudInfo<Types::CalcPoint> PC_InfoObj(InPC);
+	Mat4x4 TestPose = Mat4x4::Identity();
+	TestPose.block<3, 1>(0, 0) = Vec3(-1, 0, 0);
+	TestPose.block<3, 1>(0, 1) = Vec3(0, 0, 1);
+	TestPose.block<3, 1>(0, 2) = Vec3(0, 1, 0);
+
+	auto AABBCenter = PC_InfoObj.GetAABBCenter().cast<Types::CalcScalar>();
+	Vec3 P1 = AABBCenter + Vec3(-0.05, 0, 0.02);
+	Vec3 P2 = AABBCenter + Vec3(0.05, 0, -0.02);
+
+	Trajectory TestTrajectory;
+	Mat4x4 Pose1 = TestPose;
+	Pose1.block<3, 1>(0, 3) = P1;
+	TestTrajectory.push_back({Pose1, Vec3(0, 0, 0)});
+	Mat4x4 Pose2 = TestPose;
+	Pose2.block<3, 1>(0, 3) = P2;
+	TestTrajectory.push_back({Pose2, Vec3(0, 0, 0)});
+	
+	return TestTrajectory;
+}
+
 int main()
 {
 	auto OriginPC = LoadPC("./points.pcd");
 
 	std::ifstream f(gTempCalculationParamJsonPath);
 	gParamJson = json::parse(f, nullptr, true, true);
+
+	Trajectory KnifeTrajectory = MakeTrajectory(OriginPC);
 
 	for ( int i = 0; i < KnifeTrajectory.size(); i++ )
 	{
