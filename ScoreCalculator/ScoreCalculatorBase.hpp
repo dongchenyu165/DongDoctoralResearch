@@ -7,6 +7,7 @@
 #include <Eigen/Core>
 
 #include "DataTypes/PointSetData.hpp"
+#include "DataSelector.hpp"
 #include <Utilities/JSON_Helper/StructSerializer.hpp>
 
 /**
@@ -35,11 +36,15 @@ protected:
 
 	using DataScorePairType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
 	using DataScorePairListType = std::vector<DataScorePairType>;
+	using ReturnDataListType    = std::vector<InputDataType>;
 
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
 	// 		[Pre-Allocated DataSize]: Dynamic size. Set by the construct function's [InDataSize] argument.
 	using ScoreMatType          = Eigen::Matrix<Types::CalcScalar, -1, ScoreComponentCount>;
 	using ScoreWeightVectorType = Eigen::Matrix<Types::CalcScalar, ScoreComponentCount, 1>;
+
+public:
+	using ReturnDataSelectorType = TDataSelector<ReturnDataListType, ConfigObjType>;
 
 public:
 	TScoreCalculatorBase(const ConfigObjType& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
@@ -93,7 +98,6 @@ protected:
 		return InA.first > InB.first;
 	}
 
-public:
 	/**
 	 * @brief Mainly used function.
 	 * 			Calculate score of the input [InputDataType] data,
@@ -138,14 +142,52 @@ public:
 			this->DataScoreList[i].first = ScoreVector(i);
 		}
 
-		// Finally sort the datas by the final score.
+		// Sort the datas by the final score.
 		this->SortByScore();
+
+		// Finally fill the [ReturnDataList] with the sorted datas.
+		ReturnDataList.reserve(this->DataScoreList.size());
+		for ( const auto& DataScorePair : this->DataScoreList )
+		{
+			ReturnDataList.push_back(DataScorePair.second);
+		}
+	}
+
+public:
+	void CalculateScore(const std::vector<InputDataType>& InDataList)
+	{
+		for ( const auto& Data : InDataList )
+		{
+			CalcRawScore(Data);
+
+			// Initial final score to 0.
+			DataScoreList.push_back({ 0, Data });
+			CurrentDataIdx++;
+		}
+
+		// Calculate the final score.
+		CalcFinalScore();
+	}
+
+	/**
+	 * @brief Get the final data list by the selecting method name and the size of data.
+	 after sorting by score.
+	 *
+	 * @param InMethodName The input method name used to filter the data.
+	 * @param InDataCount The input data count used to limit the number of returned data.
+	 * @return ReturnDataListType A list containing the selected data.
+	 */
+	virtual ReturnDataListType GetFinalDataList(typename ReturnDataSelectorType::EMethod InGettingMethodName, int InGettingDataSize) const
+	{
+		ReturnDataSelectorType DataSelector(ReturnDataList, ConfigData);
+		return DataSelector.GetSelectedDataByMethodName(InGettingMethodName, InGettingDataSize);
 	}
 
 	size_t Size() { return DataScoreList.size(); }
 
 protected:
 	DataScorePairListType DataScoreList;
+	ReturnDataListType ReturnDataList;  // The final data list after sorting by score.
 	ConfigObjType ConfigData;
 	EvaluationStaticData StaticData;
 
