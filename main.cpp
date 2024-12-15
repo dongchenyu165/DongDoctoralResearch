@@ -32,7 +32,9 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 // template<typename Scalar>
 SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
 {
-
+	GeoFilterScoreCalcConfig Param;
+	JSON_Helper::LoadStructure_ByPath(gTempCalculationParamJsonPath, {"FilterByGeoScore", "GeoScoreWeight"}, Param);
+	GeometryFilterScoreCalculator Filter(Param, InInitSearchSpace.size(), InCuttingFaceResults.StaticData);
 	return SearchSpace();
 }
 
