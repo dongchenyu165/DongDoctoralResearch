@@ -10,3 +10,20 @@ CMakeFiles/Eigen/CMakeLists.txt
 1_PrepareData/CuttingFaceMaker/CrossSectionMaker/CrossSectionMaker.cpp
 1_PrepareData/CuttingFaceMaker/CrossSectionMaker/CrossSectionMaker.hpp
 *.pcd
+Logs
+
+# Temporary ignore files
+HelperScripts
+ScoreCalculator/ScoreCalculator2D.hpp
+ScoreCalculator/_CMakeLists.txt
+
+# Itertools test is not test the itertools library.
+Tests/2_FilterByGeo/ItertoolsTest.cpp
+
+2_FilterByGeo/GeometryFilter.hpp
+2_FilterByGeo/GeometryFilter.cpp
+
+README.md
+params.json
+main.cpp
+log_config.json
