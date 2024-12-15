@@ -14,6 +14,8 @@
 
 
 using namespace Types;
+std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
+
 
 auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
@@ -21,7 +23,7 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 	PCL_Helper::SearchSpaceGenerator SearchSpaceGenObj(InPC);
 	size_t RealCombCount = SearchSpaceGenObj.Generate(InitSearchSpace);
 
-	CuttingFaceMaker Maker("/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json", InTrajectoryNode);
+	CuttingFaceMaker Maker(gTempCalculationParamJsonPath, InTrajectoryNode);
 	CuttingFaceResult CuttingFaceResultObj = Maker.MakeCuttingFace(InPC);
 
 	return std::make_tuple(CuttingFaceResultObj, InitSearchSpace);
