@@ -3,6 +3,7 @@
 #include "DataTypes/PointSetData.hpp"
 #include "GlobalBaseTypes.hpp"
 #include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
+#include "Utilities/JSON_Helper/StructSerializer.hpp"
 #include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudConverter.hpp"
 #include <pcl/io/pcd_io.h>
@@ -18,7 +19,7 @@
 
 using namespace Types;
 std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
-
+json gParamJson;
 
 auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
@@ -80,7 +81,9 @@ int main()
 {
 	auto OriginPC = LoadPC("./points.pcd");
 
-	Trajectory KnifeTrajectory;
+	std::ifstream f(gTempCalculationParamJsonPath);
+	gParamJson = json::parse(f, nullptr, true, true);
+
 	for ( int i = 0; i < KnifeTrajectory.size(); i++ )
 	{
 
