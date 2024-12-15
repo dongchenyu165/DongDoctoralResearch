@@ -1,4 +1,7 @@
 #include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
+#include "2_FilterByGeo/GeometryFilterScoreCalculator.hpp"
+#include "DataTypes/PointSetData.hpp"
+#include "GlobalBaseTypes.hpp"
 #include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
 #include <vector>
 #include <tuple>
@@ -25,7 +28,7 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 }
 
 // template<typename Scalar>
-SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CalcPCPTR InGraspingPC, TrajectoryNode InTrajectoryNode)
+SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
 {
 
 	return SearchSpace();
@@ -62,7 +65,8 @@ int main()
 		const auto& KnifeTrajectoryNode = KnifeTrajectory[i];
 
 		auto [CuttingFaceResultObj, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
-		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj.GraspingPC, KnifeTrajectoryNode);
+
+		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj, KnifeTrajectoryNode);
 
 		auto KnifeForce = CalKnifeForce({CuttingFaceResultObj.CuttingFacePC_P, CuttingFaceResultObj.CuttingFacePC_N}, KnifeTrajectoryNode);
 
