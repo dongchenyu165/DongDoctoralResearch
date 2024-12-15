@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include <nlohmann/json.hpp>
+#include <GlobalBaseTypes.hpp>
 
 
 /**
@@ -46,7 +47,7 @@ template<int ScoreComponentCount>
 struct TScoreCalculatorConfig
 {
 	// Define an Eigen matrix to store the weight vector of the score calculator
-	Eigen::Matrix<float, ScoreComponentCount, 1> WeightVector;
+	Eigen::Matrix<Types::CalcScalar, ScoreComponentCount, 1> WeightVector;
 
 	// Define a friend function to read the score calculator configuration from a JSON object
 	friend void from_json(const nlohmann::ordered_json& InJsonObj, TScoreCalculatorConfig<ScoreComponentCount>& InData)
