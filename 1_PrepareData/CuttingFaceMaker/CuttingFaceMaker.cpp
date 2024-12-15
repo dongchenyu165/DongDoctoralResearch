@@ -312,6 +312,19 @@ CuttingFaceResult CuttingFaceMaker::MakeCuttingFace(Types::CalcPCPTR InPC)
 		Result.KnifeBladePC);
 	/* -------------------------------------------------------------------------- */
 
+	Result.StaticData.KnifePose = InKnifeBasePose;
+	EvaluationStaticData::CuttingFaceInfoType CuttingFaceInfo;
+	CuttingFaceInfo.Normal = PositiveCutPlanePose.block<3, 1>(0, 2);  // Use [Positive] pose's X-axis as normal.
+	CuttingFaceInfo.Center = Result.CuttingFacePC_P->getMatrixXfMap().cast<Types::CalcScalar>().colwise().mean();
+	CuttingFaceInfo.PlanePose = PositiveCutPlanePose;
+	Result.StaticData.CuttingFaceInfoList.push_back(CuttingFaceInfo);
+
+	CuttingFaceInfo = EvaluationStaticData::CuttingFaceInfoType();
+	CuttingFaceInfo.Normal = NegativeCutPlanePose.block<3, 1>(0, 2);  // Use [Negative] pose's X-axis as normal.
+	CuttingFaceInfo.Center = Result.CuttingFacePC_N->getMatrixXfMap().cast<Types::CalcScalar>().colwise().mean();
+	CuttingFaceInfo.PlanePose = NegativeCutPlanePose;
+	Result.StaticData.CuttingFaceInfoList.push_back(CuttingFaceInfo);
+
 	LOG_FUNC_EXIT(Logger, debug, 0);
 	return Result;
 }

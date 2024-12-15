@@ -38,8 +38,17 @@ struct TSearchSpaceElement
 struct EvaluationStaticData
 {
 	Eigen::Matrix<Types::CalcScalar, 4, 4> KnifePose;
-	Types::Vec3 CuttingFaceCenter;
-	Types::Vec3 CuttingFaceNormal;
+	struct CuttingFaceInfoType
+	{
+		// The point center of the cutting face.
+		Types::Vec3 Center;
+		// The normal vector of the cutting face.
+		Types::Vec3 Normal;
+		// The pose of the cutting face. Calculated by rotating the knife pose to the cutting face normal.
+		// Y-axis to cutting face normal, X-axis to the blade
+		Types::Mat4x4 PlanePose;
+	} ;
+	std::vector<CuttingFaceInfoType> CuttingFaceInfoList;
 };
 
 template<int ForceCount = 3>
