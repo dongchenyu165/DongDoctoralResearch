@@ -68,7 +68,7 @@ protected:
 	* @param InDataCount The input data count used to limit the number of selected data.
 	* @param OutDataList A reference to the output data list where the selected data will be stored.
 	*/
-	virtual void DoSelectingByMethodName(const EMethod InMethodName, const int InDataCount, DataListType& OutDataList)
+	virtual void DoSelectingByMethodName(const EMethod InMethodName, const int InDataCount, DataListType& OutDataList) const
 	{
 		switch ( InMethodName )
 		{
@@ -94,7 +94,7 @@ protected:
 
 	}
 
-	std::set<int> GenerateRandomIntList(const int InRangeLow, const int InRangeUpper, const int InDataCount)
+	std::set<int> GenerateRandomIntList(const int InRangeLow, const int InRangeUpper, const int InDataCount) const
 	{
 		assert(InDataCount <= InRangeUpper - InRangeLow + 1);
 		std::random_device r;
