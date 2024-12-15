@@ -42,11 +42,11 @@ protected:
 	using ScoreWeightVectorType = Eigen::Matrix<Types::CalcScalar, ScoreComponentCount, 1>;
 
 public:
-	TScoreCalculatorBase(const json& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
+	TScoreCalculatorBase(const ConfigObjType& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
 		: StaticData(InStaticData)
 	{
 		// Load [ConfigData] from json object.
-		ConfigData = InConfigJsonObj.get<ConfigObjType>();
+		ConfigData = InConfigJsonObj;
 		ScoreWeight = ConfigData.WeightVector;
 
 		// std::vector init;
