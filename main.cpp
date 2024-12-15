@@ -34,10 +34,22 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 
 SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
 {
+	using EGettingMethod = GeometryFilterScoreCalculator::ReturnDataSelectorType::EMethod;
 	GeoFilterScoreCalcConfig Param;
 	JSON_Helper::LoadStructure_ByPath(gTempCalculationParamJsonPath, {"FilterByGeoScore", "GeoScoreWeight"}, Param);
 	GeometryFilterScoreCalculator Filter(Param, InInitSearchSpace.size(), InCuttingFaceResults.StaticData);
-	return SearchSpace();
+
+	// Algorithm2 5-9 rows. 
+	// Loop all of the InitSearchSpace
+	// 	Calculate the score of each score of point-set data.
+	//  Sort the data by the score.
+	Filter.CalculateScore(InInitSearchSpace);
+
+	// Algorithm2 10 row.
+	// Get the front [GeoFilterRatio] ratio of the data. In paper is [rN]
+	float GeoFilterRatio = gParamJson["FilterByGeoScore"]["Filter"]["Ratio"];
+	// The method [Good] means the top [GeoFilterRatio] ratio of the data.
+	return Filter.GetFinalDataList(EGettingMethod::Good, Filter.Size() * GeoFilterRatio);
 }
 
 ForceTorque CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
