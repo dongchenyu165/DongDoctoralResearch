@@ -3,6 +3,9 @@
 #include "DataTypes/PointSetData.hpp"
 #include "GlobalBaseTypes.hpp"
 #include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
+#include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
+#include "Utilities/PCL_Helper/Basic/PointCloudConverter.hpp"
+#include <pcl/io/pcd_io.h>
 #include <vector>
 #include <tuple>
 
@@ -53,14 +56,22 @@ float CalForceScore(ForceTorque InKnifeForce, HoldingPointSet InHoldingPointSet)
 // 
 CalcPCPTR LoadPC(const std::string& InFilePath)
 {
-	return CalcPCPTR(new CalcPC);
+	NEW_PC_PTR(LoadedPC, PCL_Helper::PointXYZ);
+	if (pcl::io::loadPCDFile<PCL_Helper::PointXYZ>(InFilePath, *LoadedPC) == -1) 
+	{
+		PCL_ERROR("Couldn't read file %s \n", InFilePath.c_str());
+		return nullptr;
+	}
+	
+	CalcPCPTR FinalCalcPC = PCL_Helper::ConvertPointCloud<CalcPoint>(LoadedPC);
+	return FinalCalcPC;
 }
 
 int main()
 {
 	HoldingPointSet a;
 	// SPDLog::LoggerMaker::GetProgramExecStartTime();
-	auto OriginPC = LoadPC<PCL_Helper::PointXYZ>("");
+	auto OriginPC = LoadPC("./points.pcd");
 
 	Trajectory KnifeTrajectory;
 	for ( int i = 0; i < KnifeTrajectory.size(); i++ )
