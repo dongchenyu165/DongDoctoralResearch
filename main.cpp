@@ -32,7 +32,6 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 	return std::make_tuple(CuttingFaceResultObj, InitSearchSpace);
 }
 
-// template<typename Scalar>
 SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
 {
 	GeoFilterScoreCalcConfig Param;
@@ -41,13 +40,11 @@ SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& I
 	return SearchSpace();
 }
 
-// template<typename Scalar>
 ForceTorque CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
 {
 	return ForceTorque::Zero(6, 1);
 }
 
-// template<typename Scalar>
 float CalForceScore(ForceTorque InKnifeForce, HoldingPointSet InHoldingPointSet)
 {
 	return 0.0f;
@@ -69,8 +66,6 @@ CalcPCPTR LoadPC(const std::string& InFilePath)
 
 int main()
 {
-	HoldingPointSet a;
-	// SPDLog::LoggerMaker::GetProgramExecStartTime();
 	auto OriginPC = LoadPC("./points.pcd");
 
 	Trajectory KnifeTrajectory;
