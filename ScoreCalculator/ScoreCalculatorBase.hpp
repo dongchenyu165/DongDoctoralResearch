@@ -8,6 +8,9 @@
 
 #include "DataTypes/PointSetData.hpp"
 #include "DataSelector.hpp"
+#include "Utilities/spdlog/LogConfig.hpp"
+#include "spdlog/common.h"
+#include "Utilities/spdlog/FunctionAutoLogger.hpp"
 #include <Utilities/JSON_Helper/StructSerializer.hpp>
 
 /**
@@ -47,19 +50,20 @@ public:
 	using ReturnDataSelectorType = TDataSelector<ReturnDataListType, ConfigObjType>;
 
 public:
-	TScoreCalculatorBase(const ConfigObjType& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
-		: StaticData(InStaticData)
+	TScoreCalculatorBase(const ConfigObjType& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData, SPDLog::LoggerType InLogger = nullptr)
+		: StaticData(InStaticData), Logger(InLogger)
 	{
+		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
 		// Load [ConfigData] from json object.
 		ConfigData = InConfigJsonObj;
 		ScoreWeight = ConfigData.WeightVector;
 
-		// std::vector init;
-		DataScoreList.resize(InDataSize, { INTMAX_MIN, InputDataType() });
-
-		// Eigen matrix init.
-		ScoreRawData.resize(InDataSize, ScoreComponentCount);
-		ScoreRawData.setConstant(-INFINITY); // Init to min of the float.
+		if (InLogger && InLogger->should_log(spdlog::level::info))
+		{
+			LOG_INDENT(Logger, info, "Initial score calculator.");
+			LOG_INDENT(Logger, info, "Score Weight Vector: [{}]", ScoreWeight);
+		}
+		FUNC_LOGGER_RET;
 	}
 
 protected:
@@ -139,23 +143,76 @@ protected:
 public:
 	void CalculateScore(const std::vector<InputDataType>& InDataList)
 	{
-		// std::vector init;
-		DataScoreList.resize(InDataList.size(), { INTMAX_MIN, InputDataType() });
+		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
+		if ( Logger )
+		{
+			LOG_INDENT(Logger, info, "Start to calculate score with input data size [{}].", InDataList.size());
+			if ( Logger->should_log(spdlog::level::debug) )
+			{
+				LOG_INDENT(Logger, debug, "Start to resize [DataScoreList] and [ScoreRawData]");
+			}
+		}
 
-		this->ScoreRawData.resize(this->DataScoreList.size(), ScoreComponentCount);
+		DataScoreList.resize(InDataList.size(), { -INFINITY, InputDataType() });
+		ScoreRawData.resize(DataScoreList.size(), ScoreComponentCount);
 		ScoreRawData.setConstant(-INFINITY); // Init to min of the float.
+
+		if ( Logger )
+		{
+			LOG_INDENT(Logger, info, "Start to calculate the raw score.");
+			if ( Logger->should_log(spdlog::level::debug) )
+			{
+				LOG_INDENT(Logger, debug, "Start to resize [DataScoreList] and [ScoreRawData]");
+				std::ostringstream oss;
+				oss << ScoreRawData.block(0, 0, 10, ScoreComponentCount);
+				LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements (SHOULD ALL [-INFINITY]): \n{}", oss.str());
+			}
+		}
 
 		for ( int i = 0; i < InDataList.size(); i++ )
 		{
 			CalcRawScore(InDataList[i], i);
 
 			// Initial final score to 0.
-			DataScoreList[i].first = 0;
+			// DataScoreList[i].first = 0;
 			DataScoreList[i].second = InDataList[i];
 		}
 
-		// Calculate the final score.
+		if ( Logger )
+		{
+			if ( Logger->should_log(spdlog::level::debug) )
+			{
+				std::ostringstream oss1;
+				oss1 << ScoreRawData.block(0, 0, 10, ScoreComponentCount);
+				LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", oss1.str());
+
+				std::ostringstream oss2;
+				oss2 << "[DataScoreList] front 10 elements' score (SHOULD ALL [-INFINITY]): ";
+				for ( int i = 0; i < 10; i++ )
+				{
+					oss2 << DataScoreList[i].first << " ";
+				}
+				LOG_INDENT(Logger, debug, oss2.str());
+			}
+			LOG_INDENT(Logger, info, "Start to calculate the final (normalize, weighted and sorted) score.");
+		}
+		// Calculate the final (normalize, weighted and sorted) score.
 		CalcFinalScore();
+
+		if (Logger && Logger->should_log(spdlog::level::debug))
+		{
+			// Print ScoreRawData front 10 elements.
+			LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
+			// Print DataScoreList front 10 elements' [first] object.
+			std::ostringstream oss;
+			oss << "[DataScoreList] front 10 elements' score (SHOULD SORTED DECENT ORDER) : ";
+			for (int i = 0; i < 10; i++)
+			{
+				oss << DataScoreList[i].first << " ";
+			}
+			LOG_INDENT(Logger, debug, oss.str());
+		}
+		FUNC_LOGGER_RET;
 	}
 
 	/**
@@ -188,7 +245,9 @@ protected:
 
 	// Storage how many datas added to this calculator.
 	/// Changed in [AddCalculatingData] function/
-	size_t CurrentDataIdx = 0;
+	// size_t CurrentDataIdx = 0;
+
+	SPDLog::LoggerType Logger;
 };
 
 #endif /* BA74CF56_6B15_4A96_9B54_92D61F2CCA22 */

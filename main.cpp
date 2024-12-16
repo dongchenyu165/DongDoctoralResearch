@@ -39,7 +39,7 @@ SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& I
 	using EGettingMethod = GeometryFilterScoreCalculator::ReturnDataSelectorType::EMethod;
 	GeoFilterScoreCalcConfig Param;
 	JSON_Helper::LoadStructure_ByPath(gTempCalculationParamJsonPath, {"FilterByGeoScore", "GeoScoreWeight"}, Param);
-	GeometryFilterScoreCalculator Filter(Param, InInitSearchSpace.size(), InCuttingFaceResults.StaticData);
+	GeometryFilterScoreCalculator Filter(Param, InInitSearchSpace.size(), InCuttingFaceResults.StaticData, gLogger);
 
 	// Algorithm2 5-9 rows. 
 	// Loop all of the InitSearchSpace

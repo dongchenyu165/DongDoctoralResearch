@@ -13,8 +13,8 @@ class GeometryFilterScoreCalculator : public TScoreCalculatorBase<Types::CalcPoi
 	using Self  = GeometryFilterScoreCalculator;
 
 public:
-	GeometryFilterScoreCalculator(const GeoFilterScoreCalcConfig& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData)
-		: Super(InConfigJsonObj, InDataSize, InStaticData)
+	GeometryFilterScoreCalculator(const GeoFilterScoreCalcConfig& InConfigJsonObj, const size_t InDataSize, EvaluationStaticData& InStaticData, SPDLog::LoggerType InLogger = nullptr)
+		: Super(InConfigJsonObj, InDataSize, InStaticData, InLogger)
 	{
 	}
 
