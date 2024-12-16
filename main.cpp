@@ -21,12 +21,12 @@
 using namespace Types;
 std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
 json gParamJson;
+SPDLog::LoggerType gLogger;
+
 
 auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
-	SearchSpace InitSearchSpace;
-	PCL_Helper::SearchSpaceGenerator SearchSpaceGenObj(InPC);
-	size_t RealCombCount = SearchSpaceGenObj.Generate(InitSearchSpace);
+	gLogger->info("PrepareData");
 
 	CuttingFaceMaker Maker(gTempCalculationParamJsonPath, InTrajectoryNode);
 	CuttingFaceResult CuttingFaceResultObj = Maker.MakeCuttingFace(InPC);
@@ -67,14 +67,18 @@ float CalForceScore(ForceTorque InKnifeForce, HoldingPointSet InHoldingPointSet)
 // 
 CalcPCPTR LoadPC(const std::string& InFilePath)
 {
+	gLogger->info("Load Point Cloud");
 	NEW_PC_PTR(LoadedPC, PCL_Helper::PointXYZ);
 	if (pcl::io::loadPCDFile<PCL_Helper::PointXYZ>(InFilePath, *LoadedPC) == -1) 
 	{
-		PCL_ERROR("Couldn't read file %s \n", InFilePath.c_str());
+		gLogger->error("Couldn't read file %s \n", InFilePath.c_str());
 		return nullptr;
 	}
 	
-	CalcPCPTR FinalCalcPC = PCL_Helper::ConvertPointCloud<CalcPoint>(LoadedPC);
+	gLogger->info("Load Point Cloud with %d points", LoadedPC->size());
+	CalcPCPTR FinalCalcPC = PCL_Helper::ConvertPointCloud<CalcPoint>(LoadedPC);  // , PCL_Helper::EConvertRGBField::Const, PCL_Helper::EConvertNormalField::Estimate
+	gLogger->info("Convert to calculating point cloud.");
+
 	return FinalCalcPC;
 }
 
@@ -103,6 +107,8 @@ Trajectory MakeTrajectory(CalcPCPTR InPC)
 
 int main()
 {
+	gLogger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("Global", LogConfigJsonPath);
+
 	auto OriginPC = LoadPC("./points.pcd");
 
 	std::ifstream f(gTempCalculationParamJsonPath);
@@ -118,6 +124,9 @@ int main()
 		auto [CuttingFaceResultObj, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
 
 		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj, KnifeTrajectoryNode);
+
+		gLogger->info("FINISHED, MainSearchSpace size: {}", MainSearchSpace.size());
+		continue;
 
 		auto KnifeForce = CalKnifeForce({CuttingFaceResultObj.CuttingFacePC_P, CuttingFaceResultObj.CuttingFacePC_N}, KnifeTrajectoryNode);
 
