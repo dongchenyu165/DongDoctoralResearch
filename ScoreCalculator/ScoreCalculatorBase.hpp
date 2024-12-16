@@ -100,22 +100,6 @@ protected:
 
 	/**
 	 * @brief Mainly used function.
-	 * 			Calculate score of the input [InputDataType] data,
-	 * 			and add it to list for further score-based-sorting.
-	 *
-	 * @param InData [InputDataType] usually be [] type, for score calculating.
-	 */
-	void AddCalculatingData(const InputDataType& InData)
-	{
-		CalcRawScore(InData);
-
-		// Initial final score to 0.
-		DataScoreList.push_back({ 0, InData });
-		CurrentDataIdx++;
-	}
-
-	/**
-	 * @brief Mainly used function.
 	            Normalize each score component at their own.
 	            Also apply the weight of each component.
 	            Should called after all calculating datas was added.
@@ -123,7 +107,6 @@ protected:
 	virtual void CalcFinalScore()
 	{
 		// Resize the score matrix to the fit the real size of datas.
-		this->ScoreRawData.resize(this->CurrentDataIdx, ScoreComponentCount);
 
 		// Normalize each score component.
 		for ( int i = 0; i < ScoreComponentCount; i++ )
@@ -156,13 +139,19 @@ protected:
 public:
 	void CalculateScore(const std::vector<InputDataType>& InDataList)
 	{
-		for ( const auto& Data : InDataList )
+		// std::vector init;
+		DataScoreList.resize(InDataList.size(), { INTMAX_MIN, InputDataType() });
+
+		this->ScoreRawData.resize(this->DataScoreList.size(), ScoreComponentCount);
+		ScoreRawData.setConstant(-INFINITY); // Init to min of the float.
+
+		for ( int i = 0; i < InDataList.size(); i++ )
 		{
-			CalcRawScore(Data);
+			CalcRawScore(InDataList[i], i);
 
 			// Initial final score to 0.
-			DataScoreList.push_back({ 0, Data });
-			CurrentDataIdx++;
+			DataScoreList[i].first = 0;
+			DataScoreList[i].second = InDataList[i];
 		}
 
 		// Calculate the final score.
