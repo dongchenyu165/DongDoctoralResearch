@@ -27,6 +27,10 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 	CuttingFaceMaker Maker(gTempCalculationParamJsonPath, InTrajectoryNode);
 	CuttingFaceResult CuttingFaceResultObj = Maker.MakeCuttingFace(InPC);
 
+	SearchSpace InitSearchSpace;
+	PCL_Helper::SearchSpaceGenerator SearchSpaceGenObj(CuttingFaceResultObj.GraspingPC);
+	size_t RealCombCount = SearchSpaceGenObj.Generate(InitSearchSpace);
+
 	return std::make_tuple(CuttingFaceResultObj, InitSearchSpace);
 }
 
