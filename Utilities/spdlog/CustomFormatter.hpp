@@ -3,128 +3,147 @@
 
 #include "Utilities/PCL_Helper/Basic/FieldChecker.hpp"
 #include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
-#include "spdlog/pattern_formatter.h"
 #include "spdlog/fmt/fmt.h"
+#include <Eigen/src/Core/Matrix.h>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 
-// namespace SPDLog
-// {
-
-// class PCL_PointFormatter : public spdlog::custom_flag_formatter
-// {
-// public:
-// 	void format(
-// 		const spdlog::details::log_msg& InMsg,
-// 		const std::tm& InTime,
-// 		spdlog::memory_buf_t& InDestBuff
-// 	) override
-// 	{
-// 		std::string some_txt = "custom-flag";
-// 		InDestBuff.append(some_txt.data(), some_txt.data() + some_txt.size());
-
-// 		std::cout << (InMsg.payload.data()) << std::endl;
-// 	}
-
-// 	std::unique_ptr<custom_flag_formatter> clone() const override
-// 	{
-// 		return spdlog::details::make_unique<PCL_PointFormatter>();
-// 	}
-// };
-
-// } // namespace SPDLog
-
-// template<typename OStream, typename Scalar, int Rows, int Cols>
-// OStream& operator<<(OStream& os, const Eigen::Matrix<Scalar, Rows, Cols>& InMat)
-// {
-// 	static std::stringstream ss;
-// 	if constexpr ( Cols == 1 )
-// 	{
-// 		ss << "transposed: " << InMat.transpose();
-// 	}
-// 	else
-// 	{
-// 		ss << InMat;
-// 	}
-// 	fmt::format_to(std::ostream_iterator<char>(os), "{}", ss.str());
-// 	return os;
-// }
 
 namespace fmt
 {
-// inline namespace v10
-// {
 
-template<typename Scalar, int Rows, int Cols>
-struct formatter<Eigen::Matrix<Scalar, Rows, Cols>> : formatter<string_view>
+
+// Helper type trait to detect Eigen expressions
+template<typename T, typename = void>
+struct is_eigen_expression : std::false_type
 {
-	using MatType = Eigen::Matrix<Scalar, Rows, Cols>;
+};
 
-	auto format(const MatType& InMat, format_context& ctx) const -> format_context::iterator
+template<typename T>
+struct is_eigen_expression<T,
+	std::void_t<decltype(std::declval<T>().rows()),
+		decltype(std::declval<T>().cols()),
+		decltype(std::declval<T>().eval())>> : std::true_type
+{
+};
+
+template<typename T>
+inline constexpr bool is_eigen_expression_v = is_eigen_expression<T>::value;
+
+// Generic formatter for any Eigen expression
+template<typename T>
+struct formatter<T, char, std::enable_if_t<is_eigen_expression_v<T>>>
+{
+	char Presentation = 'f';
+	int Precision     = 6;
+	int Width         = 0;
+	bool ForcePlus    = false;
+	bool ZeroPad      = false;
+
+	constexpr auto parse(format_parse_context& InCtx)
 	{
-		// static std::string str;
+		auto It = InCtx.begin();
+
+		// Parse sign
+		if ( It != InCtx.end() && *It == '+' )
+		{
+			ForcePlus = true;
+			++It;
+		}
+
+		// Parse width and zero padding
+		if ( It != InCtx.end() )
+		{
+			if ( *It == '0' )
+			{
+				ZeroPad = true;
+				++It;
+			}
+
+			Width = 0;
+			while ( It != InCtx.end() && std::isdigit(*It) )
+			{
+				Width = Width * 10 + (*It - '0');
+				++It;
+			}
+		}
+
+		// Parse precision
+		if ( It != InCtx.end() && *It == '.' )
+		{
+			++It;
+			Precision = 0;
+			while ( It != InCtx.end() && std::isdigit(*It) )
+			{
+				Precision = Precision * 10 + (*It - '0');
+				++It;
+			}
+		}
+
+		// Parse presentation type
+		if ( It != InCtx.end() && (*It == 'f' || *It == 'e' || *It == 'g') )
+		{
+			Presentation = *It++;
+		}
+
+		if ( It != InCtx.end() && *It != '}' )
+		{
+			throw format_error("invalid format");
+		}
+
+		return It;
+	}
+
+	template<typename FormatContext>
+	auto format(const T& InExpr, FormatContext& InOutCtx)
+	{
+		auto Evaluated = InExpr.eval();
+		auto OutIter   = InOutCtx.out();
+
 		std::stringstream ss;
-		if constexpr ( Cols == 1 )
+		// Set format flags
+		ss.precision(Precision);
+		if ( ForcePlus )
 		{
-			// str += fmt::format("Transposed: {}", InMat.transpose());
-			ss << "transposed: " << InMat.transpose();
+			ss << std::showpos;
 		}
-		else
+		if ( ZeroPad )
 		{
-			// str += fmt::format("{}", InMat);
-			ss << InMat;
+			// ss << std::setfill('0');
 		}
-		// formatter<string_view>::format(str, ctx);
-		formatter<string_view>::format(ss.str(), ctx);
-		return ctx.out();
+		if ( Width > 0 )
+		{
+			ss << std::setw(Width);
+		}
+
+		switch ( Presentation )
+		{
+		case 'f':
+			ss << std::fixed;
+			break;
+		case 'e':
+			ss << std::scientific;
+			break;
+		case 'g':
+			ss << std::defaultfloat;
+			break;
+		}
+
+		// Configure Eigen format
+		Eigen::IOFormat fmt(Precision, 0, ", ", ";\n", "[", "]");
+		ss << Evaluated.format(fmt);
+
+		return format_to(OutIter, "{}", ss.str());
 	}
 };
 
-// template<int Rows, int Cols>
-// struct formatter<Eigen::Map<Eigen::Matrix<double, Rows, Cols>>> : formatter<Eigen::Matrix<double, Rows, Cols>>
-// {};
-
-// template<int Rows, int Cols>
-// struct formatter<Eigen::Map<Eigen::Matrix<float, Rows, Cols>>> : formatter<Eigen::Matrix<float, Rows, Cols>>
-// {};
-
-// template<int Rows, int Cols>
-// struct formatter<Eigen::Map<Eigen::Matrix<int, Rows, Cols>>> : formatter<Eigen::Matrix<int, Rows, Cols>>
-// {};
-
-template<typename Scalar, int Rows, int Cols>
-struct formatter<Eigen::Map<Eigen::Matrix<Scalar, Rows, Cols>>> : formatter<Eigen::Matrix<Scalar, Rows, Cols>>
-{
-	// using MatType = Eigen::Map<Eigen::Matrix<Scalar, Rows, Cols>>;
-
-	// auto format(const MatType& InMat, format_context& ctx) const -> format_context::iterator
-	// {
-	// 	static std::string str;
-	// 	// std::stringstream ss;
-	// 	if constexpr ( Cols == 1 )
-	// 	{
-	// 		// ss << "transposed: " << InMat.transpose();
-	// 		str += fmt::format("Transposed: {}", InMat.transpose());
-	// 	}
-	// 	else
-	// 	{
-	// 		// ss << InMat;
-	// 		str += fmt::format("{}", InMat);
-	// 	}
-	// 	formatter<string_view>::format(str, ctx);
-	// 	return ctx.out();
-	// }
-};
-
-// template<typename PointType>
 template<>
 struct formatter<PCL_Helper::PointXYZRGBN> : formatter<string_view>
 
 {
 	using PointType = PCL_Helper::PointXYZRGBN;
 
-	// struct fmt::formatter<PCL_Helper::PointXYZ> {
-	// struct fmt::formatter {
 	// Parses format specifiers and stores them in the formatter.
 	//
 	// [ctx.begin(), ctx.end()) is a, possibly empty, character range that
