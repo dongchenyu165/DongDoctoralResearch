@@ -18,7 +18,7 @@ public:
 	{
 	}
 
-	virtual void CalcRawScore(const Types::CalcPointSetData& InData) override
+	virtual void CalcRawScore(const Types::CalcPointSetData& InData, int InCurrentDataIdx) override
 	{
 		Types::ConstVec3& P1 = InData.PositionPair.row (0);
 		Types::ConstVec3& P2 = InData.PositionPair.row (1);
@@ -48,7 +48,7 @@ public:
 		Types::Vec3 Dir		   = (P2 - P1).normalized ();
 		Types::CalcScalar SameAsKnifeDirAngleScore = abs (StaticData.KnifePose.block<3, 1> (0, 0).dot (Dir));
 
-		ScoreRawData.row (CurrentDataIdx) << RawDistanceScore, RawNormalAngleScore, SameAsKnifeDirAngleScore, std::min (P1.z (), P2.z ());
+		ScoreRawData.row (InCurrentDataIdx) << RawDistanceScore, RawNormalAngleScore, SameAsKnifeDirAngleScore, std::min (P1.z (), P2.z ());
 	}
 };
 

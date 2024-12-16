@@ -77,7 +77,7 @@ protected:
 	 *
 	 * @param InData The data for calculating score.
 	 */
-	virtual void CalcRawScore(const InputDataType& InData) = 0;
+	virtual void CalcRawScore(const InputDataType& InData, int InCurrentDataIdx) = 0;
 
 	/**
 	 * @brief Sort the [DataScoreList] by their score in descending order.
