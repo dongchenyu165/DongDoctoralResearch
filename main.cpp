@@ -54,12 +54,12 @@ SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& I
 	return Filter.GetFinalDataList(EGettingMethod::Good, Filter.Size() * GeoFilterRatio);
 }
 
-ForceTorque CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
+ForceTorqueType CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
 {
-	return ForceTorque::Zero(6, 1);
+	return ForceTorqueType::Zero(6, 1);
 }
 
-float CalForceScore(ForceTorque InKnifeForce, HoldingPointSet InHoldingPointSet)
+float CalForceScore(ForceTorqueType InKnifeForce, HoldingPointSet InHoldingPointSet)
 {
 	return 0.0f;
 }

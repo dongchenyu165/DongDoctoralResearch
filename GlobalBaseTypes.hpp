@@ -10,7 +10,7 @@ namespace Types
 {
 
 using CalcScalar = double;
-using ForceTorque = Eigen::Matrix<CalcScalar, 6, 1>;
+using ForceTorqueType = Eigen::Matrix<CalcScalar, 6, 1>;
 
 using Vec3        = Eigen::Matrix<CalcScalar, 3, 1>;
 using ConstVec3   = const Eigen::Matrix<CalcScalar, 3, 1>;
