@@ -44,6 +44,51 @@
 		}
 	},
 	"CalKnifeForce":{
+		"CuttingFaceTriangulation": {
+			"normal_estimation": {
+				"k_search": 20,
+				"description1": "法线估计时使用的邻近点数",
+				"effect1": "数值越大，法线估计越平滑但计算时间更长",
+				"recommended_range1": "10-50"
+			},
+			"triangulation": {
+				"search_radius": 0.025,
+				"description1": "三角化时连接点的最大距离",
+				"effect1": "较大的值会连接更远的点，可能造成不准确的连接",
+				"recommended_range1": "0.01-0.05",
+		
+				"mu": 2.5,
+				"description2": "最大边长与最小边长的比率",
+				"effect2": "控制三角形的形状均匀性",
+				"recommended_range2": "2.0-3.0",
+		
+				"max_nearest_neighbors": 100,
+				"description3": "搜索邻近点的最大数量",
+				"effect3": "影响重建精度和计算时间",
+				"recommended_range3": "50-200",
+		
+				"normal_consistency": false,
+				"description4": "是否检查法线一致性",
+				"effect4": "true可以避免错误的三角形连接，但可能导致孔洞",
+				"recommended_range4": "true/false"
+			},
+			"angle_constraints": {
+				"max_surface_angle": 45.0,
+				"description1": "相邻三角形表面法线的最大夹角(度)",
+				"effect1": "控制表面平滑度，较小的值会产生更平滑的表面",
+				"recommended_range1": "30-60",
+		
+				"min_angle": 10.0,
+				"description2": "三角形内角的最小值(度)",
+				"effect2": "防止生成过于狭长的三角形",
+				"recommended_range2": "5-15",
+		
+				"max_angle": 120.0,
+				"description3": "三角形内角的最大值(度)",
+				"effect3": "限制三角形的形状，防止出现非常钝的角",
+				"recommended_range3": "110-130"
+			}
+		},
 		"FoodParams":{
 			"Potato":{
 				"Friction_Mu": 0.6,
