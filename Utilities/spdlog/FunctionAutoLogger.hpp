@@ -32,11 +32,10 @@
  * 		    	- InitializeDwfl()
  * 		    	- GetFileAndLine()
  * # Usage:
- *    1. Add [INIT_MAIN_STACK_DEPTH] to the begining of main() function.
- *    2. Add [FUNC_LOGGER_ENTER] macro to the begining of the function you want to log.
+ *    1. Add [FUNC_LOGGER_ENTER] macro to the begining of the function you want to log.
  *       Note: [FUNC_LOGGER_ENTER_CUSTOM_LOGGER(SPD_LOGGER_OBJ)] can be used to use a custom logger.
  *    			Both of the macroes will create a [FunctionAutoLogger] local object with the name [__AUTO_GEN__Logger]
- *    3. Replace the return statement by [FUNC_LOGGER_RET] macro. For examplr: 
+ *    2. Replace the return statement by [FUNC_LOGGER_RET] macro. For examplr: 
  *				FUNC_LOGGER_RET; 
  *					or 
  *				FUNC_LOGGER_RET [YOUR_RETURN_VAL]; 
@@ -375,12 +374,10 @@ public:
 };
 
 #ifdef BUILD_RELEASE
-	#define INIT_MAIN_STACK_DEPTH
 	#define FUNC_LOGGER_ENTER
 	#define FUNC_LOGGER_ENTER_CUSTOM_LOGGER(LOGGER)
 	#define FUNC_LOGGER_RET return
 #elif defined(BUILD_DEBUG)
-	#define INIT_MAIN_STACK_DEPTH FunctionAutoLogger::Init();
 	#define FUNC_LOGGER_ENTER     FunctionAutoLogger __AUTO_GEN__Logger(__func__, __FILE__, __LINE__)
 	#define FUNC_LOGGER_ENTER_CUSTOM_LOGGER(LOGGER) \
 		FunctionAutoLogger __AUTO_GEN__Logger(LOGGER, __func__, __FILE__, __LINE__)
@@ -389,7 +386,6 @@ public:
 		return
 	#define LOG_INDENT(LOGGER, LEVEL, ...) LOGGER->LEVEL(__AUTO_GEN__Logger.GetIndentString() + __VA_ARGS__)
 #else
-	#define INIT_MAIN_STACK_DEPTH
 	#define FUNC_LOGGER_ENTER
 	#define FUNC_LOGGER_ENTER_CUSTOM_LOGGER(LOGGER)
 	#define FUNC_LOGGER_RET return
