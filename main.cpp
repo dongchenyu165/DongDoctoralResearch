@@ -10,13 +10,9 @@
 #include <pcl/io/pcd_io.h>
 #include <vector>
 #include <tuple>
-
-// #include <Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp>
-
 #include <DataTypes/KnifeTrajectoryNode.hpp>
 #include <GlobalTypes.hpp>
 #include <Utilities/spdlog/LogConfig.hpp>
-
 
 using namespace Types;
 std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
