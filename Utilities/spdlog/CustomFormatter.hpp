@@ -132,7 +132,14 @@ struct formatter<T, char, std::enable_if_t<is_eigen_expression_v<T>>>
 
 		// Configure Eigen format
 		Eigen::IOFormat fmt(Precision, 0, ", ", ";\n", "[", "]");
-		ss << Evaluated.format(fmt);
+		if (Evaluated.cols() == 1)
+		{
+			ss << "col-vector Transposed: " << Evaluated.transpose().format(fmt);
+		}
+		else
+		{
+			ss << Evaluated.format(fmt);
+		}
 
 		return format_to(OutIter, "{}", ss.str());
 	}
