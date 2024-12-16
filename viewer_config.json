@@ -18,7 +18,7 @@
 			"FillResult": {
 				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.cpp:311",
 				"Description": "",
-				"Enable": true,
+				"Enable": false,
 				"Level": "DEBUG",
 				"ViewerClassStr": "",
 				"WindowTitle": "DEBUG ==== [CuttingFace] Fill Result"

@@ -38,6 +38,9 @@
 			"Weight_SameAsKnifeDir_OLD" : 4,
 			"DistanceLimit" : 0.04,
 			"DistancePenality" : 6
+		},
+		"Filter":{
+			"Ratio": 0.5
 		}
 	},
 	"CalKnifeForce":{
