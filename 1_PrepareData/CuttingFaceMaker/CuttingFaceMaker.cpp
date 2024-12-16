@@ -325,6 +325,14 @@ CuttingFaceResult CuttingFaceMaker::MakeCuttingFace(Types::CalcPCPTR InPC)
 	CuttingFaceInfo.PlanePose = NegativeCutPlanePose;
 	Result.StaticData.CuttingFaceInfoList.push_back(CuttingFaceInfo);
 
+	// Fill the cutting face's normal field.
+	Result.CuttingFacePC_P->getMatrixXfMap().row(3).setConstant(Result.StaticData.CuttingFaceInfoList[0].Normal.x());
+	Result.CuttingFacePC_P->getMatrixXfMap().row(4).setConstant(Result.StaticData.CuttingFaceInfoList[0].Normal.y());
+	Result.CuttingFacePC_P->getMatrixXfMap().row(5).setConstant(Result.StaticData.CuttingFaceInfoList[0].Normal.z());
+	Result.CuttingFacePC_N->getMatrixXfMap().row(3).setConstant(Result.StaticData.CuttingFaceInfoList[1].Normal.x());
+	Result.CuttingFacePC_N->getMatrixXfMap().row(4).setConstant(Result.StaticData.CuttingFaceInfoList[1].Normal.y());
+	Result.CuttingFacePC_N->getMatrixXfMap().row(5).setConstant(Result.StaticData.CuttingFaceInfoList[1].Normal.z());
+
 	LOG_FUNC_EXIT(Logger, debug, 0);
 	return Result;
 }
