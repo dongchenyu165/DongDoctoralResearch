@@ -90,9 +90,10 @@ Trajectory MakeTrajectory(CalcPCPTR InPC)
 	TestPose.block<3, 1>(0, 1) = Vec3(0, 0, 1);
 	TestPose.block<3, 1>(0, 2) = Vec3(0, 1, 0);
 
-	auto AABBCenter = PC_InfoObj.GetAABBCenter().cast<Types::CalcScalar>();
-	Vec3 P1 = AABBCenter + Vec3(-0.05, 0, 0.02);
-	Vec3 P2 = AABBCenter + Vec3(0.05, 0, -0.02);
+	Vec3 AABBCenter = PC_InfoObj.GetAABBCenter().cast<Types::CalcScalar>();
+	Vec3 P1 = AABBCenter + Vec3(-0.05, 0, 0.01);
+	Vec3 P2 = AABBCenter + Vec3(0.05, 0, -0.01);
+	SPDLog::Log_T(gLogger, 2, "AABBCenter: [{}] P1: [{}], P2: [{}]", AABBCenter, P1, P2);
 
 	Trajectory TestTrajectory;
 	Mat4x4 Pose1 = TestPose;
