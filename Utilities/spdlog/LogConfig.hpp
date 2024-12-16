@@ -12,6 +12,20 @@ namespace SPDLog
 {
 using LoggerType = std::shared_ptr<spdlog::logger>;
 
+inline const std::vector<std::string> __INDENT_STR_LIST__ = {
+	"",
+	"\t",
+	"\t\t",
+	"\t\t\t",
+	"\t\t\t\t",
+	"\t\t\t\t\t",
+	"\t\t\t\t\t\t",
+	"\t\t\t\t\t\t\t",
+	"\t\t\t\t\t\t\t\t",
+	"\t\t\t\t\t\t\t\t\t",
+	"\t\t\t\t\t\t\t\t\t\t",
+};
+
 class LoggerManager
 {
 public:
@@ -82,23 +96,37 @@ public:
 		LogPattern_File);
 };
 
+class LogSection
+{
+	LoggerType Logger;
+	spdlog::level::level_enum Level;
+	int Indent;
+	std::string Msg;
+
+public:
+	LogSection(LoggerType InLogger, spdlog::level::level_enum InLogLevel, std::string InAdditionalMsg)
+		: Logger(InLogger), Level(InLogLevel), Msg(InAdditionalMsg)
+	{
+
+		if ( Logger )
+		{
+			Logger->log(Level, ">>> Start: {}", Msg);
+		}
+	}
+
+	~LogSection()
+	{
+		if ( Logger )
+		{
+			Logger->log(Level, "<<< End: {}", Msg);
+		}
+	}
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                 Macro Area                                 */
 /* -------------------------------------------------------------------------- */
 
-inline const std::vector<std::string> __INDENT_STR_LIST__ = {
-	"",
-	"\t",
-	"\t\t",
-	"\t\t\t",
-	"\t\t\t\t",
-	"\t\t\t\t\t",
-	"\t\t\t\t\t\t",
-	"\t\t\t\t\t\t\t",
-	"\t\t\t\t\t\t\t\t",
-	"\t\t\t\t\t\t\t\t\t",
-	"\t\t\t\t\t\t\t\t\t\t",
-};
 
 template<typename... Args>
 void Log_I(LoggerType& InLogger, const int& InIndentSize, const std::string& InMsg, Args&&... InArgs)
