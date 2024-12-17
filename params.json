@@ -91,15 +91,16 @@
 		},
 		"FoodParams":{
 			"Potato":{
+				"FrictionPressForce": 20.0,
 				"Friction_Mu": 0.6,
 				"FractureToughness": 200
 			},
 			"Onion":{
+				"FrictionPressForce": 20.0,
 				"Friction_Mu": 0.6,
 				"FractureToughness": 600
 			}
-		},
-		"PushingForce": 20.0
+		}
 	},
 	"CalForceScore":{
 		"Param":{
