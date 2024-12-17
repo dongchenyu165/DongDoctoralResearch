@@ -91,17 +91,19 @@ Trajectory MakeTrajectory(CalcPCPTR InPC)
 	TestPose.block<3, 1>(0, 2) = Vec3(0, 1, 0);
 
 	Vec3 AABBCenter = PC_InfoObj.GetAABBCenter().cast<Types::CalcScalar>();
-	Vec3 P1 = AABBCenter + Vec3(-0.05, 0, 0.01);
-	Vec3 P2 = AABBCenter + Vec3(0.05, 0, -0.01);
+	Vec3 P1 = AABBCenter + Vec3(0.05, 0, 0.007);
+	Vec3 P2 = AABBCenter + Vec3(-0.05, 0,  0.001);
+	Vec3 P3 = AABBCenter + Vec3(0.05, 0, -0.008);
 	SPDLog::Log_T(gLogger, 2, "AABBCenter: [{}] P1: [{}], P2: [{}]", AABBCenter, P1, P2);
 
 	Trajectory TestTrajectory;
-	Mat4x4 Pose1 = TestPose;
-	Pose1.block<3, 1>(0, 3) = P1;
-	TestTrajectory.push_back({Pose1, Vec3(0, 0, 0)});
-	Mat4x4 Pose2 = TestPose;
-	Pose2.block<3, 1>(0, 3) = P2;
-	TestTrajectory.push_back({Pose2, Vec3(0, 0, 0)});
+	for (const Vec3& Pt : {P1, P2, P3})
+	{
+		Mat4x4 pose = TestPose;
+		pose.block<3, 1>(0, 3) = Pt;
+		TestTrajectory.push_back({pose, Vec3::Zero()});
+	}
+	CalculateVelocity(TestTrajectory, {0.01, 0.01, 0.01});
 	
 	return TestTrajectory;
 }
