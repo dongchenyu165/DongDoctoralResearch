@@ -224,7 +224,7 @@ public:
 
 		LOG_INDENT(Logger, info, "2. Calculate Fracture Force.");
 		Types::ForceTorqueType OutCuttingFractureForce = CuttingFractureForce(CuttingFaceResultObj.KnifeBladePC, 
-			ConfigJson["FoodParams"][InFoodName]["FractureToughness"], CalculationStaticData.CenterOfMass, InKnifeVelocity);
+			ConfigJson["FoodParams"][InFoodName]["FractureToughness"], CalculationStaticData.CenterOfMass, InKnifeVelocity, Logger);
 		OutCuttingForce += OutCuttingFractureForce;
 
 		LOG_INDENT(Logger, info, "Knife Force Result: [{}]", OutCuttingForce);
