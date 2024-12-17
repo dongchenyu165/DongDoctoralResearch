@@ -384,7 +384,19 @@ public:
 	#define FUNC_LOGGER_RET                                          \
 		__AUTO_GEN__Logger.RecordReturnLocation(__FILE__, __LINE__); \
 		return
-	#define LOG_INDENT(LOGGER, LEVEL, ...) LOGGER->LEVEL(__AUTO_GEN__Logger.GetIndentString() + __VA_ARGS__)
+	#define LOG_INDENT(LOGGER, LEVEL, ...) \
+		if (LOGGER)\
+		{\
+			LOGGER->LEVEL(__AUTO_GEN__Logger.GetIndentString() + __VA_ARGS__);\
+		}
+	#define LOG_INDENT_CHECK_SHOULD_LOG(LOGGER, LEVEL, ...) \
+		if (LOGGER)\
+		{\
+			if (LOGGER->should_log(spdlog::level::LEVEL))\
+			{\
+				LOGGER->LEVEL(__AUTO_GEN__Logger.GetIndentString() + __VA_ARGS__);\
+			}\
+		}
 #else
 	#define FUNC_LOGGER_ENTER
 	#define FUNC_LOGGER_ENTER_CUSTOM_LOGGER(LOGGER)
