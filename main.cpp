@@ -1,5 +1,6 @@
 #include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
 #include "2_FilterByGeo/GeometryFilterScoreCalculator.hpp"
+#include "3_KnifeForceCalculator/KnifeForceCalculator.hpp"
 #include "DataTypes/PointSetData.hpp"
 #include "GlobalBaseTypes.hpp"
 #include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
@@ -60,7 +61,9 @@ SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& I
 
 ForceTorqueType CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
 {
-	return ForceTorqueType::Zero(6, 1);
+	FUNC_LOGGER_ENTER_CUSTOM_LOGGER(gLogger);
+	KnifeForceCalculator Calculator(InCuttingFaceResultObj, gParamJson, gLogger);
+	return Calculator.CalculateKnifeForce(InTrajectoryNode.Velocity);
 }
 
 float CalForceScore(ForceTorqueType InKnifeForce, HoldingPointSet InHoldingPointSet)
