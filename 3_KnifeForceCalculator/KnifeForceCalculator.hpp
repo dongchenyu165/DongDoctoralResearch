@@ -64,7 +64,7 @@ protected:
 	virtual Types::CalcScalar PressureDistribution(const Types::Vec3& P1, const Types::Vec3& P2, const Types::Vec3& P3, const int& P1_Index,
 				const int& P2_Index, const int& P3_Index)
 	{
-		return static_cast<float>(FoodParamJson["FrictionPressForce"]) / TotalArea;
+		return static_cast<double>(FoodParamJson["FrictionPressForce"]) / TotalArea;
 	}
 
 private:
@@ -75,9 +75,9 @@ private:
 			const pcl::Vertices& vertices = *FaceIt;
 			if ( vertices.vertices.size() == 3 )
 			{
-				const auto& P1 = (*CuttingFacePC)[vertices.vertices[0]].getVector3fMap();
-				const auto& P2 = (*CuttingFacePC)[vertices.vertices[1]].getVector3fMap();
-				const auto& P3 = (*CuttingFacePC)[vertices.vertices[2]].getVector3fMap();
+				const Types::Vec3& P1 = (*CuttingFacePC)[vertices.vertices[0]].getVector3fMap().cast<Types::CalcScalar>();
+				const Types::Vec3& P2 = (*CuttingFacePC)[vertices.vertices[1]].getVector3fMap().cast<Types::CalcScalar>();
+				const Types::Vec3& P3 = (*CuttingFacePC)[vertices.vertices[2]].getVector3fMap().cast<Types::CalcScalar>();
 
 				FaceOperation(P1, P2, P3, vertices.vertices[0], vertices.vertices[1], vertices.vertices[2]);
 			}
@@ -109,7 +109,7 @@ private:
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
 		ResultForce.setZero();
-		LOG_INDENT(Logger, trace, "Friction mu: [{}]; Moving Dir: [{}] ", FoodParamJson["Friction_Mu"], TotalKnifeMoveDirection);
+		LOG_INDENT(Logger, trace, "Friction mu: [{}]; Moving Dir: [{}] ", FoodParamJson["Friction_Mu"].template get<double>(), TotalKnifeMoveDirection);
 
 		FaceWiseOperation(
 			[this](const Types::Vec3& P1, const Types::Vec3& P2, const Types::Vec3& P3, const int& P1_Index,
@@ -247,8 +247,8 @@ private:
 			const Types::CalcPoint& SegPointA = BladeCurve[i];
 			const Types::CalcPoint& SegPointB = BladeCurve[i + 1];
 
-			Types::ConstVec3 SegNormal = -(SegPointA.getNormalVector3fMap() + SegPointB.getNormalVector3fMap()) / 2;
-			Types::ConstVec3 SegCenter = (SegPointA.getVector3fMap() + SegPointB.getVector3fMap()) / 2;
+			Types::ConstVec3 SegNormal = -((SegPointA.getNormalVector3fMap() + SegPointB.getNormalVector3fMap()) / 2.0f).cast<double>();
+			Types::ConstVec3 SegCenter = ((SegPointA.getVector3fMap() + SegPointB.getVector3fMap()) / 2.0f).cast<double>();
 			const double SegLength = (SegPointA.getVector3fMap() - SegPointB.getVector3fMap()).norm();  // ds_\beta
 
 			LOG_INDENT(Logger, trace, "Segment {}: Normal=[{}], Center=[{}], Length={}", 
