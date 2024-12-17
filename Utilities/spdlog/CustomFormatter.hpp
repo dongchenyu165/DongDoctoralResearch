@@ -114,7 +114,7 @@ struct formatter<T, char, std::enable_if_t<is_eigen_expression_v<T>>>
 		}
 		if ( Width > 0 )
 		{
-			ss << std::setw(Width);
+			// ss << std::setw(Width);
 		}
 
 		switch ( Presentation )
