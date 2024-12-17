@@ -120,7 +120,7 @@ private:
 				// Single triangle area
 				const Types::Vec3 Edge1 = P2 - P1;
 				const Types::Vec3 Edge2 = P3 - P1;
-				const float Area = std::abs(0.5f * Edge1.cross(Edge2).norm());
+				const double Area = std::abs(0.5 * Edge1.cross(Edge2).norm());
 
 				const double Pressure = PressureDistribution(P1, P2, P3, P1_Index, P2_Index, P3_Index);
 
@@ -157,8 +157,8 @@ protected:
 	std::vector<pcl::Indices> ValidFaceList;
 
 protected:
-	float TotalArea = 0.0f;
-	float mu = 0.0f;  // 从ConfigJson读取
+	double TotalArea = 0.0f;
+	double mu = 0.0f;  // 从ConfigJson读取
 	nlohmann::json FoodParamJson;
 	Types::ForceTorqueType ResultForce = Types::ForceTorqueType::Zero();
 	// Types::Vec3 ResultTorque = Types::Vec3::Zero();
