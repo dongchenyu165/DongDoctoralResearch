@@ -104,7 +104,7 @@ namespace PCL_Helper {
 		{
 			CloudWithNormals = PCL_Helper::ConvertPointCloud<PCL_Helper::PointXYZN, EConvertRGBField::Const,
 				EConvertNormalField::Estimate>(InData, { 255, 0, 0 }, { 1, 0, 0 },
-				InJsonConfig["normal_estimation"]["k_search"]);
+				InJsonConfig["normal_estimation"]["k_search"].template get<int>());
 		}
 
 		// Create search tree
@@ -116,15 +116,15 @@ namespace PCL_Helper {
 		PlyMesh Triangles;
 
 		// Set the maximum distance between connected points (maximum edge length)
-		Triangulator.setSearchRadius(InJsonConfig["triangulation"]["search_radius"]);
+		Triangulator.setSearchRadius(InJsonConfig["triangulation"]["search_radius"].template get<double>());
 
 		// Set typical values for the parameters
-		Triangulator.setMu(InJsonConfig["triangulation"]["mu"]);
-		Triangulator.setMaximumNearestNeighbors(InJsonConfig["triangulation"]["max_nearest_neighbors"]);
-		Triangulator.setMaximumSurfaceAngle(InJsonConfig["angle_constraints"]["max_surface_angle"] * M_PI/180); // 45 degrees
-		Triangulator.setMinimumAngle(InJsonConfig["angle_constraints"]["min_angle"] * M_PI/180); // 10 degrees
-		Triangulator.setMaximumAngle(InJsonConfig["angle_constraints"]["max_angle"] * M_PI/180); // 120 degrees
-		Triangulator.setNormalConsistency(InJsonConfig["triangulation"]["normal_consistency"]);
+		Triangulator.setMu(InJsonConfig["triangulation"]["mu"].template get<double>());
+		Triangulator.setMaximumNearestNeighbors(InJsonConfig["triangulation"]["max_nearest_neighbors"].template get<int>());
+		Triangulator.setMaximumSurfaceAngle(InJsonConfig["angle_constraints"]["max_surface_angle"].template get<double>() * M_PI/180);
+		Triangulator.setMinimumAngle(InJsonConfig["angle_constraints"]["min_angle"].template get<double>() * M_PI/180);
+		Triangulator.setMaximumAngle(InJsonConfig["angle_constraints"]["max_angle"].template get<double>() * M_PI/180);
+		Triangulator.setNormalConsistency(InJsonConfig["triangulation"]["normal_consistency"].template get<bool>());
 
 		// Get result
 		Triangulator.setInputCloud(CloudWithNormals);
