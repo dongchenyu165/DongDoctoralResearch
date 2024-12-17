@@ -44,6 +44,7 @@ protected:
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
 	// 		[Pre-Allocated DataSize]: Dynamic size. Set by the construct function's [InDataSize] argument.
 	using ScoreMatType          = Eigen::Matrix<Types::CalcScalar, -1, ScoreComponentCount>;
+	using RawScoreVecType       = Eigen::Matrix<Types::CalcScalar, -1, 1>;
 	using ScoreWeightVectorType = Eigen::Matrix<Types::CalcScalar, ScoreComponentCount, 1>;
 
 public:
@@ -122,7 +123,8 @@ protected:
 		}
 
 		// Apply the weight to each component for all datas.
-		/* (DataCount, 1) */ auto ScoreVector = this->ScoreRawData * this->ScoreWeight;
+		// NOTE: return value type can not be [auto] here, because the very low access speed of the Eigen::Matrix.
+		/* (DataCount, 1) */ RawScoreVecType ScoreVector = this->ScoreRawData * this->ScoreWeight;
 		for ( int i = 0; i < this->DataScoreList.size(); i++ )
 		{
 			// Storage the final score to each element's first member var through the [DataScoreList].
