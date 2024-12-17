@@ -1,3 +1,6 @@
+#ifndef B44CFA3D_E46C_4B38_AD37_DBA551D7F50D
+#define B44CFA3D_E46C_4B38_AD37_DBA551D7F50D
+
 #include <cstdint>
 #include <iostream>
 #include <memory>
@@ -402,3 +405,6 @@ public:
 	#define FUNC_LOGGER_ENTER_CUSTOM_LOGGER(LOGGER)
 	#define FUNC_LOGGER_RET return
 #endif
+
+
+#endif /* B44CFA3D_E46C_4B38_AD37_DBA551D7F50D */
