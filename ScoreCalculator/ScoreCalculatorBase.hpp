@@ -111,8 +111,10 @@ protected:
 	 */
 	virtual void CalcFinalScore()
 	{
+		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
 		// Resize the score matrix to the fit the real size of datas.
 
+		LOG_INDENT(Logger, debug, "Normalize score column.");
 		// Normalize each score component.
 		for ( int i = 0; i < ScoreComponentCount; i++ )
 		{
@@ -124,18 +126,23 @@ protected:
 
 		// Apply the weight to each component for all datas.
 		// NOTE: return value type can not be [auto] here, because the very low access speed of the Eigen::Matrix.
+		LOG_INDENT(Logger, debug, "Apply weight.");
 		/* (DataCount, 1) */ RawScoreVecType ScoreVector = this->ScoreRawData * this->ScoreWeight;
+		LOG_INDENT(Logger, trace, "Copy score of size: [{}] .", DataScoreList.size());
 		for ( int i = 0; i < this->DataScoreList.size(); i++ )
 		{
 			// Storage the final score to each element's first member var through the [DataScoreList].
 			this->DataScoreList[i].first = ScoreVector(i);
 		}
 
+		LOG_INDENT(Logger, debug, "Sort by score.");
 		// Sort the datas by the final score.
 		this->SortByScore();
 
 		// Finally fill the [ReturnDataList] with the sorted datas.
 		ReturnDataList.reserve(this->DataScoreList.size());
+
+		LOG_INDENT(Logger, debug, "Push back to [ReturnDataList].");
 		for ( const auto& DataScorePair : this->DataScoreList )
 		{
 			ReturnDataList.push_back(DataScorePair.second);
@@ -146,31 +153,16 @@ public:
 	void CalculateScore(const std::vector<InputDataType>& InDataList)
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
-		if ( Logger )
-		{
-			LOG_INDENT(Logger, info, "Start to calculate score with input data size [{}].", InDataList.size());
-			if ( Logger->should_log(spdlog::level::debug) )
-			{
-				LOG_INDENT(Logger, debug, "Start to resize [DataScoreList] and [ScoreRawData]");
-			}
-		}
+
+		LOG_INDENT(Logger, info, "Start to calculate score with input data size [{}].", InDataList.size());
+		LOG_INDENT(Logger, debug, "Start to resize [DataScoreList] and [ScoreRawData]");
 
 		DataScoreList.resize(InDataList.size(), { -INFINITY, InputDataType() });
 		ScoreRawData.resize(DataScoreList.size(), ScoreComponentCount);
 		ScoreRawData.setConstant(-INFINITY); // Init to min of the float.
 
-		if ( Logger )
-		{
-			LOG_INDENT(Logger, info, "Start to calculate the raw score.");
-			if ( Logger->should_log(spdlog::level::debug) )
-			{
-				LOG_INDENT(Logger, debug, "Start to resize [DataScoreList] and [ScoreRawData]");
-				std::ostringstream oss;
-				oss << ScoreRawData.block(0, 0, 10, ScoreComponentCount);
-				LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements (SHOULD ALL [-INFINITY]): \n{}", oss.str());
-			}
-		}
-
+		LOG_INDENT(Logger, info, "Start to calculate the raw score.");
+		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements (SHOULD ALL [-INFINITY]): \n{}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
 		for ( int i = 0; i < InDataList.size(); i++ )
 		{
 			CalcRawScore(InDataList[i], i);
@@ -180,40 +172,15 @@ public:
 			DataScoreList[i].second = InDataList[i];
 		}
 
-		if ( Logger )
-		{
-			if ( Logger->should_log(spdlog::level::debug) )
-			{
-				std::ostringstream oss1;
-				oss1 << ScoreRawData.block(0, 0, 10, ScoreComponentCount);
-				LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", oss1.str());
+		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
+		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD ALL [-INFINITY]):  {:f10}", DataScoreList);
 
-				std::ostringstream oss2;
-				oss2 << "[DataScoreList] front 10 elements' score (SHOULD ALL [-INFINITY]): ";
-				for ( int i = 0; i < 10; i++ )
-				{
-					oss2 << DataScoreList[i].first << " ";
-				}
-				LOG_INDENT(Logger, debug, oss2.str());
-			}
-			LOG_INDENT(Logger, info, "Start to calculate the final (normalize, weighted and sorted) score.");
-		}
 		// Calculate the final (normalize, weighted and sorted) score.
+		LOG_INDENT(Logger, info, "Start to calculate the final (normalize, weighted and sorted) score.");
 		CalcFinalScore();
 
-		if (Logger && Logger->should_log(spdlog::level::debug))
-		{
-			// Print ScoreRawData front 10 elements.
-			LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
-			// Print DataScoreList front 10 elements' [first] object.
-			std::ostringstream oss;
-			oss << "[DataScoreList] front 10 elements' score (SHOULD SORTED DECENT ORDER) : ";
-			for (int i = 0; i < 10; i++)
-			{
-				oss << DataScoreList[i].first << " ";
-			}
-			LOG_INDENT(Logger, debug, oss.str());
-		}
+		LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
+		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD SORTED DECENT ORDER): {:f10}", DataScoreList);
 		FUNC_LOGGER_RET;
 	}
 
