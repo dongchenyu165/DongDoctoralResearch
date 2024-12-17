@@ -25,12 +25,12 @@ public:
 	FaceForceCalculator(Types::CalcPCPTR InCuttingFacePC,
 		const nlohmann::json& InConfigJson,
 		SPDLog::LoggerType InLogger = nullptr)
-		: CuttingFacePC(InCuttingFacePC), ConfigJson(InConfigJson["CalFaceForce"]), Logger(InLogger)
+		: CuttingFacePC(InCuttingFacePC), CalKnifeForceConfigJson(InConfigJson), Logger(InLogger)
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
 
 		LOG_INDENT(Logger, info, "Creating cutting face MESH from point cloud");
-		CuttingFaceMesh = PCL_Helper::CreatePlyMesh(CuttingFacePC, InConfigJson["CuttingFaceTriangulation"], InLogger);
+		CuttingFaceMesh = PCL_Helper::CreatePlyMesh(CuttingFacePC, CalKnifeForceConfigJson["CuttingFaceTriangulation"], InLogger);
 		assert(CuttingFaceMesh);
 		LOG_INDENT(Logger, debug, "Mesh created with {} vertices and {} faces", CuttingFaceMesh->cloud.width, CuttingFaceMesh->polygons.size());
 
@@ -150,7 +150,7 @@ private:
 
 protected:
 	Types::CalcPCPTR CuttingFacePC;
-	const nlohmann::json& ConfigJson;
+	const nlohmann::json& CalKnifeForceConfigJson;  // Param json with key ["CalKnifeForce"]
 	SPDLog::LoggerType Logger;
 
 	PCL_Helper::PlyMesh_Ptr CuttingFaceMesh;
@@ -203,8 +203,8 @@ public:
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
 
 		LOG_INDENT(Logger, info, "Initial KnifeForceCalculator.");
-		FaceForceCalculatorList.push_back({InCuttingFaceResultObj.CuttingFacePC_P, InConfigJson, InLogger});
-		FaceForceCalculatorList.push_back({InCuttingFaceResultObj.CuttingFacePC_N, InConfigJson, InLogger});
+		FaceForceCalculatorList.push_back({InCuttingFaceResultObj.CuttingFacePC_P, ConfigJson, InLogger});
+		FaceForceCalculatorList.push_back({InCuttingFaceResultObj.CuttingFacePC_N, ConfigJson, InLogger});
 	}
 
 	Types::ForceTorqueType CalculateKnifeForce(const Types::Vec3& InKnifeVelocity, const std::string& InFoodName = "Potato")
