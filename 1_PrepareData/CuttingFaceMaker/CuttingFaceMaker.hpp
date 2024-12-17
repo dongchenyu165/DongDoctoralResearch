@@ -44,7 +44,7 @@ public:
 
 protected:
 	Types::CalcPCPTR FillPolygon(Types::CalcPCPTR InPolygonPC, const Types::Mat4x4& InTlocal2world, const Types::Vec3& InGridSize);
-	Types::CalcPCPTR MakeKnifeBladeCurvePC(const Types::Vec3& InStartPt, const Types::Vec3& InEndPt, const float InGridSize);
+	Types::CalcPCPTR MakeKnifeBladeCurvePC(const Types::Vec3& InStartPt, const Types::Vec3& InEndPt, const float InGridSize, Types::ConstMat4x4& InKnifeBasePose);
 	void DenoiseByEuclideanCluster();
 	auto MakeCuttingPlaneEdge(Types::CalcPCPTR InPC,
 		const float InKnifeBladeHalfAngle,

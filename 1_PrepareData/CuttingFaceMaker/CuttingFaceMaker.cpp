@@ -307,7 +307,7 @@ CuttingFaceResult CuttingFaceMaker::MakeCuttingFace(Types::CalcPCPTR InPC)
 	double StepSize                   = ConfigObj["5.BladeCurve"]["StepSize"].get<double>();
 	Types::Vec3 StartPt               = AveragePoint(Arranged_PEdge->front(), Arranged_NEdge->front());
 	Types::Vec3 EndPt                 = AveragePoint(Arranged_PEdge->back(), Arranged_NEdge->back());
-	Result.KnifeBladePC = MakeKnifeBladeCurvePC(StartPt, EndPt, StepSize);
+	Result.KnifeBladePC = MakeKnifeBladeCurvePC(StartPt, EndPt, StepSize, InKnifeBasePose);
 	DEBUG_SHOW_PC_LIST("FillResult", "CuttingFace", GraspingPC, Result.CuttingFacePC_P, Result.CuttingFacePC_N,
 		Result.KnifeBladePC);
 	/* -------------------------------------------------------------------------- */
@@ -415,7 +415,8 @@ Types::CalcPCPTR CuttingFaceMaker::FillPolygon(Types::CalcPCPTR InPolygonPC,
 
 Types::CalcPCPTR CuttingFaceMaker::MakeKnifeBladeCurvePC(const Types::Vec3& InStartPt,
 	const Types::Vec3& InEndPt,
-	const float InGridSize)
+	const float InGridSize,
+	Types::ConstMat4x4& InKnifeBasePose)
 {
 	using namespace Types;
 	Vec3 Dir          = InEndPt - InStartPt;
@@ -430,6 +431,23 @@ Types::CalcPCPTR CuttingFaceMaker::MakeKnifeBladeCurvePC(const Types::Vec3& InSt
 		TempPt.getVector3fMap() = (InStartPt + i * Step).cast<float>();
 		KnifeLinePC->push_back(TempPt);
 	}
+
+	// Fill the normal field.
+	// Fill by pushed points.
+	auto CastedPose = InKnifeBasePose.cast<float>();
+	for ( size_t i = 0; i < KnifeLinePC->size() - 1; i++ )
+	{
+		auto BladeDir = (KnifeLinePC->at(i + 1).getVector3fMap() - KnifeLinePC->at(i).getVector3fMap()).normalized();
+		// Rotate the blade direction by the knife base pose's X-Axis, and gaurantee the rotated direction is point towards up.
+		Eigen::Vector3f Normal = CastedPose.block<3, 3>(0, 0) * BladeDir;
+		if ( Normal.dot(CastedPose.block<3, 1>(0, 2)) < 0 )
+		{
+			Normal = -Normal;
+		}
+		KnifeLinePC->at(i).getNormalVector3fMap() = Normal;
+	}
+	// Fill the last point's normal field, by the second last point's normal field.
+	KnifeLinePC->back().getNormalVector3fMap() = KnifeLinePC->at(KnifeLinePC->size() - 2).getNormalVector3fMap();
 	return KnifeLinePC;
 }
 
