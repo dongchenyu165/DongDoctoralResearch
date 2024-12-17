@@ -132,11 +132,10 @@ int main()
 
 		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj, KnifeTrajectoryNode);
 
+		auto KnifeForce = CalKnifeForce(CuttingFaceResultObj, KnifeTrajectoryNode);
+
 		gLogger->info("FINISHED, MainSearchSpace size: {}", MainSearchSpace.size());
 		continue;
-
-		auto KnifeForce = CalKnifeForce({CuttingFaceResultObj.CuttingFacePC_P, CuttingFaceResultObj.CuttingFacePC_N}, KnifeTrajectoryNode);
-
 		for ( int j = 0; j < MainSearchSpace.size(); j++ )
 		{
 			HoldingPointSet& HoldingPointSet = MainSearchSpace[j].PositionPair;  // SearchSpacetType  $\mathbf{P}$
