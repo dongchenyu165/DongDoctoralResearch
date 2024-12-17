@@ -48,12 +48,15 @@ public:
 		void(const Types::Vec3& /* InP1 */, const Types::Vec3& /* InP2 */, const Types::Vec3& /* InP3 */, 
 			const int& /* InP1_Index */, const int& /* InP2_Index */, const int& /* InP3_Index */)>;
 
-	Types::ForceTorqueType CalculateForces(const std::string& InFoodName = "Potato")
+	Types::ForceTorqueType CalculateForces(const std::string& InFoodName = "Potato", const Types::Vec3& InKnifeVelocity = Types::Vec3::Zero(), const Types::Vec3& InCenterOfMass = Types::Vec3::Zero())
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
 		CalculateTotalArea();
 
-		FoodParamJson = ConfigJson["FoodParams"][InFoodName];
+		FoodParamJson = CalKnifeForceConfigJson["FoodParams"][InFoodName];
+		TotalKnifeMoveDirection = InKnifeVelocity.normalized();
+		mu = FoodParamJson["Friction_Mu"].template get<double>();
+		CenterOfMass = InCenterOfMass;
 		CalculateFrictionForceAndTorque(InFoodName);
 
 		return ResultForce;
@@ -215,6 +218,7 @@ public:
 		Types::ForceTorqueType OutCuttingForce = Types::ForceTorqueType::Zero(6, 1);
 		for (auto& FaceForceCalculator : FaceForceCalculatorList)
 		{
+			OutCuttingForce += FaceForceCalculator.CalculateForces(InFoodName, InKnifeVelocity, CalculationStaticData.CenterOfMass);
 			LOG_INDENT(Logger, info, "--> Face Force Result: [{}]", OutCuttingForce);
 		}
 
