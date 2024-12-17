@@ -107,12 +107,19 @@ PCPTR<TargetPointType> ConvertPointCloud(
 
 	if constexpr ( bEstimateNormalField )
 	{
-		typename pcl::search::KdTree<TargetPointType>::Ptr tree(new pcl::search::KdTree<TargetPointType>());
-		pcl::NormalEstimation<TargetPointType, pcl::Normal> ne;
-		ne.setInputCloud(InSourcePC);
-		ne.setSearchMethod(tree);
-		ne.setRadiusSearch(InSearchRadius);
-		ne.compute(*ConvertedPC);
+		if constexpr ( bTargetHas_Normal )
+		{
+			auto tree = std::make_shared<pcl::search::KdTree<SourcePointType>>();
+			pcl::NormalEstimation<SourcePointType, TargetPointType> ne;
+			ne.setInputCloud(InSourcePC);
+			ne.setSearchMethod(tree);
+			ne.setRadiusSearch(InSearchRadius);
+			ne.compute(*ConvertedPC);
+		}
+		else
+		{
+			static_assert(bTargetHas_Normal, "The target point type MUST have normal field.");
+		}
 	}
 
 	return ConvertedPC;
