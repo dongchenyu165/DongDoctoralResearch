@@ -71,6 +71,58 @@ public:
 			));
 		}
 	}
+
+	/**
+	* @brief Get (3, N) Eigen Matrix Map object for point cloud normal data
+	*/
+	static Eigen::Map<PointMapMatrixType, Eigen::Aligned, PointStrideType> GetNormalEigenMatrixMap(PCPTR<PointType> InOperatingPC)
+	{
+		static_assert(pcl::traits::has_normal<PointType>::value, "Point type must have normal field");
+		
+		if (PointMapMatrixType::Flags & Eigen::RowMajorBit)
+		{
+			return (Eigen::Map<PointMapMatrixType, Eigen::Aligned, PointStrideType>(
+				reinterpret_cast<float*>(const_cast<float*>(&InOperatingPC->points[0].normal_x)),
+				InOperatingPC->size(),
+				3  // Normal always has 3 dimensions
+			));
+		}
+		else 
+		{
+			return (Eigen::Map<PointMapMatrixType, Eigen::Aligned, PointStrideType>(
+				reinterpret_cast<float*>(const_cast<float*>(&InOperatingPC->points[0].normal_x)),
+				3,
+				InOperatingPC->size()
+			));
+		}
+	}
+
+	/**
+	* @brief Get (3, N) or (4, N) Eigen Matrix Map object for point cloud color data
+	*/
+	static Eigen::Map<PointMapMatrixType, Eigen::Aligned, PointStrideType> GetColorEigenMatrixMap(PCPTR<PointType> InOperatingPC)
+	{
+		static_assert(pcl::traits::has_color<PointType>::value, "Point type must have color field");
+		
+		constexpr int COLOR_DIM = pcl::traits::has_field<PointType, pcl::fields::a>::value ? 4 : 3;
+		
+		if (PointMapMatrixType::Flags & Eigen::RowMajorBit)
+		{
+			return (Eigen::Map<PointMapMatrixType, Eigen::Aligned, PointStrideType>(
+				reinterpret_cast<float*>(const_cast<uint8_t*>(&InOperatingPC->points[0].r)),
+				InOperatingPC->size(),
+				COLOR_DIM
+			));
+		}
+		else
+		{
+			return (Eigen::Map<PointMapMatrixType, Eigen::Aligned, PointStrideType>(
+				reinterpret_cast<float*>(const_cast<uint8_t*>(&InOperatingPC->points[0].r)),
+				COLOR_DIM,
+				InOperatingPC->size()
+			));
+		}
+	}
 };
 } // namespace PCL_Helper
 
