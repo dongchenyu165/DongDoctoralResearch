@@ -92,9 +92,9 @@ private:
 			[this](const Types::Vec3& P1, const Types::Vec3& P2, const Types::Vec3& P3, const int& P1_Index,
 				const int& P2_Index, const int& P3_Index)
 			{
-				Types::Vec3 Edge1 = P2 - P1;
-				Types::Vec3 Edge2 = P3 - P1;
-				const float Area  = std::abs(0.5 * Edge1.cross(Edge2).norm());
+				Types::ConstVec3 Edge1 = P2 - P1;
+				Types::ConstVec3 Edge2 = P3 - P1;
+				const Types::CalcScalar Area  = std::abs(0.5 * Edge1.cross(Edge2).norm());
 				TotalArea         += Area;
 
 				if (Logger->should_log(spdlog::level::trace))
