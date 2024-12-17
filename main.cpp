@@ -8,6 +8,7 @@
 #include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudConverter.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudInfo.hpp"
+#include "Utilities/spdlog/FunctionAutoLogger.hpp"
 #include <pcl/io/pcd_io.h>
 #include <vector>
 #include <tuple>
@@ -59,7 +60,7 @@ SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& I
 	return Filter.GetFinalDataList(EGettingMethod::Good, Filter.Size() * GeoFilterRatio);
 }
 
-ForceTorqueType CalKnifeForce(CalcPCPTR_List InCuttingPlanePC, TrajectoryNode InTrajectoryNode)
+ForceTorqueType CalKnifeForce(CuttingFaceResult& InCuttingFaceResultObj, TrajectoryNode InTrajectoryNode)
 {
 	FUNC_LOGGER_ENTER_CUSTOM_LOGGER(gLogger);
 	KnifeForceCalculator Calculator(InCuttingFaceResultObj, gParamJson, gLogger);
