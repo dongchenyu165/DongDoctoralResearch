@@ -109,7 +109,7 @@ private:
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
 		ResultForce.setZero();
-		LOG_INDENT(Logger, trace, "Friction mu: [{}]; Moving Dir: [{}] ", FoodParamJson["Friction_Mu"].template get<double>(), TotalKnifeMoveDirection);
+		LOG_INDENT(Logger, debug, "Friction mu: [{}]; Knife Vel Dir: [{}] CenterOfMass: [{}]", FoodParamJson["Friction_Mu"].template get<double>(), TotalKnifeMoveDirection, CenterOfMass);
 
 		FaceWiseOperation(
 			[this](const Types::Vec3& P1, const Types::Vec3& P2, const Types::Vec3& P3, const int& P1_Index,
@@ -138,7 +138,11 @@ private:
 				{
 					FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
 					LOG_INDENT(Logger, trace, "Edge1: [{}], Edge2: [{}], Area: [{}], Pressure: [{}] ", Edge1, Edge2, Area, Pressure);
-					LOG_INDENT(Logger, trace, "dForceFriction: [{}], dTorqueFriction: [{}]", dForceFriction, dTorqueFriction);
+					LOG_INDENT(Logger, trace, "dForceFriction: [{}]", dTorqueFriction);
+
+					LOG_INDENT(Logger, trace, "FaceCenter: [{}]  PointToCenter[{}]", FaceCenter, PointToCenter);
+					LOG_INDENT(Logger, trace, "dTorqueFriction: [{}]", dTorqueFriction);
+
 					LOG_INDENT(Logger, trace, "ResultForce: [{}]", ResultForce);
 				}
 			});
@@ -211,7 +215,7 @@ public:
 		Types::ForceTorqueType OutCuttingForce = Types::ForceTorqueType::Zero(6, 1);
 		for (auto& FaceForceCalculator : FaceForceCalculatorList)
 		{
-			OutCuttingForce += FaceForceCalculator.CalculateForces(InFoodName);
+			LOG_INDENT(Logger, info, "--> Face Force Result: [{}]", OutCuttingForce);
 		}
 
 		LOG_INDENT(Logger, info, "2. Calculate Fracture Force.");
@@ -238,7 +242,7 @@ private:
 		LOG_INDENT(Logger, debug, "0. Blade has {} points.", InBladeCurvePointList->size());
 		
 		Types::ConstVec3 KnifeVelocityDir = InKnifeVelocity.normalized();
-		LOG_INDENT(Logger, debug, "0. Knife velocity direction: [{}]", KnifeVelocityDir);
+		LOG_INDENT(Logger, debug, "0. Knife velocity direction: [{}], FractureToughness: [{}]", KnifeVelocityDir, InFractureToughness);
 
 		Types::ForceTorqueType OutCuttingForce = Types::ForceTorqueType::Zero(6, 1);
 
