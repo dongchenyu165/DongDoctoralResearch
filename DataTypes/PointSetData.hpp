@@ -38,8 +38,11 @@ struct TSearchSpaceElement
 struct EvaluationStaticData
 {
 	Eigen::Matrix<Types::CalcScalar, 4, 4> KnifePose;
+	Types::Vec3 CenterOfMass;
+	
 	struct CuttingFaceInfoType
 	{
+		Types::CalcPCPTR CuttingFacePC;
 		// The point center of the cutting face.
 		Types::Vec3 Center;
 		// The normal vector of the cutting face.
