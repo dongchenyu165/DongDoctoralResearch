@@ -8,6 +8,7 @@
 #include <pcl/geometry/triangle_mesh.h>
 #include <pcl/surface/gp3.h>
 
+#include "ToEigenMap.hpp"
 #include "PCL_TypeAlias.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudConverter.hpp"
 
@@ -86,11 +87,12 @@ namespace PCL_Helper {
 		bool bHasNormalData            = false;
 		if constexpr ( bHasNormalField )
 		{
+			const auto& DataNormalMat = TPCL_EigenMapper<PointType>::GetNormalEigenMatrixMap(InData);
 			// Check if point cloud has valid normal data:
 			// 1. Verify length of normal vectors are not zero
 			// 2. Ensure no NaN values exist in any normal vector component
-			bHasNormalData = !(InData->getNormalVector3fMap().rowwise().norm().array().isApproxToConstant(0, 1e-4) ||
-							   InData->getNormalVector3fMap().array().isNaN().any());
+			bHasNormalData = !(DataNormalMat.rowwise().norm().isApproxToConstant(0, 1e-4) ||
+							   DataNormalMat.array().isNaN().any());
 		}
 
 		if ( bHasNormalData )
