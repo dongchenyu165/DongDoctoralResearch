@@ -257,7 +257,130 @@ struct formatter<PCL_Helper::PointXYZRGB> : formatter<PCL_Helper::PointXYZRGBN>
 {
 };
 
-// } // namespace v10
+
+template<typename T1, typename T2>
+struct formatter<std::pair<T1, T2>> : fmt::formatter<fmt::string_view>
+{
+	bool bPrintFirst = true;
+	bool bPrintSecond = false;
+	const std::string DefaultFloatFormat = "{:+08.5f}";
+	
+ // constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator
+	constexpr auto parse(format_parse_context& InCtx) -> format_parse_context::iterator
+	{ 
+		// Add option to control print the [first] or [second] member of the [DataScorePairType].
+		auto It = InCtx.begin();
+		if ( It != InCtx.end() && *It == 'f' )
+		{
+			bPrintFirst = true;
+			++It;
+		}
+		else if ( It != InCtx.end() && *It == 's' )
+		{
+			bPrintSecond = true;
+			++It;
+		}
+		return It;
+	}
+	auto format(const std::pair<T1, T2>& InData, fmt::format_context& InCtx)
+	{
+		std::string str;
+		str += fmt::format("[");
+		if ( bPrintFirst )
+		{
+			if constexpr ( fmt::is_formattable<T1>::value )
+			{
+				if constexpr (std::is_floating_point_v<T1>)
+				{
+					str += fmt::format(DefaultFloatFormat, InData.first);
+				}
+				else
+				{
+					str += fmt::format(" {} ", InData.first);
+				}
+			}
+			else
+			{
+				str += fmt::format(" PAIR_FIRST UNFORMATTABLE ");
+			}
+		}
+		else if ( bPrintSecond )
+		{
+			if constexpr (fmt::is_formattable<T2>::value)
+			{
+				if constexpr (std::is_floating_point_v<T2>)
+				{
+					str += fmt::format(DefaultFloatFormat, InData.second);
+				}
+				else
+				{
+					str += fmt::format(" {} ", InData.second);
+				}
+			}
+			else
+			{
+				str += fmt::format(" PAIR_SENOND UNFORMATTABLE ");
+			}
+		}
+		return format_to(InCtx.out(), "{}]", str);
+	}
+};
+
+template<typename T1, typename T2>
+struct formatter<std::vector<std::pair<T1, T2>>> : fmt::formatter<fmt::string_view>
+{
+	bool bPrintFirst = true;
+	bool bPrintSecond = false;
+	std::string OptionStr;
+	int PrintCount = 0;
+
+	auto parse(fmt::format_parse_context& InCtx)
+	{
+		// Add option to control print the [first] or [second] member of the [DataScorePairType].
+		auto It = InCtx.begin();
+		if ( It != InCtx.end() && *It == 'f' )
+		{
+			bPrintFirst = true;
+			OptionStr += "f";
+			++It;
+		}
+		else if ( It != InCtx.end() && *It == 's' )
+		{
+			bPrintSecond = true;
+			OptionStr += "s";
+			++It;
+		}
+		if (!OptionStr.empty())
+		{
+			OptionStr = ":" + OptionStr;
+		}
+
+		// Add a number option to control print the first [n] elements.
+		while ( It != InCtx.end() && std::isdigit(*It) )
+		{
+			PrintCount = PrintCount * 10 + (*It - '0');
+			++It;
+		}
+		return It;
+	}
+	auto format(const std::vector<std::pair<T1, T2>>& InDataList, fmt::format_context& InCtx)
+	{
+		std::string str;
+		str += fmt::format("[");
+		for ( const auto& DataScorePair : InDataList )
+		{
+			str += fmt::format("{" + OptionStr + "}, ", DataScorePair);
+
+			if ( --PrintCount == 0 )
+			{
+				break;
+			}
+		}
+		format_to(InCtx.out(), "{}]", str);
+		return InCtx.out();
+	}
+};
+
 } // namespace fmt
 
 #endif /* A8053CAA_A240_41C9_BBD4_21D3F29AD183 */
