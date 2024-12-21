@@ -14,8 +14,9 @@ namespace Types
 using TrajectoryNode = TKnifeTrajectoryNode<CalcScalar>;
 using Trajectory     = std::vector<TrajectoryNode>;
 
+using HoldingPointSet = Eigen::Matrix<CalcScalar, FINGER_NUMBER, 3>;
+
 using CalcPointSetData = TSearchSpaceElement<bCONSIDER_GRAVITY ? FINGER_NUMBER + 1 : FINGER_NUMBER>;
-using HoldingPointSet  = Eigen::Matrix<CalcScalar, FINGER_NUMBER, 3>;
 using SearchSpace      = std::vector<CalcPointSetData>;
 
 } // namespace Types
