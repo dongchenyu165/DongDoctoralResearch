@@ -16,8 +16,10 @@ using Trajectory     = std::vector<TrajectoryNode>;
 
 using HoldingPointSet = Eigen::Matrix<CalcScalar, FINGER_NUMBER, 3>;
 
-using CalcPointSetData = TSearchSpaceElement<bCONSIDER_GRAVITY ? FINGER_NUMBER + 1 : FINGER_NUMBER>;
-using SearchSpace      = std::vector<CalcPointSetData>;
+using CalcPointSetData         = TSearchSpaceElement<bCONSIDER_GRAVITY ? FINGER_NUMBER + 1 : FINGER_NUMBER>;
+using CalcPointSetDataPtr      = std::shared_ptr<CalcPointSetData>;
+using CalcPointSetDataConstPtr = std::shared_ptr<const CalcPointSetData>;
+using SearchSpace              = std::vector<CalcPointSetDataPtr>;
 
 } // namespace Types
 

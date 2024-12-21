@@ -5,9 +5,10 @@
 #include "GlobalVars.hpp"
 #include <Eigen/Core>
 #include <Eigen/src/Core/IO.h>
+#include <memory>
 
 template<int ForceCount = 3>
-struct TSearchSpaceElement
+struct TSearchSpaceElement : public std::enable_shared_from_this<TSearchSpaceElement<ForceCount>>
 {
 	// For search space generating.
 	static constexpr int FORCE_COUNT = ForceCount;
@@ -32,6 +33,11 @@ struct TSearchSpaceElement
 					<< "\tPoint Index: " << PointIndexPair.transpose() << std::endl;
 		
 		return StrStream.str();
+	}
+
+	static std::shared_ptr<TSearchSpaceElement> MakeShared()
+	{
+		return std::make_shared<TSearchSpaceElement>();
 	}
 };
 

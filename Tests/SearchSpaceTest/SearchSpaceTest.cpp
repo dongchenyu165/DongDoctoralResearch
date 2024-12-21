@@ -55,7 +55,7 @@ protected:
 
 TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ValidCombinationCount)
 {
-	std::vector<Types::CalcPointSetData> SearchSpace;
+	Types::SearchSpace SearchSpace;
 	size_t ResultCount = Generator->Generate(SearchSpace);
 
 	EXPECT_EQ(ResultCount, 10);        // Combinations C(5, 2) == 10
@@ -64,7 +64,7 @@ TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ValidCombinationCount)
 
 TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ContentVerification)
 {
-	std::vector<Types::CalcPointSetData> SearchSpace;
+	Types::SearchSpace SearchSpace;
 	Generator->Generate(SearchSpace);
 	// Eigen::Matrix<float, 2, 3> PositionPair;
 	// Eigen::Matrix<float, 1, 3> PositionPair2;
@@ -75,11 +75,11 @@ TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ContentVerification)
 	{
 		for ( int i = 0; i < Types::CalcPointSetData::FINGER_COUNT; ++i )
 		{
-			int point_idx          = set_data.PointIndexPair(i);
+			int point_idx          = set_data->PointIndexPair(i);
 			const CalcPoint& point = (*OperatingPC)[point_idx];
 
-			EXPECT_EQ(set_data.PositionPair.row(i).transpose(), point.getVector3fMap().cast<Types::CalcScalar>());
-			EXPECT_EQ(set_data.NormalPair.row(i).transpose(), point.getNormalVector3fMap().cast<Types::CalcScalar>());
+			EXPECT_EQ(set_data->PositionPair.row(i).transpose(), point.getVector3fMap().cast<Types::CalcScalar>());
+			EXPECT_EQ(set_data->NormalPair.row(i).transpose(), point.getNormalVector3fMap().cast<Types::CalcScalar>());
 		}
 	}
 }

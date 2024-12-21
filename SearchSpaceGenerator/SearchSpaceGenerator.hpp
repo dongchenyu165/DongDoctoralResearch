@@ -14,7 +14,7 @@ class SearchSpaceGenerator
 public:
 	SearchSpaceGenerator(Types::CalcPCPTR InPC);
 
-	size_t Generate(std::vector<Types::CalcPointSetData>& OutSearchSpace);
+	size_t Generate(Types::SearchSpace& OutSearchSpace);
 
 private:
 	Types::CalcPCPTR OperatingPC;

@@ -7,9 +7,9 @@
 #include "2_FilterByGeo/GeoScoreCalcConfig.hpp"
 #include "ScoreCalculator/ScoreCalculatorBase.hpp"
 
-class GeometryFilterScoreCalculator : public TScoreCalculatorBase<Types::CalcPointSetData, GeoFilterScoreCalcConfig>
+class GeometryFilterScoreCalculator : public TScoreCalculatorBase<Types::CalcPointSetDataPtr, GeoFilterScoreCalcConfig>
 {
-	using Super = TScoreCalculatorBase<Types::CalcPointSetData, GeoFilterScoreCalcConfig>;
+	using Super = TScoreCalculatorBase<Types::CalcPointSetDataPtr, GeoFilterScoreCalcConfig>;
 	using Self  = GeometryFilterScoreCalculator;
 
 public:
@@ -18,12 +18,12 @@ public:
 	{
 	}
 
-	virtual void CalcRawScore(const Types::CalcPointSetData& InData, int InCurrentDataIdx) override
+	virtual void CalcRawScore(const Types::CalcPointSetDataPtr& InDataPtr, int InCurrentDataIdx) override
 	{
-		Types::ConstVec3& P1 = InData.PositionPair.row (0);
-		Types::ConstVec3& P2 = InData.PositionPair.row (1);
-		Types::ConstVec3& N1 = InData.NormalPair.row (0);
-		Types::ConstVec3& N2 = InData.NormalPair.row (1);
+		Types::ConstVec3& P1 = InDataPtr->PositionPair.row (0);
+		Types::ConstVec3& P2 = InDataPtr->PositionPair.row (1);
+		Types::ConstVec3& N1 = InDataPtr->NormalPair.row (0);
+		Types::ConstVec3& N2 = InDataPtr->NormalPair.row (1);
 
 		Types::CalcScalar RawDistanceScore = 1;
 		Types::CalcScalar Distance			= (P2 - P1).norm ();

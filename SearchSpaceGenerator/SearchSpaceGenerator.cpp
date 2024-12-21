@@ -43,7 +43,7 @@ size_t CalcCombination(const size_t InElementCount, const size_t InSelectCount, 
 	return Upper / Lower;
 }
 
-size_t SearchSpaceGenerator::Generate(std::vector<Types::CalcPointSetData>& OutSearchSpace)
+size_t SearchSpaceGenerator::Generate(Types::SearchSpace& OutSearchSpace)
 {
 	using namespace Types;
 	LOG_FUNC_ENTER(Logger, debug, 0);
@@ -60,7 +60,12 @@ size_t SearchSpaceGenerator::Generate(std::vector<Types::CalcPointSetData>& OutS
 
 	// Initial the output [OutSearchSpace] std::vector.
 	const size_t SearchSpaceCount = CalcCombination(PointIndexList.size(), CalcPointSetData::FINGER_COUNT, Logger);
-	OutSearchSpace.assign(SearchSpaceCount, CalcPointSetData());
+	OutSearchSpace.clear();
+	OutSearchSpace.reserve(SearchSpaceCount);
+	for(int i = 0; i < SearchSpaceCount; ++i)
+	{
+		OutSearchSpace.push_back(CalcPointSetData::MakeShared());
+	}
 	SPDLog::Log_D(Logger, 0, "Pre allocate [OutSearchSpace] with size: [{}].", SearchSpaceCount);
 
 	size_t CombIdx = 0;
@@ -69,17 +74,17 @@ size_t SearchSpaceGenerator::Generate(std::vector<Types::CalcPointSetData>& OutS
 	/// 			[PointIndexSetIt] is the iterator of {0, 1}
 	for ( auto&& PointIndexSetIt : iter::combinations(PointIndexList, CalcPointSetData::FINGER_COUNT) )
 	{
-		CalcPointSetData& OperatingData = OutSearchSpace[CombIdx];
+		CalcPointSetDataPtr& OperatingData = OutSearchSpace[CombIdx];
 
 		size_t DataIdx = 0;
 		for ( size_t PointIdx : PointIndexSetIt )
 		{
 			// Storage point position of each point in this point set.
-			OperatingData.PositionPair.row(DataIdx) = (*OperatingPC)[PointIdx].getVector3fMap().cast<Types::CalcScalar>();
+			OperatingData->PositionPair.row(DataIdx) = (*OperatingPC)[PointIdx].getVector3fMap().cast<Types::CalcScalar>();
 			// Storage point normal of each point in this point set.
-			OperatingData.NormalPair.row(DataIdx) = (*OperatingPC)[PointIdx].getNormalVector3fMap().cast<Types::CalcScalar>();
+			OperatingData->NormalPair.row(DataIdx) = (*OperatingPC)[PointIdx].getNormalVector3fMap().cast<Types::CalcScalar>();
 			// Storage index of each point in this point set.
-			OperatingData.PointIndexPair(DataIdx) = PointIdx;
+			OperatingData->PointIndexPair(DataIdx) = PointIdx;
 			DataIdx++;
 		}
 
