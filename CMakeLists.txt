@@ -244,3 +244,9 @@ if(TEST_ScoreCalculator)
 	add_subdirectory(Tests/spdlog_Test)
 endif()
 
+option(TEST_ForceBalancer "Build and execute the [TEST_ForceBalancer]" ON)
+if(TEST_ScoreCalculator)
+	message("Build TEST_ForceBalancer")
+	add_subdirectory(Tests/4_ForceScore)
+endif()
+

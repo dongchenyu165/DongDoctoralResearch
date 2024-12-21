@@ -1,0 +1,3 @@
+add_executable(BalancerTests ForceBalancerTest.cpp)
+target_link_libraries(BalancerTests gtest)
+add_test(NAME BalancerTest COMMAND BalancerTests)
