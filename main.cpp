@@ -127,6 +127,10 @@ int main()
 
 	Trajectory KnifeTrajectory = MakeTrajectory(OriginPC);
 
+	// This is the dictionary mentioned in the paper Algorithm 1.
+	// std::map<HoldingPointSet, Types::CalcScalar> HoldingPointSetScoreMap;
+	std::map<CalcPointSetDataPtr, Types::CalcScalar> ScoreMap;
+
 	for ( int i = 0; i < KnifeTrajectory.size(); i++ )
 	{
 
@@ -142,9 +146,28 @@ int main()
 		continue;
 		for ( int j = 0; j < MainSearchSpace.size(); j++ )
 		{
-			HoldingPointSet& HoldingPointSet = MainSearchSpace[j].PositionPair;  // SearchSpacetType  $\mathbf{P}$
-
 			Types::CalcScalar ForceScore = CalForceScore(KnifeForce, MainSearchSpace[j]);
+
+			const Types::CalcScalar& PositionScore = MainSearchSpace[j]->GeoScore;
+
+			const Types::CalcScalar PointSetScore = PositionScore + ForceScore;
+			if (ForceScore != -INFINITY)
+			{
+				auto&& SearchSpaceElement = ScoreMap.find(MainSearchSpace[j]);
+				if (SearchSpaceElement == ScoreMap.end())
+				{
+					ScoreMap.insert({MainSearchSpace[j], PointSetScore});
+				}
+				else
+				{
+					SearchSpaceElement->second += PointSetScore;
+				}
+			}
+		}
+
+	}
+
+	// Find the best HoldingPointSet which has the highest score.
 
 	return 0;
 }
