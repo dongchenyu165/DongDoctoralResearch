@@ -142,6 +142,7 @@ protected:
 		// Finally fill the [ReturnDataList] with the sorted datas.
 		ReturnDataList.reserve(this->DataScoreList.size());
 
+		// TODO: Check if this push_back() can be removed
 		LOG_INDENT(Logger, debug, "Push back to [ReturnDataList].");
 		for ( const auto& DataScorePair : this->DataScoreList )
 		{
