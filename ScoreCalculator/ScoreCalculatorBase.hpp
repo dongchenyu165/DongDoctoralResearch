@@ -150,6 +150,32 @@ protected:
 	}
 
 public:
+
+	/**
+	 * @brief Calculates scores for a list of input data
+	 * 
+	 * Calculation Steps:
+	 * 1. Initializes internal data structures (DataScoreList and ScoreRawData)
+	 * 2. Calculates raw scores for each input data point (Depends on the implementation of virtual function CalcRawScore())
+	 * 3. Computes final scores through normalization, weighting and sorting
+	 * 
+	 * @param InDataList Vector containing input data points to be scored. Typically, 
+	 * 						in my research, the type is [SearchSpaceType] aka to 
+	 * 						[std::vector<std::shared_ptr<TSearchSpaceElement<2>>>]
+	 * 
+	 * @details The process involves:
+	 * - Resizing internal containers to match input size
+	 * - Initializing scores to -INFINITY
+	 * - Computing raw scores for each input element
+	 * - Processing raw scores into final weighted and normalized scores
+	 * - Sorting results in descending order
+	 * 
+	 * @note The final scores are stored in DataScoreList, with raw component 
+	 *       scores maintained in ScoreRawData
+	 * 
+	 * @see CalcRawScore()
+	 * @see CalcFinalScore()
+	 */
 	void CalculateScore(const std::vector<InputDataType>& InDataList)
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
