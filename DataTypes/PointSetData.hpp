@@ -20,8 +20,13 @@ struct TSearchSpaceElement : public std::enable_shared_from_this<TSearchSpaceEle
 	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> PositionPair;
 	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> NormalPair;
 	Eigen::Matrix<int, ForceCount, 1> PointIndexPair;
-	
+
 	bool bIsIgnored = false;  // Flag this element is ignored from all of the further calculation.
+
+	Types::CalcScalar GeoScore = 0.0;
+	Types::CalcScalar ForceScore    = 0.0;
+	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> ForcePair;
+
 	std::string ToString()
 	{
 		std::stringstream StrStream;
