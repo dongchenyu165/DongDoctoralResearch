@@ -67,9 +67,9 @@ ForceTorqueType CalKnifeForce(CuttingFaceResult& InCuttingFaceResultObj, Traject
 	return Calculator.CalculateKnifeForce(InTrajectoryNode.Velocity);
 }
 
-float CalForceScore(ForceTorqueType InKnifeForce, HoldingPointSet InHoldingPointSet)
+CalcScalar CalForceScore(ForceTorqueType InKnifeForce, CalcPointSetDataPtr InPointSetDataPtr)
 {
-	return 0.0f;
+	return 0.0;
 }
 
 // 
@@ -144,11 +144,7 @@ int main()
 		{
 			HoldingPointSet& HoldingPointSet = MainSearchSpace[j].PositionPair;  // SearchSpacetType  $\mathbf{P}$
 
-			float ForceScore = CalForceScore(KnifeForce, HoldingPointSet);
-			
-		}
-
-	}
+			Types::CalcScalar ForceScore = CalForceScore(KnifeForce, MainSearchSpace[j]);
 
 	return 0;
 }
