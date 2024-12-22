@@ -22,7 +22,7 @@ using CalcPointSetData         = TSearchSpaceElement<bCONSIDER_GRAVITY ? FINGER_
 // Type alias for the shared pointer of the [CalcPointSetData]. @see CalcPointSetData
 using CalcPointSetDataPtr      = std::shared_ptr<CalcPointSetData>;
 using CalcPointSetDataConstPtr = std::shared_ptr<const CalcPointSetData>;
-using SearchSpace              = std::vector<CalcPointSetDataPtr>;
+using SearchSpaceType              = std::vector<CalcPointSetDataPtr>;
 
 } // namespace Types
 

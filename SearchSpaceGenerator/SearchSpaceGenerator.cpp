@@ -43,7 +43,7 @@ size_t CalcCombination(const size_t InElementCount, const size_t InSelectCount, 
 	return Upper / Lower;
 }
 
-size_t SearchSpaceGenerator::Generate(Types::SearchSpace& OutSearchSpace)
+size_t SearchSpaceGenerator::Generate(Types::SearchSpaceType& OutSearchSpace)
 {
 	using namespace Types;
 	LOG_FUNC_ENTER(Logger, debug, 0);

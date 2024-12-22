@@ -33,14 +33,14 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 	PCL_Helper::TPointCloudInfo<Types::CalcPoint> PC_InfoObj(InPC);
 	CuttingFaceResultObj.StaticData.CenterOfMass = PC_InfoObj.GetPointsCenter().cast<CalcScalar>();
 
-	SearchSpace InitSearchSpace;
+	SearchSpaceType InitSearchSpace;
 	PCL_Helper::SearchSpaceGenerator SearchSpaceGenObj(CuttingFaceResultObj.GraspingPC);
 	size_t RealCombCount = SearchSpaceGenObj.Generate(InitSearchSpace);
 
 	return std::make_tuple(CuttingFaceResultObj, InitSearchSpace);
 }
 
-SearchSpace FilterByGeoScore(SearchSpace InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
+SearchSpaceType FilterByGeoScore(SearchSpaceType InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
 {
 	using EGettingMethod = GeometryFilterScoreCalculator::ReturnDataSelectorType::EMethod;
 	GeoFilterScoreCalcConfig Param;
@@ -134,7 +134,7 @@ int main()
 
 		auto [CuttingFaceResultObj, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
 
-		SearchSpace MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj, KnifeTrajectoryNode);
+		SearchSpaceType MainSearchSpace = FilterByGeoScore(InitSearchSpace, CuttingFaceResultObj, KnifeTrajectoryNode);
 
 		auto KnifeForce = CalKnifeForce(CuttingFaceResultObj, KnifeTrajectoryNode);
 

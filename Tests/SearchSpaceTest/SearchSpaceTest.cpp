@@ -13,7 +13,7 @@
 bool TEST_GenerateInitSearchSpace(const SPDLog::LoggerType& InLogger, Types::CalcPCPTR InPC)
 {
 	PCL_Helper::SearchSpaceGenerator SearchSpaceGenObj(InPC);
-	Types::SearchSpace ResultSearchSpace;
+	Types::SearchSpaceType ResultSearchSpace;
 	size_t RealCombCount = SearchSpaceGenObj.Generate(ResultSearchSpace);
 
 	return true;
@@ -55,7 +55,7 @@ protected:
 
 TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ValidCombinationCount)
 {
-	Types::SearchSpace SearchSpace;
+	Types::SearchSpaceType SearchSpace;
 	size_t ResultCount = Generator->Generate(SearchSpace);
 
 	EXPECT_EQ(ResultCount, 10);        // Combinations C(5, 2) == 10
@@ -64,7 +64,7 @@ TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ValidCombinationCount)
 
 TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ContentVerification)
 {
-	Types::SearchSpace SearchSpace;
+	Types::SearchSpaceType SearchSpace;
 	Generator->Generate(SearchSpace);
 	// Eigen::Matrix<float, 2, 3> PositionPair;
 	// Eigen::Matrix<float, 1, 3> PositionPair2;
