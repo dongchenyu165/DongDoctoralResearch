@@ -38,7 +38,7 @@ public:
 };
 
 template<typename Scalar>
-static void CalculateVelocity(std::vector<TKnifeTrajectoryNode<Scalar>>& InOutTrajectory, const std::vector<Scalar>& InScalarVelocity, const Eigen::Matrix<Scalar, 3, 1>& InEndVelocity = Eigen::Matrix<Scalar, 3, 1>::Zero())
+static void CalculateVelocity(std::vector<TKnifeTrajectoryNode<Scalar>, Eigen::aligned_allocator<TKnifeTrajectoryNode<Scalar>>>& InOutTrajectory, const std::vector<Scalar>& InScalarVelocity, const Eigen::Matrix<Scalar, 3, 1>& InEndVelocity = Eigen::Matrix<Scalar, 3, 1>::Zero())
 {
 	for (size_t i = 0; i < InOutTrajectory.size() - 1; i++)
 	{

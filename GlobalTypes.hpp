@@ -12,7 +12,7 @@ namespace Types
 {
 
 using TrajectoryNode = TKnifeTrajectoryNode<CalcScalar>;
-using Trajectory     = std::vector<TrajectoryNode>;
+using Trajectory     = std::vector<TrajectoryNode, Eigen::aligned_allocator<TrajectoryNode>>;
 
 using HoldingPointSet = Eigen::Matrix<CalcScalar, FINGER_NUMBER, 3>;
 

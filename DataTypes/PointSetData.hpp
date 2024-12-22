@@ -48,6 +48,8 @@ struct EvaluationStaticData
 	
 	struct CuttingFaceInfoType
 	{
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 		Types::CalcPCPTR CuttingFacePC;
 		// The point center of the cutting face.
 		Types::Vec3 Center;
@@ -57,7 +59,7 @@ struct EvaluationStaticData
 		// Y-axis to cutting face normal, X-axis to the blade
 		Types::Mat4x4 PlanePose;
 	} ;
-	std::vector<CuttingFaceInfoType> CuttingFaceInfoList;
+	std::vector<CuttingFaceInfoType, Eigen::aligned_allocator<CuttingFaceInfoType>> CuttingFaceInfoList;
 };
 
 template<int ForceCount = 3>
