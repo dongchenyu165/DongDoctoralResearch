@@ -125,11 +125,6 @@ public:
 
 			if ( !BalanceRes.isZero(1e-6) )
 			{
-				// std::cout << "\033[31m\033[1m" << std::endl;
-				// std::cout << "Assert Failed: Calculated force is NOT balanced!" << std::endl;
-				// std::cout << "Result finger force: " << InOutInitForce.transpose() << std::endl;
-				// std::cout << "Balanced result (NET force act on the object): " << BalanceRes.transpose() << std::endl;
-				// std::cout << "\033[0m" << std::endl;
 				return false;
 			}
 		}
