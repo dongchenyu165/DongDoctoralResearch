@@ -81,16 +81,13 @@ public:
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	TFingerForceBalancer(const Vec3& InCoM)
+	TFingerForceBalancer(const Vec3& InCoM, const Vec6& InExternalForce = Vec6::Zero()) : CoM(InCoM), ExternalForce(InExternalForce)
 	{
 		for ( int i = 0; i < ForceCount; i++ )
 		{
 			GMat.template block<3, 3>(0, i * 3) = Mat3x3::Identity();
 		}
 	}
-
-	TFingerForceBalancer(const Vec3& InCoM, const Vec6& InExternalForce)
-		: CoM(InCoM), ExternalForce(InExternalForce) { }
 
 	void SetExternalForce(const Vec6& InExternalForce) { ExternalForce = InExternalForce; }
 
