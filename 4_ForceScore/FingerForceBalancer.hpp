@@ -111,7 +111,8 @@ public:
 		GMatInv.template block<ForceCount * 3, 6>(0, 0) = res.template block<ForceCount * 3, 6>(0, 0);
 	}
 
-	bool MakeForceBalanced(ForceListType& InOutInitForce)
+	template<typename Derived>
+	bool MakeForceBalanced(Eigen::MatrixBase<Derived>& InOutInitForce)
 	{
 		// 计算【当前手指力与平衡力】之间的误差
 		const Vec6&& BalancedForceError = GMat * InOutInitForce - ExternalForce;
