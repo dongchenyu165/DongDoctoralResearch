@@ -103,10 +103,18 @@
 		}
 	},
 	"CalForceScore":{
-		"Param":{
-			"MaxRandomRangeForce" : 300,
-			"RandomHalfAngle" : 90,
-			"AngleLimit": 120
+		"ForceGenBasicParam":{
+			"AngleLimit": 120,
+			"GeneratingRetryTimes" : 100
+		},
+		"FingerForceGeneratorWithinCone_Param":{
+			"ForceRangeMin" : 5,
+			"ForceRangeMax" : 300,
+			"RandomHalfAngle" : 90
+		},
+		"FingerForceGeneratorByRandomK_Param":{
+			"ForceRangeMin" : 5,
+			"ForceRangeMax" : 300
 		},
 		"Weight":{
 			"Weight_ForceIntensity" : 2,
