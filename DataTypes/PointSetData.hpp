@@ -17,15 +17,15 @@ struct TSearchSpaceElement : public std::enable_shared_from_this<TSearchSpaceEle
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	// These matrix are generate by [Search space generator]
-	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> PositionPair;
-	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> NormalPair;
-	Eigen::Matrix<int, ForceCount, 1> PointIndexPair;
+	Eigen::Matrix<Types::CalcScalar, ForceCount, 3, Eigen::RowMajor> PositionPair;
+	Eigen::Matrix<Types::CalcScalar, ForceCount, 3, Eigen::RowMajor> NormalPair;
+	Eigen::Matrix<int, ForceCount, 1> PointIndexPair;  // (n, 1) and (1, n) are NOT allowed using [Eigen::RowMajor] [Eigen::ColMajor]
 
 	bool bIsIgnored = false;  // Flag this element is ignored from all of the further calculation.
 
 	Types::CalcScalar GeoScore = 0.0;
 	Types::CalcScalar ForceScore    = 0.0;
-	Eigen::Matrix<Types::CalcScalar, ForceCount, 3> ForcePair;
+	Eigen::Matrix<Types::CalcScalar, ForceCount, 3, Eigen::RowMajor> ForcePair;
 
 	std::string ToString()
 	{
