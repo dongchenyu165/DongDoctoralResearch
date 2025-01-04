@@ -136,7 +136,7 @@ public:
 		return true;
 	}
 
-	ForceListType CalculateFingerForece(const ForceListType& InK)
+	[[deprecated("Use MakeForceBalanced instead")]] ForceListType CalculateFingerForeceByK(const ForceListType& InK)
 	{
 		return GMatInv * ExternalForce + (NullSpaceIdentity - GMatInv * GMat) * InK;
 	}

@@ -66,7 +66,13 @@ TEST(FingerForceBalancerTest, CalculateFingerForce)
 	Eigen::Matrix<double, 6, 1> InK;
 	InK.setZero();
 
-	auto OutResult = Balancer.CalculateFingerForece(InK);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+	auto OutResult = Balancer.CalculateFingerForeceByK(InK);
+#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
 	Eigen::Matrix<double, 6, 1> NetForce = Balancer.GMat * OutResult - InExtForce;
 	EXPECT_TRUE(NetForce.isZero(1e-6));
