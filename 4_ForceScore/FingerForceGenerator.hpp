@@ -26,9 +26,11 @@ protected:
 	using GeneratorPointSetDataPtr = std::shared_ptr<GeneratorPointSetData>;
 	using GeneratorPointSetDataConstPtr = std::shared_ptr<const GeneratorPointSetData>;
 
+public:
 	using ForcePairType      = Eigen::Matrix<Scalar, ForceCount, 3, Eigen::RowMajor>;
 	using ForcePairAllocType = Eigen::aligned_allocator<ForcePairType>;
 	using ForcePairListType  = std::vector<ForcePairType, ForcePairAllocType>;
+protected:
 	using BalancerType       = TFingerForceBalancer<Scalar, ForceCount>;
 	// using NormalType         = decltype(Types::CalcPointSetData::NormalPair);
 	using NormalType         = Eigen::Matrix<Scalar, ForceCount, 3, Eigen::RowMajor>;
