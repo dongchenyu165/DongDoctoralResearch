@@ -39,6 +39,7 @@ protected:
 
 	using DataScorePairType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
 	using DataScorePairListType = std::vector<DataScorePairType>;
+	using DataScoreMapType 		= std::map<InputDataType /* Input Data Obj*/, double /* Score */>;
 	using ReturnDataListType    = std::vector<InputDataType>;
 
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
@@ -133,6 +134,7 @@ protected:
 		{
 			// Storage the final score to each element's first member var through the [DataScoreList].
 			this->DataScoreList[i].first = ScoreVector(i);
+			this->DataScoreMap[this->DataScoreList[i].second] = ScoreVector(i);
 		}
 
 		LOG_INDENT(Logger, debug, "Sort by score.");
@@ -197,6 +199,7 @@ public:
 			// Initial final score to 0.
 			// DataScoreList[i].first = 0;
 			DataScoreList[i].second = InDataList[i];
+			DataScoreMap[InDataList[i]] = -INFINITY;  // Init to min of the float.
 		}
 
 		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
@@ -225,10 +228,21 @@ public:
 		return DataSelector.GetSelectedDataByMethodName(InGettingMethodName, InGettingDataSize);
 	}
 
+	double GetScore(const InputDataType& InData) const
+	{
+		auto FindIter = DataScoreMap.find(InData);
+		if (FindIter == DataScoreMap.end())
+		{
+			return -INFINITY;
+		}
+		return FindIter->second;
+	}
+
 	size_t Size() { return DataScoreList.size(); }
 
 protected:
 	DataScorePairListType DataScoreList;
+	DataScoreMapType DataScoreMap;
 	ReturnDataListType ReturnDataList;  // The final data list after sorting by score.
 	ConfigObjType ConfigData;
 	EvaluationStaticData& StaticData;
