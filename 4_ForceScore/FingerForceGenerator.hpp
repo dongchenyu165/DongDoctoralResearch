@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <nlohmann/json.hpp>
 #include <random>
+#include <memory>
 
 using json = nlohmann::json;
 
@@ -19,7 +20,7 @@ using json = nlohmann::json;
  *
  */
 template<typename Scalar, int ForceCount = 2>
-class TFingerForceGenerator
+class TFingerForceGenerator : public std::enable_shared_from_this<TFingerForceGenerator<Scalar, ForceCount>>
 {
 protected:
 	using GeneratorPointSetData = TSearchSpaceElement<ForceCount>;
