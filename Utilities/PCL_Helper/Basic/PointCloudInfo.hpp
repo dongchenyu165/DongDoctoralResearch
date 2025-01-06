@@ -61,6 +61,7 @@ class TPointCloudInfo
 	static constexpr int PointDim = HAS_z_FIELD<PointType>() ? 3 : 2;
 
   public:
+	TPointCloudInfo() = default;
 	TPointCloudInfo(PCPTR<PointType> InPC) : OperatingPC(InPC) { UpdateInfo(); }
 
 	void SetCalculationPC(PCPTR<PointType> InPC)
