@@ -50,6 +50,8 @@ struct EvaluationStaticData
 {
 	Eigen::Matrix<Types::CalcScalar, 4, 4> KnifePose;
 	Types::Vec3 CenterOfMass;
+	Types::Vec3 TableContactPoint;
+	Types::CalcScalar FoodMass;
 	
 	struct CuttingFaceInfoType
 	{

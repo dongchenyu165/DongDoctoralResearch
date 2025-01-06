@@ -13,6 +13,7 @@
 #include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
 #include "DataTypes/PointSetData.hpp"
 #include "GlobalBaseTypes.hpp"
+#include "GlobalVars.hpp"
 #include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
 #include "Utilities/PCL_Helper/Basic/PlyMeshCreator.hpp"
 #include "Utilities/spdlog/FunctionAutoLogger.hpp"
@@ -227,11 +228,38 @@ public:
 			ConfigJson["FoodParams"][InFoodName]["FractureToughness"], CalculationStaticData.CenterOfMass, InKnifeVelocity, Logger);
 		OutCuttingForce += OutCuttingFractureForce;
 
+		if constexpr (bCONSIDER_GRAVITY)
+		{
+			LOG_INDENT(Logger, info, "3. Calculate Gravity Force.");
+			// Data from https://vldb.gsi.go.jp/sokuchi/gsigra/calc/index.html 東２号館； 6-floor Height: 20.0m
+			Types::ForceTorqueType OutCuttingGravityForce = CuttingGravityForce(CalculationStaticData, 9.797485, Logger);
+			OutCuttingForce += OutCuttingGravityForce;
+		}
+
 		LOG_INDENT(Logger, info, "Knife Force Result: [{}]", OutCuttingForce);
 		return OutCuttingForce;
 	}
 
 private:
+	static Types::ForceTorqueType CuttingGravityForce(
+		const EvaluationStaticData& InStaticData,
+		// Data from https://vldb.gsi.go.jp/sokuchi/gsigra/calc/index.html 東２号館； 6-floor Height: 20.0m
+		const Types::CalcScalar& InGravityConstant = 9.797485,
+		SPDLog::LoggerType Logger = nullptr)
+	{
+		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);
+		Types::ForceTorqueType OutCuttingForce = Types::ForceTorqueType::Zero(6, 1);
+		
+		// Add gravity force
+		OutCuttingForce << 0, 0, InStaticData.FoodMass * InGravityConstant, 0, 0, 0;
+		const auto& GravityForce = OutCuttingForce.block<3, 1>(0, 0);
+		const auto GravityTorque = (InStaticData.TableContactPoint - InStaticData.CenterOfMass).cross(GravityForce);
+		OutCuttingForce.block<3, 1>(3, 0) = GravityTorque;
+		
+		LOG_INDENT(Logger, info, "Gravity force and torque: [{}]", OutCuttingForce);
+		return OutCuttingForce;
+	}
+
 	static Types::ForceTorqueType CuttingFractureForce(
 		Types::CalcPCPTR InBladeCurvePointList, 
 		Types::CalcScalar InFractureToughness, 
