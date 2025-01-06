@@ -59,7 +59,6 @@ struct EvaluationStaticData
 	Types::Vec3 CenterOfMass;
 	Types::Vec3 TableContactPoint;
 	Types::CalcScalar FoodMass;
-	
 	struct CuttingFaceInfoType
 	{
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW

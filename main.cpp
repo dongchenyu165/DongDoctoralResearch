@@ -28,6 +28,7 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 
 	CuttingFaceMaker Maker(gTempCalculationParamJsonPath, InTrajectoryNode);
 	CuttingFaceResult CuttingFaceResultObj = Maker.MakeCuttingFace(InPC);
+	CuttingFaceResultObj.StaticData.GraspingPC = CuttingFaceResultObj.GraspingPC;
 
 	// Calculate the center of mass of the input point cloud. (Use the average of all points as CoM)
 	PCL_Helper::TPointCloudInfo<Types::CalcPoint> PC_InfoObj(InPC);
