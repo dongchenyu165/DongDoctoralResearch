@@ -231,7 +231,7 @@ protected:
 	DataScorePairListType DataScoreList;
 	ReturnDataListType ReturnDataList;  // The final data list after sorting by score.
 	ConfigObjType ConfigData;
-	EvaluationStaticData StaticData;
+	EvaluationStaticData& StaticData;
 
 	// A matrix to storage the score data with size (Pre-Allocated DataSize, ComponentSize).
 	// 		[Pre-Allocated DataSize] set by the construct function's [InDataSize] argument.
