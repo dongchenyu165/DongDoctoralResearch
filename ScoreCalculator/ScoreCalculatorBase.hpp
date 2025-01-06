@@ -1,6 +1,7 @@
 #ifndef BA74CF56_6B15_4A96_9B54_92D61F2CCA22
 #define BA74CF56_6B15_4A96_9B54_92D61F2CCA22
 
+#include <tuple>
 #include <vector>
 #include <map>
 
@@ -104,6 +105,12 @@ protected:
 		return InA.first > InB.first;
 	}
 
+	virtual std::tuple<double, double> GetNormalizedMinMax(const int InScoreComponentIdx)
+	{
+		const auto ColRef = this->ScoreRawData.col(InScoreComponentIdx);
+		return { ColRef.minCoeff(),	ColRef.maxCoeff() };
+	}
+
 	/**
 	 * @brief Mainly used function.
 	            Normalize each score component at their own.
@@ -119,10 +126,9 @@ protected:
 		// Normalize each score component.
 		for ( int i = 0; i < ScoreComponentCount; i++ )
 		{
-			float min                         = this->ScoreRawData.col(i).minCoeff();
-			float max                         = this->ScoreRawData.col(i).maxCoeff();
-			this->ScoreRawData.col(i).array() += min;
-			this->ScoreRawData.col(i) / (max - min);
+			auto [ NormMin, NormMax ] = GetNormalizedMinMax(i);
+			this->ScoreRawData.col(i).array() += NormMin;
+			this->ScoreRawData.col(i) / (NormMax - NormMin);
 		}
 
 		// Apply the weight to each component for all datas.
