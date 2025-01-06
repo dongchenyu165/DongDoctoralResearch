@@ -120,9 +120,6 @@
 			"Weight_ForceIntensity" : 2,
 			"Weight_ForceNormalAngle" : 2,
 			"Weight_ForceVarience" : 1,
-			"Weight_KnifeDistance" : 4,
-			"Weight_PointPairDir" : 5,
-			"Weight_" : 1,
 			"ForceAngleLimit" : 45
 		}
 	}
