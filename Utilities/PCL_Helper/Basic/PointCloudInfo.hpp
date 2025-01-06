@@ -62,12 +62,15 @@ class TPointCloudInfo
   public:
 	TPointCloudInfo(PCPTR<PointType> InPC) : OperatingPC(InPC) { UpdateInfo(); }
 
+	void SetCalculationPC(PCPTR<PointType> InPC)
+	{
+		OperatingPC = InPC;
+		UpdateInfo();
+	}
+
 	size_t GetSize() { return OperatingPC->size(); }
-
 	TAABB<float, PointDim> GetAABB() const { return AABB; }
-
 	Eigen::Matrix<float, PointDim, 1> GetPointsCenter() const { return PointsCenter; }
-
 	Eigen::Matrix<float, PointDim, 1> GetAABBCenter() const { return AABBCenter; }
 
 	void UpdateInfo()
