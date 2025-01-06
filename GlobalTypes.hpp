@@ -18,7 +18,7 @@ using Trajectory     = std::vector<TrajectoryNode, Eigen::aligned_allocator<Traj
 using HoldingPointSet = Eigen::Matrix<CalcScalar, FINGER_NUMBER, 3>;
 
 // Type alias for the calculation related data (like [position] [point normal] [point index] etc...) for a point set.
-using CalcPointSetData         = TSearchSpaceElement<bCONSIDER_GRAVITY ? FINGER_NUMBER + 1 : FINGER_NUMBER>;
+using CalcPointSetData         = TSearchSpaceElement<FINGER_NUMBER>;
 // Type alias for the shared pointer of the [CalcPointSetData]. @see CalcPointSetData
 using CalcPointSetDataPtr      = std::shared_ptr<CalcPointSetData>;
 using CalcPointSetDataConstPtr = std::shared_ptr<const CalcPointSetData>;
