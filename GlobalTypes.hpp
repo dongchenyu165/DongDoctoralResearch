@@ -26,4 +26,9 @@ using SearchSpaceType              = std::vector<CalcPointSetDataPtr>;
 
 } // namespace Types
 
+#define POINT_SET_DATA_TYPE_ALIAS(FORCE_COUNT_PARAM) /* */ \
+using PointSetData         = TSearchSpaceElement<FORCE_COUNT_PARAM>;\
+using PointSetDataPtr      = std::shared_ptr<PointSetData>;\
+using PointSetDataConstPtr = std::shared_ptr<const PointSetData>;
+
 #endif /* CDB22300_C712_4BB5_9D8B_D6D84A929F34 */

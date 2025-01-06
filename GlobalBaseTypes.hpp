@@ -16,6 +16,11 @@ using Vec3        = Eigen::Matrix<CalcScalar, 3, 1>;
 using ConstVec3   = const Eigen::Matrix<CalcScalar, 3, 1>;
 using Mat4x4      = Eigen::Matrix<CalcScalar, 4, 4>;
 using ConstMat4x4 = const Eigen::Matrix<CalcScalar, 4, 4>;
+#define DEF_MATRIX_TYPES_ALIASES(SCALAR_TYPE) \
+	using Vec3        = Eigen::Matrix<SCALAR_TYPE, 3, 1>; \
+	using ConstVec3   = const Eigen::Matrix<SCALAR_TYPE, 3, 1>; \
+	using Mat4x4      = Eigen::Matrix<SCALAR_TYPE, 4, 4>; \
+	using ConstMat4x4 = const Eigen::Matrix<SCALAR_TYPE, 4, 4>;
 
 using CalcPoint = PCL_Helper::PointXYZRGBN;
 // Point cloud with a [PointXYZRGBN] point type for this program.
