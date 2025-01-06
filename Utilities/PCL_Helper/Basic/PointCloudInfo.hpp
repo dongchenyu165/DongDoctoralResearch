@@ -68,7 +68,7 @@ class TPointCloudInfo
 		UpdateInfo();
 	}
 
-	size_t GetSize() { return OperatingPC->size(); }
+	size_t GetPointCount() { return OperatingPC->size(); }
 	TAABB<float, PointDim> GetAABB() const { return AABB; }
 	Eigen::Matrix<float, PointDim, 1> GetPointsCenter() const { return PointsCenter; }
 	Eigen::Matrix<float, PointDim, 1> GetAABBCenter() const { return AABBCenter; }
