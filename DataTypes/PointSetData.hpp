@@ -48,6 +48,13 @@ struct TSearchSpaceElement : public std::enable_shared_from_this<TSearchSpaceEle
 
 struct EvaluationStaticData
 {
+	// In this program,
+	// Knife's cross section has a triangle shape.
+	// knife pose means the middle plane pose of the knife.
+	// The rotation matrix.
+	// 		1st-column is the blade direction.
+	// 		3rd-column is the middle plane's normal direction.
+	// 		2nd-column is calculated by cross_product with a right-hand coordinate.
 	Eigen::Matrix<Types::CalcScalar, 4, 4> KnifePose;
 	Types::Vec3 CenterOfMass;
 	Types::Vec3 TableContactPoint;
