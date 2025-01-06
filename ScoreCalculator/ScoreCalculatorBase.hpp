@@ -69,6 +69,19 @@ public:
 		FUNC_LOGGER_RET;
 	}
 
+	/**
+	 * @brief A function to decide data A is LARGER than B.
+	 *
+	 * @param InA data A
+	 * @param InB data B
+	 * @return true A is LARGER than B.
+	 * @return false A is SMALLER than B.
+	 */
+	static bool __INTERNAL_USE__SortPredicate(const DataScorePairType& InA, const DataScorePairType& InB)
+	{
+		return InA.first > InB.first;
+	}
+
 protected:
 	/**
 	 * @brief Calculate a raw score of each score-component by using the input [InData] and the [StaticData].
@@ -90,20 +103,7 @@ protected:
 	 * @brief Sort the [DataScoreList] by their score in descending order.
 	 *
 	 */
-	void SortByScore() { std::stable_sort(DataScoreList.begin(), DataScoreList.end(), &Self::SortPredicate); }
-
-	/**
-	 * @brief A function to decide data A is LARGER than B.
-	 *
-	 * @param InA data A
-	 * @param InB data B
-	 * @return true A is LARGER than B.
-	 * @return false A is SMALLER than B.
-	 */
-	static bool SortPredicate(const DataScorePairType& InA, const DataScorePairType& InB)
-	{
-		return InA.first > InB.first;
-	}
+	void SortByScore() { std::stable_sort(DataScoreList.begin(), DataScoreList.end(), &Self::__INTERNAL_USE__SortPredicate); }
 
 	virtual std::tuple<double, double> GetNormalizedMinMax(const int InScoreComponentIdx)
 	{
