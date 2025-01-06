@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/src/Core/util/Constants.h>
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -65,10 +66,11 @@ class TPointCloudInfo
 	void SetCalculationPC(PCPTR<PointType> InPC)
 	{
 		OperatingPC = InPC;
+		assert(OperatingPC);
 		UpdateInfo();
 	}
 
-	size_t GetPointCount() { return OperatingPC->size(); }
+	size_t GetPointCount() { assert(OperatingPC); return OperatingPC->size(); }
 	TAABB<float, PointDim> GetAABB() const { return AABB; }
 	Eigen::Matrix<float, PointDim, 1> GetPointsCenter() const { return PointsCenter; }
 	Eigen::Matrix<float, PointDim, 1> GetAABBCenter() const { return AABBCenter; }
