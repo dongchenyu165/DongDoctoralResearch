@@ -8,7 +8,7 @@ constexpr int FINGER_NUMBER = 2;
 
 // True: Consider the gravity and the force from the cutting board
 constexpr bool bCONSIDER_GRAVITY = false;
-
+constexpr int FORCE_COUNT = bCONSIDER_GRAVITY ? FINGER_NUMBER + 1 : FINGER_NUMBER;
 
 
 inline std::string CalculationParamJsonPath = "./params.json";
