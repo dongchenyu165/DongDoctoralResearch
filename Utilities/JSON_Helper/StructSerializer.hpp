@@ -36,34 +36,34 @@ using json = nlohmann::json;
  * @param InKeyList A key list (or path) to navigate to the json dictionary of structure.
  * @param OutStruct
  */
-template<typename StructType>
+template<typename StructType, typename JsonObjType = json>
 void LoadStructure_ByPath(const std::string& InJsonPath, const std::vector<std::string>& InKeyList, StructType& OutStruct)
 {
 	std::ifstream f(InJsonPath);
-	json OrgData = json::parse(f, nullptr, true, true);
+	JsonObjType OrgData = JsonObjType::parse(f, nullptr, true, true);
 
-	json Data    = OrgData;
+	JsonObjType Data    = OrgData;
 	for ( auto CurKey : InKeyList )
 	{
 		Data = Data[CurKey];
 	}
 
-	OutStruct = Data.get<StructType>();
+	OutStruct = Data.template get<StructType>();
 }
 
-template<typename StructType>
+template<typename StructType, typename JsonObjType = json>
 void LoadStructure_ByJsonStr(const std::string& InJsonStr, const std::vector<std::string>& InKeyList, StructType& OutStruct)
 {
 	std::stringstream ss(InJsonStr);
-	json OrgData = json::parse(ss, nullptr, true, true);
+	JsonObjType OrgData = JsonObjType::parse(ss, nullptr, true, true);
 
-	json Data    = OrgData;
+	JsonObjType Data    = OrgData;
 	for ( auto CurKey : InKeyList )
 	{
 		Data = Data[CurKey];
 	}
 
-	OutStruct = Data.get<StructType>();
+	OutStruct = Data.template get<StructType>();
 }
 
 } // namespace JSON_Helper
