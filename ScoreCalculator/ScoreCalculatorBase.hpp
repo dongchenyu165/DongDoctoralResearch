@@ -208,14 +208,15 @@ public:
 			DataScoreMap[InDataList[i]] = -INFINITY;  // Init to min of the float.
 		}
 
-		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
+		const int DisplaySize = std::min(10, static_cast<int>(ScoreRawData.rows()));
+		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", ScoreRawData.block(0, 0, DisplaySize, ScoreComponentCount));
 		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD ALL [-INFINITY]):  {:f10}", DataScoreList);
 
 		// Calculate the final (normalize, weighted and sorted) score.
 		LOG_INDENT(Logger, info, "Start to calculate the final (normalize, weighted and sorted) score.");
 		CalcFinalScore();
 
-		LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
+		LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, DisplaySize, ScoreComponentCount));
 		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD SORTED DECENT ORDER): {:f10}", DataScoreList);
 		FUNC_LOGGER_RET;
 	}
