@@ -3,7 +3,7 @@
 
 namespace Utilities
 {
-template<typename Scalar, int Rows, int Cols, int Options = Eigen::RowMajor>
+template<typename Scalar, int Rows, int Cols, int Options = Eigen::ColMajor>
 struct MatrixLess
 {
 	bool operator()(const Eigen::Matrix<Scalar, Rows, Cols, Options>& lhs,
