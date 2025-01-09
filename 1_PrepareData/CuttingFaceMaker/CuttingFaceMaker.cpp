@@ -131,7 +131,7 @@ CuttingFaceMaker::CuttingFaceMaker(const std::string& InConfigJsonPath,
 	// Load json config object.
 	std::ifstream f(InConfigJsonPath);
 	Logger->debug("Loading json config from file {}.", InConfigJsonPath);
-	ConfigObj = json::parse(f, nullptr, true, true)["Prepare-Data"]["MakeCuttingFace"];
+	ConfigObj = nlohmann::json::parse(f, nullptr, true, true)["Prepare-Data"]["MakeCuttingFace"];
 
 	// json::dump() will not execute if no need to log.
 	if ( Logger->should_log(spdlog::level::debug) )

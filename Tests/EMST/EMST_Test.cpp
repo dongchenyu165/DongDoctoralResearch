@@ -10,7 +10,6 @@
 #include <unsupported/Eigen/Splines>
 
 
-using json = nlohmann::json;
 
 int main()
 {

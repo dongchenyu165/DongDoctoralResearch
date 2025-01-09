@@ -88,6 +88,7 @@ protected:
 		}
 	}
 })";
+		using json = nlohmann::json;
 		json JsonObj        = json::parse(JsonStr);
 
 		Generator =

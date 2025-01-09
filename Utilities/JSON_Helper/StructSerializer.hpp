@@ -5,10 +5,10 @@
 
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
 
 namespace JSON_Helper
 {
+using json = nlohmann::json;
 
 /**
  * @brief Load a struct/class from a json file.

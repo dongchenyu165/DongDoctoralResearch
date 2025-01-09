@@ -18,7 +18,6 @@
 #include "DebugViewer.hpp"
 #include "PointArrangementViewer.hpp"
 
-using json = nlohmann::json;
 
 namespace PCL_Helper
 {
@@ -47,6 +46,7 @@ struct DebugViewerConfig
 template<typename PointType>
 class TDebugViewerManager
 {
+	using json = nlohmann::json;
 public:
 	/**
 	 * @brief The priority is [Larger is lower].

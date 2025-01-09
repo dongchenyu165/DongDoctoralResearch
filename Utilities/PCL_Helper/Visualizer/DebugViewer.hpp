@@ -7,7 +7,6 @@
 #include <Utilities/spdlog/LogConfig.hpp>
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
 #if false
 
 template<typename PointType>
@@ -41,6 +40,7 @@ namespace PCL_Helper
 template<typename PointType>
 class TDebugViewer : public PCL_Helper::TSimpleCloudViewer<PointType>
 {
+	using json = nlohmann::json;
 public:
 	/**
 	 * @brief The priority is [Larger is lower].
