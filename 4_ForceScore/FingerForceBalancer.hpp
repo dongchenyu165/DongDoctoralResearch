@@ -119,8 +119,7 @@ public:
 
 		if constexpr ( ASSERT_RESULT_BALANCED )
 		{
-			const Vec6&& BalanceRes = (GMat * InOutInitForce - ExternalForce);
-
+			const Vec6 BalanceRes = (GMat * InOutInitForce - ExternalForce);
 			if ( !BalanceRes.isZero(1e-6) )
 			{
 				return false;
