@@ -83,6 +83,7 @@ size_t SearchSpaceGenerator::Generate(Types::SearchSpaceType& OutSearchSpace)
 			OperatingData->PositionPair.row(DataIdx) = (*OperatingPC)[PointIdx].getVector3fMap().cast<Types::CalcScalar>();
 			// Storage point normal of each point in this point set.
 			OperatingData->NormalPair.row(DataIdx) = (*OperatingPC)[PointIdx].getNormalVector3fMap().cast<Types::CalcScalar>();
+			OperatingData->NormalPair.row(DataIdx).normalize();
 			// Storage index of each point in this point set.
 			OperatingData->PointIndexPair(DataIdx) = PointIdx;
 			DataIdx++;
