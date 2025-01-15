@@ -96,10 +96,56 @@ void Test_OMP()
 
 }
 
+int Test_33() {
+    // Method 1: Using dynamic vector
+    Eigen::VectorXd col_vec(3);
+    col_vec << 1, 2, 3;
+    
+    // Copy the column vector 4 times to create a matrix
+    Eigen::MatrixXd result1 = col_vec.replicate(1, 4);
+    
+    // Method 2: Using fixed size vector
+    Eigen::Vector3d fixed_vec;
+    fixed_vec << 4, 5, 6;
+    Eigen::Matrix3d result2;
+    result2 = fixed_vec.replicate(1, 3);
+    
+    std::cout << "Original vector:\n" << col_vec << "\n\n";
+    std::cout << "Replicated matrix (dynamic):\n" << result1 << "\n\n";
+    std::cout << "Replicated matrix (fixed):\n" << result2 << "\n";
+    
+    return 0;
+}
+
+void Test_22()
+{
+	using MatType = Matrix<double, 2, 3, RowMajor>;
+	using MappedType = Matrix<double, MatType::SizeAtCompileTime, 1>;
+	MatType A;
+	A << 1, 2, 3, 4, 5, 6;
+	std::cout << "A: " << A << std::endl;
+
+	Map<MappedType> MappedA(A.data());
+
+	constexpr int EXTEND_ROW = 10;
+	using ExtendMatType = Matrix<double, MatType::SizeAtCompileTime * EXTEND_ROW, 1>;
+	using ExtendMatType2 = Matrix<double, MatType::SizeAtCompileTime, EXTEND_ROW>;
+	ExtendMatType ExtendMat = MappedA.replicate(EXTEND_ROW, 1);
+	ExtendMatType2 ExtendMat2 = MappedA.replicate(1, EXTEND_ROW);
+	
+	std::cout << "ROWS: " << ExtendMat.rows() << "; COLS: " << ExtendMat.cols() << std::endl;
+	std::cout << ExtendMat << std::endl << std::endl << std::endl;
+	
+	std::cout << "ROWS: " << ExtendMat2.rows() << "; COLS: " << ExtendMat2.cols() << std::endl;
+	std::cout << ExtendMat2 << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
 	// Test_VectorListDotProduct();
 	// Test_X_Matrix();
-	Test_OMP();
+	// Test_OMP();
+	Test_22();
+	// Test_33();
 	return 0;
 }

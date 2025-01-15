@@ -63,6 +63,23 @@ cmake_minimum_required(VERSION 3.15...3.22)
 project(GraspingPointCalculator LANGUAGES CXX)
 
 
+# Enable CUDA support
+option(ENABLE_CUDA_SUPPORT "Using CUDA?" ON)
+if(ENABLE_CUDA_SUPPORT)
+	# Find and Enable CUDA support
+	set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-12.2)
+	find_package(CUDA 12.2 REQUIRED)
+	set(CMAKE_CUDA_COMPILER ${CUDA_NVCC_EXECUTABLE})  # Must set the CUDA compiler before enable_language(CUDA).
+	enable_language(CUDA)
+
+	# Set CUDA related variable.
+	set(CMAKE_CUDA_STANDARD 17)
+	set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+	set(CMAKE_CUDA_ARCHITECTURES 75)  # Set CUDA architecture（[75] for [RTX 2080]）
+	message("CMAKE_CUDA_COMPILER: ${CMAKE_CUDA_COMPILER}")
+
+	include_directories(${CUDA_INCLUDE_DIRS})
+endif()
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -198,6 +215,13 @@ option(TEST_EIGEN "Build and execute the test" ON)
 if(TEST_EIGEN)
 	message("Build Eigen Test")
 	add_subdirectory(Tests/EigenTest)
+endif()
+
+
+option(TEST_CUDA_EIGEN "Build and execute the CUDA EIGEN test" ON)
+if(TEST_CUDA_EIGEN)
+	message("Build CUDA EIGEN Test")
+	add_subdirectory(Tests/cuda_eigen)
 endif()
 
 
