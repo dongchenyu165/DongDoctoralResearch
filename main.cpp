@@ -135,7 +135,7 @@ int main()
 	auto OriginPC = LoadPC("./points.pcd");
 
 	std::ifstream f(gTempCalculationParamJsonPath);
-	gParamJson = json::parse(f, nullptr, true, true);
+	gParamJson = nlohmann::ordered_json::parse(f, nullptr, true, true);
 
 	Trajectory KnifeTrajectory = MakeTrajectory(OriginPC);
 
