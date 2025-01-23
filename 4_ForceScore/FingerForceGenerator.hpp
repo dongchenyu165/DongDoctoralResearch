@@ -132,17 +132,21 @@ public:
 	int GetGeneratingRetryTimes() const { return GeneratingRetryTimes; }
 
 protected:
-	virtual bool IsValidFingerForce(const ForcePairType& InFingerForce, const NormalType& InPointSetNormal) const
+	virtual bool IsValidFingerForce(const ForcePairType& InFingerForce, const NormalType& InPointSetNormal, int& OutFailureReason) const
 	{
-		// Both [InFingerForce] and [InPointSetNormal} are (n, 3) matrix where n is the number of fingers, each row is a
-		// finger force or normal vector. Check if the force vector and the normal vector is within the angle limit.
+		enum FailureReason
+		{
+			None = 0,
+			ForceLengthOutOfRange,
+			AngleExceedsLimit
+		};
+
 		for ( int i = 0; i < FORCE_COUNT; i++ )
 		{
 			const auto& InForce = InFingerForce.row(i);
 			const auto& Normal  = InPointSetNormal.row(i);
 
 			const double ForceLength = InForce.norm();
-
 
 			// Skip zero force vectors
 			if ( ForceLength < 1e-6 )
@@ -151,8 +155,9 @@ protected:
 			}
 
 			// Check if the force vector is within the specified range
-			if (ForceLength < ForceMin || ForceLength > ForceMax)
+			if ( ForceLength > ForceMax * 2 )
 			{
+				OutFailureReason = ForceLengthOutOfRange;
 				return false;
 			}
 
@@ -163,9 +168,11 @@ protected:
 			// Check if angle exceeds limit
 			if ( Angle > AngleLimit )
 			{
+				OutFailureReason = AngleExceedsLimit;
 				return false;
 			}
 		}
+		OutFailureReason = None;
 		return true;
 	}
 
