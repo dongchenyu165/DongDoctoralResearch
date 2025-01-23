@@ -194,6 +194,13 @@ void FirstInitScoreMap(std::unordered_map<CalcPointSetDataPtr, Types::CalcScalar
 	bFirstInit = false;
 }
 
+template<typename Scalar>
+inline bool IsValidFloat(Scalar InValue)
+{
+	return !std::isnan(InValue) && !std::isinf(InValue) && InValue > -std::numeric_limits<Scalar>::max() &&
+	       InValue < std::numeric_limits<Scalar>::max();
+}
+
 int main()
 {
 	gLogger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("Global", LogConfigJsonPath);
