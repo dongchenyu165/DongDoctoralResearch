@@ -170,6 +170,30 @@ Trajectory MakeTrajectory(CalcPCPTR InPC)
 	return TestTrajectory;
 }
 
+template<typename HashType=std::hash<CalcPointSetDataPtr>, typename EqualType=std::equal_to<CalcPointSetDataPtr>>
+void FirstInitScoreMap(std::unordered_map<CalcPointSetDataPtr, Types::CalcScalar, HashType, EqualType>& ScoreMap, CalcPCPTR InGraspingPC)
+{
+	constexpr float PRESERVE_RATIO = 1.5;
+	static bool bFirstInit = true;
+	if (!bFirstInit)
+	{
+		return;
+	}
+
+	// Calculate the combination count of the point cloud, C(OriginPC->size(), FINGER_COUNT).
+	size_t CombinationCount = 1;
+	const size_t N          = InGraspingPC->size();
+	for ( size_t i = 0; i < FINGER_NUMBER; i++ )
+	{
+		CombinationCount *= (N - i);
+		CombinationCount /= (i + 1);
+	}
+	gLogger->debug("Combination count: {}", CombinationCount);
+
+	ScoreMap.reserve(CombinationCount * PRESERVE_RATIO);
+	bFirstInit = false;
+}
+
 int main()
 {
 	gLogger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("Global", LogConfigJsonPath);
