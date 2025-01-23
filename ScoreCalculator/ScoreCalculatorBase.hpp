@@ -196,6 +196,7 @@ public:
 
 		DataScoreList.resize(InDataList.size(), { -INFINITY, InputDataType() });
 		ScoreRawData.resize(DataScoreList.size(), ScoreComponentCount);
+		ScoreRawData.setConstant(-std::numeric_limits<Types::CalcScalar>::infinity()); // Init to min of the float.
 		// assert((ScoreRawData.array() == -std::numeric_limits<Types::CalcScalar>::infinity()).all());
 
 		LOG_INDENT(Logger, trace, "Start to calculate the raw score.");
