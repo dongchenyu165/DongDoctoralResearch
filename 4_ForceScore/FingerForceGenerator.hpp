@@ -5,6 +5,8 @@
 #include "GlobalTypes.hpp"
 #include "GlobalBaseTypes.hpp"
 #include "4_ForceScore/FingerForceBalancer.hpp"
+#include "GlobalVars.hpp"
+#include "spdlog/logger.h"
 #include <cassert>
 #include <cmath>
 #include <cstddef>
@@ -50,9 +52,10 @@ public:
 		Types::Vec3 InCoM,
 		GeneratorPointSetDataConstPtr InPointSetDataPtr,
 		size_t InFingerForceGenCount,
-		const json& InJson)
+		const json& InJson,
+		std::shared_ptr<spdlog::logger> InLogger = nullptr)
 		: KnifeForce(InKnifeForce), CenterOfMass(InCoM), PointSetDataPtr(InPointSetDataPtr),
-		  FingerForceGenCount(InFingerForceGenCount)
+		  FingerForceGenCount(InFingerForceGenCount), Logger(InLogger)
 	{
 		GeneratingRetryTimes = InJson["CalForceScore"]["ForceGenBasicParam"]["GeneratingRetryTimes"];
 		AngleLimit           = InJson["CalForceScore"]["ForceGenBasicParam"]["AngleLimit"].get<double>() * M_PI / 180.0;
@@ -191,6 +194,8 @@ protected:
 	std::mt19937 RandGenerator;
 
 	BalancerType FingerForceBalancer{ CenterOfMass, KnifeForce };
+
+	std::shared_ptr<spdlog::logger> Logger;
 };
 template<typename Scalar = double, int ForceCount = 2>
 class TFingerForceGeneratorWithinCone : public TFingerForceGenerator<Scalar, ForceCount>
@@ -209,8 +214,9 @@ public:
 		Types::Vec3 InCoM,
 		typename Super::GeneratorPointSetDataConstPtr InPointSetDataPtr,
 		size_t InFingerForceGenCount,
-		const typename Super::json& InJson)
-		: Super(InKnifeForce, InCoM, InPointSetDataPtr, InFingerForceGenCount, InJson)
+		const typename Super::json& InJson,
+		std::shared_ptr<spdlog::logger> InLogger = nullptr)
+		: Super(InKnifeForce, InCoM, InPointSetDataPtr, InFingerForceGenCount, InJson, InLogger)
 	{
 		// Do nothing
 		const typename Super::json& GeneratorJsonObj = InJson["CalForceScore"]["FingerForceGeneratorWithinCone_Param"];
@@ -377,8 +383,9 @@ public:
 		Types::Vec3 InCoM,
 		typename Super::GeneratorPointSetDataConstPtr InPointSetDataPtr,
 		size_t InFingerForceGenCount,
-		const typename Super::json& InJson)
-		: TFingerForceGenerator<Scalar, ForceCount>(InKnifeForce, InCoM, InPointSetDataPtr, InFingerForceGenCount, InJson)
+		const typename Super::json& InJson,
+		std::shared_ptr<spdlog::logger> InLogger = nullptr)
+		: TFingerForceGenerator<Scalar, ForceCount>(InKnifeForce, InCoM, InPointSetDataPtr, InFingerForceGenCount, InJson, InLogger)
 	{
 		const typename Super::json& GeneratorJsonObj = InJson["CalForceScore"]["FingerForceGeneratorByRandomK_Param"];
 		const double ForceRangeMin   = GeneratorJsonObj["ForceRangeMin"];
