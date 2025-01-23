@@ -90,21 +90,38 @@ public:
 	{
 		size_t SuccessCount = 0;
 
-		// #pragma omp parallel for reduction(+:SuccessCount)
+		size_t ConditionFailedCount = 0;
+		size_t BalanceFailedCount = 0;
+		size_t ForceLengthOutOfRangeCount = 0;
+		size_t AngleExceedsLimitCount = 0;
+
+		// #pragma omp parallel for reduction(+:SuccessCount, ConditionFailedCount, BalanceFailedCount, ForceLengthOutOfRangeCount, AngleExceedsLimitCount)
 		for ( size_t i = 0; i < FingerForceGenCount; i++ )
 		{
 			int RetryTimes = GeneratingRetryTimes;
 			do
 			{
+				RetryTimes--;
+
 				ForcePairType& ForcePair = ForcePairList[i];
 				GenereateSingleForcePair(ForcePair);  // This function is implemented in the sub-class.
 
 				Eigen::Map<typename BalancerType::ForceListType> FingerForceList(ForcePair.data());
 				bool bGenSuccess = FingerForceBalancer.MakeForceBalanced(FingerForceList);
 
+				int FailureReason = 0;
 				// Check if the generated finger force is valid
-				if ( !IsValidFingerForce(ForcePair, PointSetDataPtr->NormalPair) )
+				if ( !IsValidFingerForce(ForcePair, PointSetDataPtr->NormalPair, FailureReason) )
 				{
+					ConditionFailedCount++;
+					if ( FailureReason == 1 )
+					{
+						ForceLengthOutOfRangeCount++;
+					}
+					else if ( FailureReason == 2 )
+					{
+						AngleExceedsLimitCount++;
+					}
 					// If invalid, retry generating.
 					continue;
 				}
@@ -114,8 +131,12 @@ public:
 					SuccessCount++;
 					break;
 				}
+				else
+				{
+					BalanceFailedCount++;
+				}
 			}
-			while ( RetryTimes-- );
+			while ( RetryTimes );
 
 			if ( RetryTimes == 0 )
 			{
