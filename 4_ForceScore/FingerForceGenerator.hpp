@@ -141,11 +141,7 @@ public:
 			if ( RetryTimes == 0 )
 			{
 				// If the retry times is exhausted, set the force pair to infinity.
-				ForcePairList[i].setConstant(Eigen::Infinity);
-			}
-		}
-
-		return SuccessCount;
+				ForcePairList[i].setConstant(std::numeric_limits<Scalar>::infinity());
 	}
 
 	// Getters
