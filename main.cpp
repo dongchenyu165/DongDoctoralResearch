@@ -18,7 +18,7 @@
 
 using namespace Types;
 std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
-json gParamJson;
+nlohmann::json gParamJson;
 SPDLog::LoggerType gLogger;
 
 
