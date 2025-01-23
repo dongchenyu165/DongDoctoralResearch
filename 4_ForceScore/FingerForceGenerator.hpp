@@ -305,36 +305,11 @@ protected:
 			// Generate random direction within cone
 			const double Theta = this->AngleDist(this->RandGenerator);
 			const double Phi   = this->AzimuthDist(this->RandGenerator);
-
-			// Convert spherical coordinates to Cartesian coordinates
-			// Generate a random direction within a cone that direction is (0, 0, 1)
-			// Types::Vec3 RandomDir;
-			// RandomDir.x() = sin(Theta) * cos(Phi);
-			// RandomDir.y() = sin(Theta) * sin(Phi);
-			// RandomDir.z() = cos(Theta);
-
+			
 			InOutForcePair.row(i) << sin(Theta) * cos(Phi), sin(Theta) * sin(Phi), cos(Theta);
-			// InOutForcePair.row(i).x() = sin(Theta) * cos(Phi);
-			// InOutForcePair.row(i).y() = sin(Theta) * sin(Phi);
-			// InOutForcePair.row(i).z() = cos(Theta);
-
-			// Rotate RandomDir to align with InNormalVec
-			// Rotate above vector (cone direction of generating this vector) to align with InNormalVec
-			// Eigen::Quaterniond Q = Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitZ(), NormalVec.normalized());
-			// const Eigen::Vector3d RotatedDir = CachedRotationMatrices[i] * RandomDir;
-
-			// InOutForcePair.row(i)
-
-			// Scale by length
-			// InOutForcePair.row(i) = Length * (CachedRotationMatrices[i] * RandomDir);
+			
 			const Vec3 RotatedDir = CachedRotationMatrices[i] * InOutForcePair.row(i).transpose();
 			InOutForcePair.row(i) = Length * RotatedDir;
-			// InOutForcePair.row(i) = Length * (CachedRotationMatrices[i] * InOutForcePair.row(i).transpose());
-			// InOutForcePair.row(i) = Length * (InOutForcePair.row(i) * (CachedRotationMatrices[i].transpose()));
-
-			// const Eigen::Vector3d rotatedVector = InOutForcePair.row(i) * CachedRotationMatrices[i].transpose();
-			// const Eigen::Vector3d rotatedVector = InOutForcePair.row(i) * CachedRotationMatrices[i];
-			// InOutForcePair.row(i) = Length * rotatedVector;
 		}
 	}
 
