@@ -1,20 +1,29 @@
-#include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
-#include "2_FilterByGeo/GeometryFilterScoreCalculator.hpp"
-#include "3_KnifeForceCalculator/KnifeForceCalculator.hpp"
+#include <omp.h>
+#include <pcl/io/pcd_io.h>
+
 #include "DataTypes/PointSetData.hpp"
+#include "DataTypes/KnifeTrajectoryNode.hpp"
 #include "GlobalBaseTypes.hpp"
-#include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
+#include "GlobalVars.hpp"
+#include "GlobalTypes.hpp"
+
 #include "Utilities/JSON_Helper/StructSerializer.hpp"
 #include "Utilities/PCL_Helper/Basic/PCL_TypeAlias.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudConverter.hpp"
 #include "Utilities/PCL_Helper/Basic/PointCloudInfo.hpp"
 #include "Utilities/spdlog/FunctionAutoLogger.hpp"
-#include <pcl/io/pcd_io.h>
-#include <vector>
-#include <tuple>
-#include <DataTypes/KnifeTrajectoryNode.hpp>
-#include <GlobalTypes.hpp>
-#include <Utilities/spdlog/LogConfig.hpp>
+#include "Utilities/spdlog/LogConfig.hpp"
+
+#include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
+#include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
+#include "2_FilterByGeo/GeometryFilterScoreCalculator.hpp"
+#include "3_KnifeForceCalculator/KnifeForceCalculator.hpp"
+#include "4_ForceScore/FingerForceGenerator.hpp"
+#include "4_ForceScore/ForceScoreCalculator.hpp"
+#include "4_ForceScore/ForceScoreCalculatorConfig.hpp"
+#include "4_PositionScore/PositionScoreCalculator.hpp"
+#include "4_PositionScore/PositionScoreCalculatorConfig.hpp"
+
 
 using namespace Types;
 std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
