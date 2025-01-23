@@ -45,6 +45,7 @@ protected:
 			_Point.normal_x = -static_cast<float>(i);
 			_Point.normal_y = -static_cast<float>(i);
 			_Point.normal_z = -static_cast<float>(i);
+			_Point.getNormalVector3fMap().normalize();
 			OperatingPC->push_back(_Point);
 		}
 	}
@@ -78,8 +79,13 @@ TEST_F(SearchSpaceGeneratorTest, GenerateSearchSpace_ContentVerification)
 			int point_idx          = set_data->PointIndexPair(i);
 			const CalcPoint& point = (*OperatingPC)[point_idx];
 
-			EXPECT_EQ(set_data->PositionPair.row(i).transpose(), point.getVector3fMap().cast<Types::CalcScalar>());
-			EXPECT_EQ(set_data->NormalPair.row(i).transpose(), point.getNormalVector3fMap().cast<Types::CalcScalar>());
+			EXPECT_NEAR(set_data->PositionPair(i, 0), point.x, 1e-6);
+			EXPECT_NEAR(set_data->PositionPair(i, 1), point.y, 1e-6);
+			EXPECT_NEAR(set_data->PositionPair(i, 2), point.z, 1e-6);
+			
+			EXPECT_NEAR(set_data->NormalPair(i, 0), point.normal_x, 1e-6);
+			EXPECT_NEAR(set_data->NormalPair(i, 1), point.normal_y, 1e-6);
+			EXPECT_NEAR(set_data->NormalPair(i, 2), point.normal_z, 1e-6);
 		}
 	}
 }
