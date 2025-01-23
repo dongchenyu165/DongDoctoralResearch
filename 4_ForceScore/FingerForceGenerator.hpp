@@ -153,6 +153,13 @@ public:
 							   return bIsInf;
 						   }),
 			ForcePairList.end());
+
+		if ( Logger )
+		{
+			Logger->trace("===---===---===: RetSize: {}, ConditionFailed: {}, BalanceFailed: {}  ;;   LengthOut: {}, AngleOut: {}",
+						 ForcePairList.size(), ConditionFailedCount, BalanceFailedCount, ForceLengthOutOfRangeCount, AngleExceedsLimitCount);
+		}
+
 		return ForcePairList.size();
 	}
 
