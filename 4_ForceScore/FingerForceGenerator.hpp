@@ -86,7 +86,7 @@ public:
 
 	ForcePairListType& GetGeneratedFingerForceList() { return ForcePairList; }
 
-	size_t GenerateFingerForceList()
+	virtual size_t GenerateFingerForceList()
 	{
 		size_t SuccessCount = 0;
 
