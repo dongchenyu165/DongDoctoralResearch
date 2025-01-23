@@ -13,6 +13,8 @@
 #include "Utilities/PCL_Helper/Basic/PointCloudInfo.hpp"
 #include "Utilities/spdlog/FunctionAutoLogger.hpp"
 #include "Utilities/spdlog/LogConfig.hpp"
+#include "Utilities/CustomHashAndCmp.hpp"
+#include "Utilities/ProcessBar.hpp"
 
 #include "SearchSpaceGenerator/SearchSpaceGenerator.hpp"
 #include "1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.hpp"
@@ -29,7 +31,6 @@ using namespace Types;
 std::string gTempCalculationParamJsonPath = "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/params.json";
 nlohmann::json gParamJson;
 SPDLog::LoggerType gLogger;
-
 
 auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 {
@@ -212,13 +213,13 @@ int main()
 
 	Trajectory KnifeTrajectory = MakeTrajectory(OriginPC);
 
+	size_t FinalValidCount = 0;
 	// This is the dictionary mentioned in the paper Algorithm 1.
-	// std::map<HoldingPointSet, Types::CalcScalar> HoldingPointSetScoreMap;
-	std::map<CalcPointSetDataPtr, Types::CalcScalar> ScoreMap;
+	std::unordered_map<CalcPointSetDataPtr, Types::CalcScalar, Utilities::TCalcPointSetDataPtrHash<CalcPointSetDataPtr, FINGER_NUMBER>, Utilities::TCalcPointSetDataPtrEqual<CalcPointSetDataPtr>> ScoreMap;
 
 	for ( int i = 0; i < KnifeTrajectory.size(); i++ )
 	{
-
+		gLogger->set_level(spdlog::level::info);
 		const auto& KnifeTrajectoryNode = KnifeTrajectory[i];
 
 		auto [CuttingFaceResultObj, InitSearchSpace] = PrepareData(OriginPC, KnifeTrajectoryNode);
@@ -227,32 +228,123 @@ int main()
 
 		auto KnifeForce = CalKnifeForce(CuttingFaceResultObj, KnifeTrajectoryNode);
 
-		gLogger->info("FINISHED, MainSearchSpace size: {}", MainSearchSpace.size());
-		continue;
+		FirstInitScoreMap(ScoreMap, CuttingFaceResultObj.GraspingPC);
+
+		// continue;
+		gLogger->debug("ScoreMap size: {}", ScoreMap.size());
+
+		EvaluationStaticData& StaticData = CuttingFaceResultObj.StaticData;
+
+		PositionScoreCalcConfig PositionScoreCalcParam;  // PositionWeight
+		JSON_Helper::LoadStructure_ByPath(gTempCalculationParamJsonPath, {"CalForceScore", "PositionWeight"}, PositionScoreCalcParam);
+		TPositionScoreCalculator<CalcScalar, FINGER_NUMBER> PositionScoreCalculator(PositionScoreCalcParam, MainSearchSpace.size(), nullptr, StaticData, gLogger);
+		PositionScoreCalculator.CalculateScore(MainSearchSpace);
+		gLogger->set_level(spdlog::level::debug);
+
+		size_t Count = 0;
+		FinalValidCount = 0;
+		#pragma omp parallel for shared(Count)
 		for ( int j = 0; j < MainSearchSpace.size(); j++ )
 		{
-			Types::CalcScalar ForceScore = CalForceScore(KnifeForce, MainSearchSpace[j]);
+			auto SearchSpaceElement = ScoreMap.find(MainSearchSpace[j]);
+			const bool bExist = SearchSpaceElement != ScoreMap.end();
 
-			const Types::CalcScalar& PositionScore = MainSearchSpace[j]->GeoScore;
-
-			const Types::CalcScalar PointSetScore = PositionScore + ForceScore;
-			if (ForceScore != -INFINITY)
+			if (!gLogger->should_log(spdlog::level::trace))
 			{
-				auto&& SearchSpaceElement = ScoreMap.find(MainSearchSpace[j]);
-				if (SearchSpaceElement == ScoreMap.end())
+				#pragma omp critical(console_output)
 				{
-					ScoreMap.insert({MainSearchSpace[j], PointSetScore});
+					Utilities::UpdateProgress(float(Count) / MainSearchSpace.size());
 				}
-				else
-				{
-					SearchSpaceElement->second += PointSetScore;
-				}
+			}
+			Count++;
+
+			// Skip the below calculation if the PointSetScore is already set to [-INFINITY].
+			if (bExist && SearchSpaceElement->second == -INFINITY) 
+			{
+				gLogger->trace("{} INVALID, SKIP", j);
+				continue;
+			}
+
+			// 1. Calculate the ForceScore.
+			const Types::CalcScalar ForceScore = CalForceScore(KnifeForce, StaticData, MainSearchSpace[j]);
+
+			// Calculate the PositionScore, except the ForceScore is -INFINITY.
+			//     Means there is no balanced force for this point set.
+			// So skip the PositionScore calculation.
+			// Also, [PointSetScore] set to -INFINITY and storage in the dictionary.
+			// 		Means if a point set
+			CalcScalar PositionScore = PositionScoreCalculator.GetScore(MainSearchSpace[j]);
+			assert(PositionScore != -INFINITY);  // Got -INFINITY means the point set is not EXIST in [PositionScoreCalculator]
+			// CalcScalar PositionScore2 = -INFINITY;
+			// if (ForceScore != -INFINITY)
+			// {
+			// 	// 2. Calculate the PositionScore.
+			// 	PositionScore = CalcForceScore_PositionScore(MainSearchSpace[j], StaticData);
+			// }
+
+
+			// Merge the score of the geometry and the force. PositionScore
+			const Types::CalcScalar PointSetScore = PositionScore + ForceScore;
+			// Accumulate or Insert the score into the score dictionary.
+			if (bExist)
+			{
+				SearchSpaceElement->second += PointSetScore;
+			}
+			else
+			{
+				ScoreMap.insert_or_assign(MainSearchSpace[j], PointSetScore);
+			}
+
+			// if ( gLogger->should_log(spdlog::level::trace) )
+			{
+				// gLogger->trace("Progress: {}/{} == {:+08.4f}", Count, MainSearchSpace.size(), ForceScore);
+				gLogger->info("ThreadID: {} Progress: {}/{} == {:+08.4f}", omp_get_thread_num(), Count, MainSearchSpace.size(), ForceScore);
+			}
+
+			if (!IsValidFloat(ForceScore))
+			{
+				FinalValidCount++;
 			}
 		}
 
+		gLogger->info("========================");
+		for ( auto& [Key, Value] : ScoreMap )
+		{
+			if (!IsValidFloat(Value))
+			{
+				continue;
+			}
+
+			gLogger->info("Point index list: {}, Score: {}", Key->PointIndexPair.transpose(), Value);
+		}
+		gLogger->info(" Found valid holding point sets: {}/{}", FinalValidCount, MainSearchSpace.size());
+		gLogger->info("========================");
 	}
 
-	// Find the best HoldingPointSet which has the highest score.
 
+	// Find the best HoldingPointSet which has the highest score.
+	std::vector<std::pair<CalcPointSetDataPtr, Types::CalcScalar>> SortedScoreList;
+	SortedScoreList.reserve(FinalValidCount);
+	for ( auto& [Key, Value] : ScoreMap )
+	{
+		if (IsValidFloat(Value))
+		{
+			SortedScoreList.emplace_back(Key, Value);
+		}
+	}
+
+	// Sort the dictionary [ScoreMap] by the score.
+	std::sort(SortedScoreList.begin(), SortedScoreList.end(), [](const auto& LHS, const auto& RHS) { return LHS.second > RHS.second; });
+	gLogger->info("=======  FOUND FORCE  ======");
+	for ( auto& [Key, Value] : SortedScoreList )
+	{
+		if (!IsValidFloat(Value))
+		{
+			continue;
+		}
+
+		gLogger->info("Point index list: {}, Score: {}", Key->PointIndexPair.transpose(), Value);
+	}
+	gLogger->info("========================");
 	return 0;
 }
