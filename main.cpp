@@ -82,9 +82,46 @@ ForceTorqueType CalKnifeForce(CuttingFaceResult& InCuttingFaceResultObj, Traject
 	return Calculator.CalculateKnifeForce(InTrajectoryNode.Velocity);
 }
 
-CalcScalar CalForceScore(ForceTorqueType InKnifeForce, CalcPointSetDataPtr InPointSetDataPtr)
+CalcScalar CalForceScore(ForceTorqueType InKnifeForce, EvaluationStaticData& InStaticData, CalcPointSetDataPtr InPointSetDataPtr)
 {
-	return 0.0;
+	static bool bIsParamLoaded = false;
+	static ForceScoreCalcConfig ForceScoreCalcParam;
+
+	int ThreadID = omp_get_thread_num();
+	SPDLog::LoggerType InternalLogger = SPDLog::LoggerManager::GetSubLogger(gLogger->name(), "CalForceScore_" + std::to_string(ThreadID));
+	InternalLogger->set_level(spdlog::level::warn);
+
+	using GeneratorType = TFingerForceGeneratorWithinCone<double, FINGER_NUMBER>;
+	using GeneratorBaseType = GeneratorType::Super;
+	
+	// Use GeneratorType object to generate a finger force list.
+	std::shared_ptr<GeneratorBaseType> GeneratorPtr =
+			std::make_shared<GeneratorType>(InKnifeForce, InStaticData.CenterOfMass, InPointSetDataPtr, 1800, gParamJson, gLogger);  // TODO: ["CalForceScore"]
+	size_t SucceedCnt = GeneratorPtr->GenerateFingerForceList();
+	if (SucceedCnt == 0)
+	{
+		gLogger->trace("No finger force generated. point index: {}", InPointSetDataPtr->PointIndexPair);
+		return -std::numeric_limits<CalcScalar>::infinity();
+	}
+	InternalLogger->info("{} finger force generated.", SucceedCnt);
+
+	GeneratorType::ForcePairListType& Result = GeneratorPtr->GetGeneratedFingerForceList();
+
+	// Sort and select the top score of the data.
+	if ( !bIsParamLoaded )
+	{
+		JSON_Helper::LoadStructure_ByPath<ForceScoreCalcConfig, nlohmann::ordered_json>(gTempCalculationParamJsonPath,
+			{ "CalForceScore", "Weight" }, ForceScoreCalcParam);
+	}
+	using ForceCalculatorType = TForceScoreCalculator<CalcScalar, FINGER_NUMBER>;
+	using EGettingMethod = ForceCalculatorType::ReturnDataSelectorType::EMethod;
+	ForceCalculatorType ForceScoreCalculator(ForceScoreCalcParam, Result.size(), InPointSetDataPtr, InStaticData, InternalLogger);
+	ForceScoreCalculator.CalculateScore(Result);
+	const ForceCalculatorType::ForcePairType ForceResult = ForceScoreCalculator.GetFinalDataList(EGettingMethod::Good, 1)[0];
+
+	const CalcScalar ForceScore = ForceScoreCalculator.GetScore(ForceResult);
+	
+	return ForceScore;
 }
 
 // 
