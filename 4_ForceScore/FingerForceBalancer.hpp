@@ -55,8 +55,8 @@ template<typename Scalar = double, int ForceCount = 2>
 class TFingerForceBalancer
 {
 	constexpr static bool ASSERT_RESULT_BALANCED = true;
-	using GraspingMatrixType        = Eigen::Matrix<Scalar, 6, ForceCount * 3>; // 6 x 3N Matrix type  Fx Fy Fz Tx Ty Tz
-	using GraspingMatrixInverseType = Eigen::Matrix<Scalar, ForceCount * 3, 6>;
+	using GraspingMatrixType        = Eigen::Matrix<Scalar, 6, ForceCount * 3, Eigen::RowMajor>; // 6 x 3N Matrix type  Fx Fy Fz Tx Ty Tz
+	using GraspingMatrixInverseType = Eigen::Matrix<Scalar, ForceCount * 3, 6, Eigen::RowMajor>;
 	using NullSpaceIdentityType     = Eigen::Matrix<Scalar, ForceCount * 3, ForceCount * 3>;
 
 	using GraspPointListType = Eigen::Matrix<Scalar, ForceCount, 3>; // N x 3 matrix type.
@@ -107,6 +107,10 @@ public:
 		const auto&& res                                = CalcSVD_MatInv(GMat);
 		GMatInv.template block<ForceCount * 3, 6>(0, 0) = res.template block<ForceCount * 3, 6>(0, 0);
 	}
+
+	auto GetGMat() const { return GMat; }
+	auto GetGMatInv() const { return GMatInv; }
+	auto GetExternalForce() const { return ExternalForce; }
 
 	template<typename Derived>
 	bool MakeForceBalanced(Eigen::MatrixBase<Derived>& InOutInitForce)
