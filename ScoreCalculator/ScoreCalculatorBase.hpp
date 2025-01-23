@@ -61,10 +61,10 @@ public:
 		ConfigData = InConfigJsonObj;
 		ScoreWeight = ConfigData.WeightVector;
 
-		if (InLogger && InLogger->should_log(spdlog::level::info))
+		if (InLogger && InLogger->should_log(spdlog::level::debug))
 		{
-			LOG_INDENT(Logger, info, "Initial score calculator.");
-			LOG_INDENT(Logger, info, "Score Weight Vector: [{}]", ScoreWeight);
+			LOG_INDENT(Logger, debug, "Initial score calculator.");
+			LOG_INDENT(Logger, debug, "Score Weight Vector: [{}]", ScoreWeight);
 		}
 		FUNC_LOGGER_RET;
 	}
@@ -126,9 +126,8 @@ protected:
 		// Normalize each score component.
 		for ( int i = 0; i < ScoreComponentCount; i++ )
 		{
-			auto [ NormMin, NormMax ] = GetNormalizedMinMax(i);
-			this->ScoreRawData.col(i).array() += NormMin;
-			this->ScoreRawData.col(i) / (NormMax - NormMin);
+			LOG_INDENT(Logger, debug, "Normalize score column [{}]. Min: [{}], Max: [{}].", i, NormMin, NormMax);
+			
 		}
 
 		// Apply the weight to each component for all datas.
@@ -189,15 +188,15 @@ public:
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
 
-		LOG_INDENT(Logger, info, "Start to calculate score with input data size [{}].", InDataList.size());
-		LOG_INDENT(Logger, debug, "Start to resize [DataScoreList] and [ScoreRawData]");
+		LOG_INDENT(Logger, debug, "Start to calculate score with input data size [{}].", InDataList.size());
+		LOG_INDENT(Logger, trace, "Start to resize [DataScoreList] and [ScoreRawData]");
 
 		DataScoreList.resize(InDataList.size(), { -INFINITY, InputDataType() });
 		ScoreRawData.resize(DataScoreList.size(), ScoreComponentCount);
-		ScoreRawData.setConstant(-INFINITY); // Init to min of the float.
+		// assert((ScoreRawData.array() == -std::numeric_limits<Types::CalcScalar>::infinity()).all());
 
-		LOG_INDENT(Logger, info, "Start to calculate the raw score.");
-		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements (SHOULD ALL [-INFINITY]): \n{}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
+		LOG_INDENT(Logger, trace, "Start to calculate the raw score.");
+		// LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements (SHOULD ALL [-INFINITY]): \n{}", ScoreRawData.block(0, 0, 10, ScoreComponentCount));
 		for ( int i = 0; i < InDataList.size(); i++ )
 		{
 			CalcRawScore(InDataList[i], i);
@@ -209,15 +208,15 @@ public:
 		}
 
 		const int DisplaySize = std::min(10, static_cast<int>(ScoreRawData.rows()));
-		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", ScoreRawData.block(0, 0, DisplaySize, ScoreComponentCount));
-		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD ALL [-INFINITY]):  {:f10}", DataScoreList);
+		// LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[ScoreRawData] front 10 elements: \n{}", ScoreRawData.block(0, 0, DisplaySize, ScoreComponentCount));
+		// LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD ALL [-INFINITY]):  {:f10}", DataScoreList);
 
 		// Calculate the final (normalize, weighted and sorted) score.
-		LOG_INDENT(Logger, info, "Start to calculate the final (normalize, weighted and sorted) score.");
+		LOG_INDENT(Logger, debug, "Start to calculate the final (normalize, weighted and sorted) score.");
 		CalcFinalScore();
 
-		LOG_INDENT(Logger, debug, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, DisplaySize, ScoreComponentCount));
-		LOG_INDENT_CHECK_SHOULD_LOG(Logger, debug, "[DataScoreList] front 10 elements' score (SHOULD SORTED DECENT ORDER): {:f10}", DataScoreList);
+		LOG_INDENT(Logger, trace, "[ScoreRawData] front 10 elements: \n{:+07.4}", ScoreRawData.block(0, 0, DisplaySize, ScoreComponentCount));
+		LOG_INDENT_CHECK_SHOULD_LOG(Logger, trace, "[DataScoreList] front 10 elements' score (SHOULD SORTED DECENT ORDER): {:f10}", DataScoreList);
 		FUNC_LOGGER_RET;
 	}
 
