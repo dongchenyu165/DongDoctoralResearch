@@ -1,14 +1,14 @@
 #ifndef B16ED593_C249_4151_BFA1_7D5EFA540194
 #define B16ED593_C249_4151_BFA1_7D5EFA540194
 
-#include <cstddef>
+// #include <cstddef>
 #include <pcl/impl/point_types.hpp>
 #include <pcl/visualization/pcl_visualizer.h>
 
 #include "../Basic/PCL_TypeAlias.hpp"
-#include "GlobalVars.hpp"
+// #include "GlobalVars.hpp"
 #include "pcl/common/io.h"
-#include <Utilities/spdlog/LogConfig.hpp>
+// #include <Utilities/spdlog/LogConfig.hpp>
 
 namespace PCL_Helper
 {
@@ -129,27 +129,28 @@ public:
 
 	void AddPointCloudList(const std::vector<PCPTR<PointType>>& InPointList, const std::string& InCloudName = "")
 	{
-		auto Logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("PCL_Vis", LogConfigJsonPath);
+		// auto Logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("PCL_Vis", LogConfigJsonPath);
 
 		auto ColorList = CreateRainbowColorList(InPointList.size());
 		for ( int i = 0; i < InPointList.size(); i++ )
 		{
 			ColorHandlerType CH(InPointList[i], ColorList[i].x, ColorList[i].y, ColorList[i].z);
-			Logger->trace("SIMPLE VIEWER: ADD Point cloud with size: [{}]; RGB: [{}]", InPointList[i]->size(), ColorList[i].getVector3fMap());
+			// TODO: Fix template error
+			// Logger->trace("SIMPLE VIEWER: ADD Point cloud with size: [{}]; RGB: [{}]", InPointList[i]->size(), ColorList[i].getVector3fMap());
 			addPointCloud(InPointList[i], CH, InCloudName + "cloud_" + std::to_string(i));
 		}
 	}
 
 	void AddPointCloudByIndexList(PCPTR<PointType> InPC, std::vector<PCIDX_Ptr> InIndexList, const std::string& InCloudName = "")
 	{
-		auto Logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("PCL_Vis", LogConfigJsonPath);
+		// auto Logger = SPDLog::LoggerManager::GetOrMakeLoggerFromJsonPath("PCL_Vis", LogConfigJsonPath);
 		PCPTR<PointType> AddingPC(new PC<PointType>);
 		auto ColorList = CreateRainbowColorList(InIndexList.size());
 
 		for ( int i = 0; i < InIndexList.size(); i++ )
 		{
 			pcl::copyPointCloud(*InPC, *(InIndexList[i]), *AddingPC);
-			Logger->trace("SIMPLE VIEWER: COPY Point cloud with size: [{}]; RGB: [{}]", AddingPC->size(), ColorList[i].getVector3fMap());
+			// Logger->trace("SIMPLE VIEWER: COPY Point cloud with size: [{}]; RGB: [{}]", AddingPC->size(), ColorList[i].getVector3fMap());
 
 			ColorHandlerType CH(AddingPC, ColorList[i].x, ColorList[i].y, ColorList[i].z);
 			addPointCloud(AddingPC, CH, InCloudName + "cloud_" + std::to_string(i));
