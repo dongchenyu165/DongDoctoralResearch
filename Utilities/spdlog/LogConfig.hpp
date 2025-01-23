@@ -43,6 +43,8 @@ public:
 	static LoggerType MakeLoggerFromJsonPath(const std::string& InJsonPath,
 		const std::vector<std::string>& InConfigKeyList);
 	static LoggerType GetLogger(const std::string& InLoggerName);
+	static LoggerType GetSubLogger(const std::string& InLoggerName, const std::string& InSubLoggerName);
+	static void RemoveLogger(const std::string& InRemovingLoggerName);
 };
 
 /**

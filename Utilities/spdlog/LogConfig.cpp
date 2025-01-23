@@ -91,6 +91,28 @@ LoggerType LoggerManager::MakeLoggerFromJsonPath(const std::string& InJsonPath,
 
 LoggerType LoggerManager::GetLogger(const std::string& InLoggerName) { return spdlog::get(InLoggerName); }
 
+LoggerType LoggerManager::GetSubLogger(const std::string& InLoggerName, const std::string& InSubLoggerName)
+{
+	auto Logger = spdlog::get(InLoggerName);
+	if ( Logger == nullptr )
+	{
+		spdlog::error("Parent logger [{}] is not exist!", InLoggerName);
+		return nullptr;
+	}
+
+	return Logger->clone(InSubLoggerName);
+}
+
+void RemoveLogger(const std::string& InRemovingLoggerName)
+{
+	auto PendingRemovingLogger = spdlog::get(InRemovingLoggerName);
+	if ( !PendingRemovingLogger )
+	{
+		spdlog::error("Logger [{}] is not exist!", InRemovingLoggerName);;
+	}
+	spdlog::drop(InRemovingLoggerName);
+}
+
 /* -------------------------------------------------------------------------- */
 /*                       class LoggerConfig methods impl                      */
 /* -------------------------------------------------------------------------- */
