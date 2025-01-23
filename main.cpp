@@ -53,8 +53,13 @@ auto PrepareData(CalcPCPTR InPC, TrajectoryNode InTrajectoryNode)
 SearchSpaceType FilterByGeoScore(SearchSpaceType InInitSearchSpace, CuttingFaceResult& InCuttingFaceResults, TrajectoryNode InTrajectoryNode)
 {
 	using EGettingMethod = GeometryFilterScoreCalculator::ReturnDataSelectorType::EMethod;
-	GeoFilterScoreCalcConfig Param;
-	JSON_Helper::LoadStructure_ByPath(gTempCalculationParamJsonPath, {"FilterByGeoScore", "GeoScoreWeight"}, Param);
+	static GeoFilterScoreCalcConfig Param;
+	static bool bIsParamLoaded = false;
+	if ( !bIsParamLoaded )
+	{
+		JSON_Helper::LoadStructure_ByPath<GeoFilterScoreCalcConfig, nlohmann::ordered_json>(gTempCalculationParamJsonPath, { "FilterByGeoScore", "GeoScoreWeight" },
+			Param);			bIsParamLoaded = true;
+	}
 	GeometryFilterScoreCalculator Filter(Param, InInitSearchSpace.size(), InCuttingFaceResults.StaticData, gLogger);
 
 	// Algorithm2 5-9 rows. 
