@@ -13,6 +13,10 @@
 #include <fstream>
 #include <dlfcn.h>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include <dwarf.h>
 #include <elfutils/libdwfl.h>
 #include <vector>
@@ -357,7 +361,14 @@ public:
 		}
 		if ( MainIndex == -1 )
 		{
+#ifdef _OPENMP
+			if ( omp_get_thread_num() == 0 )
+			{
+				std::cerr << "Failed to find main function in the stack trace" << std::endl;
+			}
+#else
 			std::cerr << "Failed to find main function in the stack trace" << std::endl;
+#endif
 			return -1;
 		}
 
