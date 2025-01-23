@@ -24,7 +24,7 @@
 				"WindowTitle": "DEBUG ==== [CuttingFace] Fill Result"
 			},
 			"FinalCutEdge": {
-				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.cpp:247",
+				"CodePath": "/home/cookteam/Workspace/CPP_Program/PythonForceCalculator_Refactor/1_PrepareData/CuttingFaceMaker/CuttingFaceMaker.cpp:257",
 				"Description": "",
 				"Enable": false,
 				"Level": "DEBUG",

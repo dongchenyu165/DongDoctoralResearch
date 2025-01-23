@@ -40,7 +40,7 @@
 			"DistancePenality" : 6
 		},
 		"Filter":{
-			"Ratio": 0.5
+			"Ratio": 0.006
 		}
 	},
 	"CalKnifeForce":{
@@ -104,12 +104,12 @@
 	},
 	"CalForceScore":{
 		"ForceGenBasicParam":{
-			"AngleLimit": 120,
-			"GeneratingRetryTimes" : 100
+			"AngleLimit": 90,
+			"GeneratingRetryTimes" : 40
 		},
 		"FingerForceGeneratorWithinCone_Param":{
-			"ForceRangeMin" : 5,
-			"ForceRangeMax" : 300,
+			"ForceRangeMin" : 0.1,
+			"ForceRangeMax" : 25,
 			"RandomHalfAngle" : 90
 		},
 		"FingerForceGeneratorByRandomK_Param":{
