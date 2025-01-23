@@ -44,6 +44,17 @@ struct TSearchSpaceElement : public std::enable_shared_from_this<TSearchSpaceEle
 	{
 		return std::make_shared<TSearchSpaceElement>();
 	}
+
+	bool operator==(const TSearchSpaceElement& InOther) const
+	{
+		// return PositionPair.isApprox(InOther.PositionPair) && NormalPair.isApprox(InOther.NormalPair) && PointIndexPair.isApprox(InOther.PointIndexPair);
+		// return PositionPair.isApprox(InOther.PositionPair) && NormalPair.isApprox(InOther.NormalPair);
+		return abs(PositionPair.sum	() - InOther.PositionPair.sum()) < 1e-6 && abs(NormalPair.sum() == InOther.NormalPair.sum()) < 1e-6;
+	}
+	bool operator!=(const TSearchSpaceElement& InOther) const
+	{
+		return !(*this == InOther);
+	}
 };
 
 struct EvaluationStaticData
