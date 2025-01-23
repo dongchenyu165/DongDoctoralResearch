@@ -302,46 +302,17 @@ protected:
 		constexpr int RETRY_COUNT = 5;
 
 		RetFlagsType ReturnedFlagsList[GEN_COUNT];
-		// Eigen::Matrix<Scalar, GEN_COUNT, 1> ForceScoreList;
 		Eigen::MatrixXd ForceScoreList(GEN_COUNT, 1);
 		Eigen::Matrix<double, -1, -1, Eigen::RowMajor> GeneratedForceList(GEN_COUNT, 3 * ForceCount);
-		// double* GeneratedForcePtr = this->PointSetDataPtr->NormalPair.data();
 
-		// // Print this->FingerForceBalancer.GMat
-		// this->Logger->warn("== GMat: \n{}", this->FingerForceBalancer.GMat);
-		// this->Logger->warn("== GMatInv: \n{}", this->FingerForceBalancer.GMatInv);
-		// this->Logger->warn("GetExternalForce: \n{}", this->FingerForceBalancer.GetExternalForce());
-
-		// typename Super::BalancerType::ForceListType FingerForceList2;
-		// FingerForceList2 << -41.723096, 21.776270, 5.938131, -36.765165, -6.557523, -13.803236, -5.471032, 12.460430, -1.162422;
-		// bool bGenSuccess = this->FingerForceBalancer.MakeForceBalanced(FingerForceList2);
 		double ExtForceLength = this->FingerForceBalancer.GetExternalForce().template block<3, 1>(0, 0).norm();
 		ForceGen( GEN_COUNT, RETRY_COUNT, FINGER_NUMBER, 
-			// this->AngleLimit, this->ForceMin, this->ForceMax, this->AngleDist.max(), 
 			this->AngleLimit, this->ForceMin, ExtForceLength, this->AngleDist.max(), 
 			this->PointSetDataPtr->NormalPair.data(), 
 			this->FingerForceBalancer.GetExternalForce().data(), 
 			this->FingerForceBalancer.GMat.data(), 
 			this->FingerForceBalancer.GMatInv.data(), 
 			ReturnedFlagsList, ForceScoreList.data(), GeneratedForceList.data());
-
-		// // Use TSimpleCloudViewer<> to visualize the generated force vectors
-		//     // Visualize force vectors
-		// PCL_Helper::TSimpleCloudViewer<pcl::PointXYZ> viewer {"Force Vectors"};
-		
-		// // Add contact points
-		// pcl::PointCloud<pcl::PointXYZ>::Ptr contactPoints(new pcl::PointCloud<pcl::PointXYZ>);
-		// for(int i = 0; i < GeneratedForceList.rows(); i++) {
-		// 	pcl::PointXYZ p;
-		// 	p.x = GeneratedForceList(i, 0);
-		// 	p.y = GeneratedForceList(i, 1);
-		// 	p.z = GeneratedForceList(i, 2);
-		// 	contactPoints->push_back(p);
-		// }
-		// viewer.addPointCloud(contactPoints, "contacts");
-		// viewer.spin();
-		
-		// this->Logger->info("ForceGen finished.");
 
 		size_t SuccessCount = 0;
 
