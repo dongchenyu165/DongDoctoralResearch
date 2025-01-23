@@ -29,7 +29,7 @@
  Final Score = ScoreComp_1 * Weight_1 + ScoreComp_2 * Weight_2 + ... + ScoreComp_n * Weight_n  (n =
  [ScoreComponentCount])
  */
-template<typename InputDataType, typename ConfigObjType, typename MapCompareMethod = std::less<InputDataType>>
+template<typename InputDataType, typename ConfigObjType, typename MapCompareMethod = std::less<InputDataType>, typename VectorAllocator = std::allocator<InputDataType>>
 class TScoreCalculatorBase
 {
 public:
@@ -41,7 +41,7 @@ protected:
 	using DataScorePairType     = std::pair<double /* Score */, InputDataType /* Input Data Obj*/>;
 	using DataScorePairListType = std::vector<DataScorePairType>;
 	using DataScoreMapType 		= std::map<InputDataType /* Input Data Obj*/, double /* Score */, MapCompareMethod>;
-	using ReturnDataListType    = std::vector<InputDataType>;
+	using ReturnDataListType    = std::vector<InputDataType, VectorAllocator>;
 
 	// A matrix type to storage the score data with size (Pre-Allocated DataSize, ComponentSize)
 	// 		[Pre-Allocated DataSize]: Dynamic size. Set by the construct function's [InDataSize] argument.
@@ -184,7 +184,7 @@ public:
 	 * @see CalcRawScore()
 	 * @see CalcFinalScore()
 	 */
-	void CalculateScore(const std::vector<InputDataType>& InDataList)
+	void CalculateScore(const std::vector<InputDataType, VectorAllocator>& InDataList)
 	{
 		FUNC_LOGGER_ENTER_CUSTOM_LOGGER(Logger);  // Create a logger if [Logger] is [nullptr].
 
