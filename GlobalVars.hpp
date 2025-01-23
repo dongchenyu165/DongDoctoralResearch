@@ -4,7 +4,7 @@
 #include <string>
 #include <chrono>
 
-constexpr int FINGER_NUMBER = 2;
+constexpr int FINGER_NUMBER = 3;
 
 // True: Consider the gravity and the force from the cutting board
 constexpr bool bCONSIDER_GRAVITY = false;
