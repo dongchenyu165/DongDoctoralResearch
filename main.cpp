@@ -76,7 +76,7 @@ CalcScalar CalForceScore(ForceTorqueType InKnifeForce, CalcPointSetDataPtr InPoi
 // 
 CalcPCPTR LoadPC(const std::string& InFilePath)
 {
-	gLogger->info("Load Point Cloud");
+	gLogger->info("Load Point Cloud from file: {}", InFilePath);
 	NEW_PC_PTR(LoadedPC, PCL_Helper::PointXYZ);
 	if (pcl::io::loadPCDFile<PCL_Helper::PointXYZ>(InFilePath, *LoadedPC) == -1) 
 	{
@@ -84,8 +84,10 @@ CalcPCPTR LoadPC(const std::string& InFilePath)
 		return nullptr;
 	}
 	
-	gLogger->info("Load Point Cloud with %d points", LoadedPC->size());
-	CalcPCPTR FinalCalcPC = PCL_Helper::ConvertPointCloud<CalcPoint>(LoadedPC);  // , PCL_Helper::EConvertRGBField::Const, PCL_Helper::EConvertNormalField::Estimate
+	gLogger->info("Load Point Cloud with {} points", LoadedPC->size());
+	CalcPCPTR FinalCalcPC = PCL_Helper::ConvertPointCloud<CalcPoint,
+		PCL_Helper::EConvertRGBField::Const,
+		PCL_Helper::EConvertNormalField::Estimate>(LoadedPC);  // , PCL_Helper::EConvertRGBField::Const, PCL_Helper::EConvertNormalField::Estimate
 	gLogger->info("Convert to calculating point cloud.");
 
 	return FinalCalcPC;
