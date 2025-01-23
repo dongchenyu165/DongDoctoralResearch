@@ -126,8 +126,11 @@ protected:
 		// Normalize each score component.
 		for ( int i = 0; i < ScoreComponentCount; i++ )
 		{
+			const auto [ NormMin, NormMax ] = GetNormalizedMinMax(i);
 			LOG_INDENT(Logger, debug, "Normalize score column [{}]. Min: [{}], Max: [{}].", i, NormMin, NormMax);
 			
+			this->ScoreRawData.col(i).array() -= NormMin;
+			this->ScoreRawData.col(i).array() /= (NormMax - NormMin);
 		}
 
 		// Apply the weight to each component for all datas.
