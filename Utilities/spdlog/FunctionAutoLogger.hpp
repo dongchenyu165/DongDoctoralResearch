@@ -61,8 +61,8 @@ public:
 		if ( !Logger_ )
 		{
 			Logger_ = spdlog::stdout_color_mt("FunctionLogger");
+			Logger_->set_level(spdlog::level::debug);
 		}
-		Logger_->set_level(spdlog::level::debug);
 
 		PrintEnteringMsg();
 	}
@@ -79,8 +79,8 @@ public:
 			if ( !Logger_ )
 			{
 				Logger_ = spdlog::stdout_color_mt("FunctionLogger");
+				Logger_->set_level(spdlog::level::debug);
 			}
-			Logger_->set_level(spdlog::level::debug);
 		}
 
 		StackDepth_ = FindStackDepth(StackBuffer_, StackFrameCount_);
