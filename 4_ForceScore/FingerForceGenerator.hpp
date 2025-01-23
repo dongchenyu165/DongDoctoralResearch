@@ -215,6 +215,7 @@ protected:
 	virtual void GenereateSingleForcePair(ForcePairType& InOutForcePair) = 0;
 
 protected:
+
 	Types::ForceTorqueType KnifeForce;
 	Types::Vec3 CenterOfMass;
 	GeneratorPointSetDataConstPtr PointSetDataPtr;
@@ -240,6 +241,7 @@ protected:
 
 	std::shared_ptr<spdlog::logger> Logger;
 };
+
 template<typename Scalar = double, int ForceCount = 2>
 class TFingerForceGeneratorWithinCone : public TFingerForceGenerator<Scalar, ForceCount>
 {
