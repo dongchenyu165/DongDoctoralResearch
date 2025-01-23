@@ -142,6 +142,18 @@ public:
 			{
 				// If the retry times is exhausted, set the force pair to infinity.
 				ForcePairList[i].setConstant(std::numeric_limits<Scalar>::infinity());
+			}
+		}
+		
+		// Remove the invalid (force are Eigen::Infinity) force pairs.
+		ForcePairList.erase(
+			std::remove_if(ForcePairList.begin(), ForcePairList.end(),
+						   [](const ForcePairType& ForcePair) {
+							const bool&& bIsInf = ForcePair.array().isInf().any();
+							   return bIsInf;
+						   }),
+			ForcePairList.end());
+		return ForcePairList.size();
 	}
 
 	// Getters
