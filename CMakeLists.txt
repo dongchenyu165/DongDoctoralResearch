@@ -1,64 +1,3 @@
-# cmake_minimum_required(VERSION 3.4...3.18)
-# project(pybind11_test)
-
-# add_subdirectory(pybind11)
-# pybind11_add_module(pybind11_test src/main.cpp)
-
-# # EXAMPLE_VERSION_INFO is defined by setup.py and passed into the C++ code as a
-# # define (VERSION_INFO) here.
-# target_compile_definitions(pybind11_test
-#                            PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})
-
-
-
-
-
-
-# # set(PYTHON_MODULE_EXTENSION "")
-# # message("====\t Python3_LINK_OPTIONS: ${PYTHON_MODULE_EXTENSION}") 
-# cmake_minimum_required(VERSION 3.15...3.22)
-# project(pybind11_test LANGUAGES CXX)
-
-# set(PYBIND11_FINDPYTHON on) 
-# set(Python_ROOT_DIR "~/.pyenv/versions/cookteam-dong-env/bin")
-# set(Python_DIR "~/.pyenv/versions/cookteam-dong-env/bin")
-# include_directories("/home/cookteam/.pyenv/versions/3.10.9/include/python3.10")
-# # find_package(Python 3.10 COMPONENTS Interpreter Development REQUIRED PATHS /home/cookteam/.pyenv/versions/cookteam-dong-env NO_DEFAULT_PATH)
-# find_package (Python 3.10 COMPONENTS Interpreter Development)
-# # message("====\t Python3_LINK_OPTIONS: ${PYTHON_MODULE_EXTENSION}") 
-
-
-# if(Python_FOUND)
-# 	# message("====\t Python3_VERSION: ${Python3_VERSION}")
-# 	# message("====\t Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
-# 	# message("====\t Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
-# 	# message("====\t Python3_LIBRARIES: ${Python3_LIBRARIES}")
-# 	# message("====\t Python3_NumPy_VERSION: ${Python3_NumPy_VERSION}")
-# 	# message("====\t Python3_LINK_OPTIONS: ${Python3_LINK_OPTIONS}") 
-# 	# message("====\t Python3_LINK_OPTIONS: ${PYTHON_MODULE_EXTENSION}") 
-	
-# 	# message("====\t Python_VERSION: ${Python_VERSION}")
-# 	# message("====\t Python_INCLUDE_DIRS: ${Python_INCLUDE_DIRS}")
-# 	# message("====\t Python_EXECUTABLE: ${PYTHON_EXECUTABLE}")
-# 	# message("====\t Python_LIBRARIES: ${Python_LIBRARIES}")
-# 	# message("====\t Python_NumPy_VERSION: ${Python_NumPy_VERSION}")
-# 	# message("====\t Python_LINK_OPTIONS: ${Python_LINK_OPTIONS}") 
-# 	# message("====\t Python_LINK_OPTIONS: ${PYTHON_MODULE_EXTENSION}") 
-	
-	
-# 	# find_package(pybind11 CONFIG REQUIRED) 
-# 	# set(PYBIND11_PYTHON_VERSION 3.10)
-# 	add_subdirectory(pybind11)
-	
-# 	# set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
-# 	# set(PYTHON_LIBRARY "${Python3_LIBRARIES}")
-# 	message("====\t Python_LINK_OPTIONS: ${PYTHON_MODULE_EXTENSION}") 
-# 	pybind11_add_module(pybind11_test SHARED NO_EXTRAS main.cpp)
-# endif(Python_FOUND)
-
-
-
-
 cmake_minimum_required(VERSION 3.15...3.22)
 project(GraspingPointCalculator LANGUAGES CXX)
 
@@ -155,8 +94,8 @@ add_subdirectory(pybind11)
 # For OpenMP
 find_package(OpenMP REQUIRED)
 if(OpenMP_FOUND)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
 
