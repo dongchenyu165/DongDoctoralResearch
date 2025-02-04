@@ -121,6 +121,7 @@ CalcScalar CalForceScore(ForceTorqueType InKnifeForce, EvaluationStaticData& InS
 	using ForceCalculatorType = TForceScoreCalculator<CalcScalar, FINGER_NUMBER>;
 	using EGettingMethod = ForceCalculatorType::ReturnDataSelectorType::EMethod;
 	ForceCalculatorType ForceScoreCalculator(ForceScoreCalcParam, Result.size(), InPointSetDataPtr, InStaticData, InternalLogger);
+	// TODO: HEAVY OPERATION
 	ForceScoreCalculator.CalculateScore(Result);
 	const ForceCalculatorType::ForcePairType ForceResult = ForceScoreCalculator.GetFinalDataList(EGettingMethod::Good, 1)[0];
 
