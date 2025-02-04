@@ -88,7 +88,11 @@ CalcScalar CalForceScore(ForceTorqueType InKnifeForce, EvaluationStaticData& InS
 	static bool bIsParamLoaded = false;
 	static ForceScoreCalcConfig ForceScoreCalcParam;
 
+#if OPENMP || _OPENMP
 	int ThreadID = omp_get_thread_num();
+#else
+	int ThreadID = 0;
+#endif
 	SPDLog::LoggerType InternalLogger = SPDLog::LoggerManager::GetSubLogger(gLogger->name(), "CalForceScore_" + std::to_string(ThreadID));
 	InternalLogger->set_level(spdlog::level::warn);
 
@@ -241,6 +245,11 @@ int main()
 		PositionScoreCalculator.CalculateScore(MainSearchSpace);
 		gLogger->set_level(spdlog::level::debug);
 
+		#if OPENMP || _OPENMP
+			int ThreadID = omp_get_thread_num();
+		#else
+			int ThreadID = 0;
+		#endif
 		size_t Count = 0;
 		FinalValidCount = 0;
 		#pragma omp parallel for shared(Count)
@@ -298,7 +307,8 @@ int main()
 			// if ( gLogger->should_log(spdlog::level::trace) )
 			{
 				// gLogger->trace("Progress: {}/{} == {:+08.4f}", Count, MainSearchSpace.size(), ForceScore);
-				gLogger->info("ThreadID: {} Progress: {}/{} == {:+08.4f}", omp_get_thread_num(), Count, MainSearchSpace.size(), ForceScore);
+				// gLogger->info("ThreadID: {} Progress: {}/{} == {:+08.4f}", omp_get_thread_num(), Count, MainSearchSpace.size(), ForceScore);
+				gLogger->info("ThreadID: {} Progress: {}/{} == {:+08.4f}", ThreadID, MainSearchSpace.size(), ForceScore);
 			}
 
 			if (!IsValidFloat(ForceScore))
