@@ -325,25 +325,18 @@ protected:
 		#pragma omp parallel for reduction(+:SuccessCount, ConditionFailedCount, BalanceFailedCount, ForceLengthOutOfRangeCount, AngleExceedsLimitCount)
 		for ( int i = 0; i < GeneratedForceList.rows(); i++ )
 		{
-			const Eigen::Map<typename Super::ForcePairType> ForcePairMap(GeneratedForceList.data() + i * 3 * ForceCount);
-			if ( !this->IsValidFingerForce(ForcePairMap, this->PointSetDataPtr->NormalPair, FailureReason) )
-			{
-				ConditionFailedCount++;
-				if ( FailureReason == 1 )
-				{
-					ForceLengthOutOfRangeCount++;
-				}
-				else if ( FailureReason == 2 )
-				{
-					AngleExceedsLimitCount++;
-				}
-				// If invalid, retry generating.
-				continue;
-			}
 			if ( ReturnedFlagsList[i].IsBalance )
 			{
 				// ONLY count the valid and balanced finger force.
 				SuccessCount++;
+			}
+			else if ( !ReturnedFlagsList[i].IsForceInLimit )
+			{
+				ForceLengthOutOfRangeCount++;
+			}
+			else if ( !ReturnedFlagsList[i].IsAngleInLimit )
+			{
+				AngleExceedsLimitCount++;
 			}
 			else
 			{
