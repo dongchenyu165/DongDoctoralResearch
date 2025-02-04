@@ -1,7 +1,7 @@
 #ifndef C7D34643_55AE_4574_B043_5E580F558864
 #define C7D34643_55AE_4574_B043_5E580F558864
 
-#include "spdlog/logger.h"
+#include <spdlog/spdlog.h>
 #include <cstddef>
 #include <memory>
 
@@ -14,7 +14,7 @@ template<typename CalcPointSetDataPtrType, int FingerCount>
 struct TCalcPointSetDataPtrHash
 {
 	static constexpr int POINT_COUNT = 1000;
-	static std::shared_ptr<spdlog::logger> Logger;
+	inline static std::shared_ptr<spdlog::logger> Logger;
 
 	std::size_t operator()(const CalcPointSetDataPtrType& key) const
 	{
@@ -38,7 +38,7 @@ template<typename CalcPointSetDataPtrType, int FingerCount>
 struct TCalcPointSetDataPtrPointPosHash
 {
 	static constexpr int POINT_COUNT = 1000;
-	static std::shared_ptr<spdlog::logger> Logger;
+	inline static std::shared_ptr<spdlog::logger> Logger;
 
 	std::size_t operator()(const CalcPointSetDataPtrType& key) const
 	{
