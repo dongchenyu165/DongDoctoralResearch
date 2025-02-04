@@ -67,6 +67,7 @@ struct EvaluationStaticData
 	// 		3rd-column is the middle plane's normal direction.
 	// 		2nd-column is calculated by cross_product with a right-hand coordinate.
 	Eigen::Matrix<Types::CalcScalar, 4, 4> KnifePose;
+	Types::CalcPCPTR GraspingPC;
 	Types::Vec3 CenterOfMass;
 	Types::Vec3 TableContactPoint;
 	Types::CalcScalar FoodMass;
